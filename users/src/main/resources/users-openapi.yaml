@@ -1,0 +1,442 @@
+openapi: 3.1.0
+info:
+  title: ParanoiaX Users API
+  description: User profile management, device handling, authentication, and presence subsystem.
+  version: 1.0.0
+
+servers:
+  - url: /api
+    description: Main API Gateway
+
+tags:
+  - name: Authentication & Onboarding
+    description: User registration and access token issuance
+  - name: Device Management
+    description: Device session management and state migration (Transfer Blob)
+  - name: Profile Management & Discovery
+    description: User search and public ECC key exchange
+  - name: Presence
+    description: Online status tracking subsystem
+
+paths:
+  /v1/users/invite:
+    post:
+      tags: [Authentication & Onboarding]
+      summary: Generate an invite token
+      description: Generates a temporary token used for creating invite links or QR codes for new users.
+      security:
+        - BearerAuth: []
+      parameters:
+        - $ref: '#/components/parameters/IdempotencyKeyRequired'
+      responses:
+        '200':
+          description: Token generated successfully
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/InviteResponse'
+
+  /v1/users:
+    put:
+      tags: [Authentication & Onboarding]
+      summary: Register a new user
+      description: Primary user onboarding. Exchanges the registration token for a device session and uploads the public ECC key.
+      parameters:
+        - $ref: '#/components/parameters/IdempotencyKeyRequired'
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/RegisterUserRequest'
+      responses:
+        '201':
+          description: User successfully registered (No Content)
+    patch:
+      tags: [Profile Management & Discovery]
+      summary: Partial profile update
+      description: Updates specific user parameters (e.g., username, display name, avatar).
+      security:
+        - BearerAuth: []
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/UpdateProfileRequest'
+      responses:
+        '200':
+          description: Profile updated successfully
+        '204':
+          description: Profile updated successfully (No Content)
+
+  /v1/users/auth/challenge:
+    post:
+      tags: [Authentication & Onboarding]
+      summary: Request an authentication challenge
+      description: Receives a challenge to verify the user's identity.
+      parameters:
+        - $ref: '#/components/parameters/IdempotencyKeyRequired'
+        - $ref: '#/components/parameters/DeviceIdRequired'
+      responses:
+        '200':
+          description: Challenge generated successfully
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ChallengeResponse'
+
+  /v1/users/auth:
+    post:
+      tags: [Authentication & Onboarding]
+      summary: Authenticate via challenge signature
+      description: Verifies client identity via cryptographic signature to issue a JWT session token without transmitting passwords.
+      parameters:
+        - $ref: '#/components/parameters/IdempotencyKeyRequired'
+        - $ref: '#/components/parameters/DeviceIdRequired'
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/AuthRequest'
+      responses:
+        '200':
+          description: Authentication successful
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/TokenPairResponse'
+
+  /v1/users/auth/refresh:
+    post:
+      tags: [Authentication & Onboarding]
+      summary: Refresh JWT token pair
+      description: Exchanges a valid refresh token for a new pair of JWT access and refresh tokens.
+      parameters:
+        - $ref: '#/components/parameters/IdempotencyKeyRequired'
+        - $ref: '#/components/parameters/DeviceIdRequired'
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/RefreshTokenRequest'
+      responses:
+        '200':
+          description: New token pair issued
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/TokenPairResponse'
+
+  /v1/users/devices/link-token:
+    post:
+      tags: [Device Management]
+      summary: Upload state blob and generate link token
+      description: Uploads an encrypted blob containing the old device's state (encrypted client-side) and returns a short-lived token to authorize a new secondary device.
+      security:
+        - BearerAuth: []
+      parameters:
+        - $ref: '#/components/parameters/IdempotencyKeyRequired'
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/UploadBlobRequest'
+      responses:
+        '201':
+          description: Blob uploaded and link token generated successfully
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/LinkTokenResponse'
+
+  /v1/users/devices/link-token/blob:
+    get:
+      tags: [Device Management]
+      summary: Download encrypted state blob
+      description: Retrieves the encrypted state blob for a new device. The server deletes the blob immediately after a successful response (one-time read).
+      security:
+        - LinkTokenAuth: []
+      responses:
+        '200':
+          description: Encrypted state blob retrieved
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/DownloadBlobResponse'
+
+  /v1/users/devices/{device_id}:
+    put:
+      tags: [Device Management]
+      summary: Register a secondary device
+      description: Exchanges the link token for a new device session.
+      parameters:
+        - $ref: '#/components/parameters/IdempotencyKeyRequired'
+        - name: device_id
+          in: path
+          required: true
+          schema:
+            type: string
+            format: uuid
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/RegisterDeviceRequest'
+      responses:
+        '204':
+          description: Secondary device registered successfully (No Content)
+    delete:
+      tags: [Device Management]
+      summary: Revoke device session
+      description: Invalidates a specific device session, preventing it from obtaining new JWT tokens.
+      security:
+        - BearerAuth: []
+      parameters:
+        - name: device_id
+          in: path
+          required: true
+          schema:
+            type: string
+            format: uuid
+      responses:
+        '204':
+          description: Session revoked successfully (No Content)
+
+  /v1/users/search:
+    get:
+      tags: [Profile Management & Discovery]
+      summary: Search for a user
+      description: Searches for users to initiate a chat and retrieve their UUID.
+      security:
+        - BearerAuth: []
+      parameters:
+        - name: username
+          in: query
+          required: true
+          schema:
+            type: string
+      responses:
+        '200':
+          description: Search results
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/UserSearchItem'
+
+  /v1/users/keys:
+    get:
+      tags: [Profile Management & Discovery]
+      summary: Retrieve public ECC keys
+      description: Batch retrieval of public ECC keys for chat initialization (ECIES digital envelope) or key rotation procedures.
+      security:
+        - BearerAuth: []
+      parameters:
+        - name: ids
+          in: query
+          required: true
+          description: Comma-separated array of user UUIDs
+          schema:
+            type: string
+      responses:
+        '200':
+          description: Array of user keys and their devices
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/UserKeysResponse'
+
+  /v1/users/heartbeat:
+    post:
+      tags: [Presence]
+      summary: Send online status heartbeat
+      description: Background signal sent by the client to maintain the "Online" status in the Redis-backed presence system.
+      security:
+        - BearerAuth: []
+      responses:
+        '204':
+          description: Status updated successfully (No Content)
+
+components:
+  securitySchemes:
+    BearerAuth:
+      type: http
+      scheme: bearer
+      bearerFormat: JWT
+    LinkTokenAuth:
+      type: http
+      scheme: bearer
+      description: Uses the link_token instead of JWT for authorization. Works exclusively for GET /v1/users/devices/link-token/blob.
+
+  parameters:
+    IdempotencyKeyOptional:
+      name: Idempotency-Key
+      in: header
+      required: false
+      schema:
+        type: string
+    IdempotencyKeyRequired:
+      name: Idempotency-Key
+      in: header
+      required: true
+      schema:
+        type: string
+    DeviceIdOptional:
+      name: Device-Id
+      in: header
+      required: false
+      schema:
+        type: string
+        format: uuid
+    DeviceIdRequired:
+      name: Device-Id
+      in: header
+      required: true
+      schema:
+        type: string
+        format: uuid
+
+  schemas:
+    InviteResponse:
+      type: object
+      properties:
+        host:
+          type: string
+        registration_token:
+          type: string
+        fingerprint:
+          type: string
+
+    RegisterUserRequest:
+      type: object
+      properties:
+        username:
+          type: string
+        registration_token:
+          type: string
+        device_id:
+          type: string
+          format: uuid
+        device_name:
+          type: string
+        device_type:
+          type: string
+          enum: [MOBILE, DESKTOP]
+        identity_key:
+          type: string
+        encryption_key:
+          type: string
+
+    ChallengeResponse:
+      type: object
+      properties:
+        challenge:
+          type: string
+        expires_in:
+          type: integer
+
+    AuthRequest:
+      type: object
+      properties:
+        signature:
+          type: string
+
+    TokenPairResponse:
+      type: object
+      properties:
+        access_token:
+          type: string
+        refresh_token:
+          type: string
+
+    RefreshTokenRequest:
+      type: object
+      properties:
+        refresh_token:
+          type: string
+
+    LinkTokenResponse:
+      type: object
+      properties:
+        link_token:
+          type: string
+        expires_in:
+          type: integer
+
+    UploadBlobRequest:
+      type: object
+      properties:
+        encrypted_blob:
+          type: string
+
+    DownloadBlobResponse:
+      type: object
+      properties:
+        encrypted_blob:
+          type: string
+
+    RegisterDeviceRequest:
+      type: object
+      properties:
+        link_token:
+          type: string
+        identity_key:
+          type: string
+          description: Public identity signing key (e.g., Ed25519) for the new device
+        encryption_key:
+          type: string
+          description: Public ephemeral encryption key (e.g., X25519) for the new device
+        device_name:
+          type: string
+        device_type:
+          type: string
+
+    UpdateProfileRequest:
+      type: object
+      properties:
+        username:
+          type: string
+
+    UserSearchItem:
+      type: object
+      properties:
+        user_id:
+          type: string
+          format: uuid
+        username:
+          type: string
+        is_online:
+          type: boolean
+        last_seen_at:
+          type: string
+          format: date-time
+
+    UserKeysResponse:
+      type: object
+      properties:
+        user_id:
+          type: string
+          format: uuid
+        devices:
+          type: array
+          items:
+            $ref: '#/components/schemas/DeviceKeys'
+
+    DeviceKeys:
+      type: object
+      properties:
+        device_id:
+          type: string
+          format: uuid
+        identity_key:
+          type: string
+        encryption_key:
+          type: string
