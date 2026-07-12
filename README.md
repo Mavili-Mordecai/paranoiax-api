@@ -23,16 +23,6 @@ The backend is built as a distributed microservices architecture, communicating 
 
 ---
 
-## How It Works (High-Level Overview)
-
-ParanoiaX completely abandons traditional security anti-patterns:
-1.  **No Passwords:** Authentication is purely cryptographic. Devices prove their identity by signing a server-generated random string (Challenge) with a hardware-protected private key.
-2.  **No Open Registration:** The network is invite-only to prevent spam and Sybil attacks.
-3.  **No Server-Side Trust (Cross-Signing):** The server is not trusted to verify who owns a device. When a user links a new laptop or phone, their primary device cryptographically signs the new device's keys. Other users verify this signature locally before sending any messages.
-4.  **Zero-Knowledge State Migration:** When transferring chat history to a new device, the old device encrypts the database with a one-time AES key. The server only sees an unreadable binary blob. The AES key is transmitted offline (via QR code) directly between the two screens.
-
----
-
 ## Cryptographic Foundation
 
 ParanoiaX relies on modern, fast, and secure cryptographic primitives:
