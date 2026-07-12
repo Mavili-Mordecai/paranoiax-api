@@ -42,8 +42,7 @@ To guarantee Perfect Forward Secrecy and ensure that a single compromised device
 This level identifies the *person*, not the hardware. 
 * **Master Identity Key (Ed25519):** Generated once on the very first device during registration. 
     * *Public Key:* Acts as the user's global "passport" for other contacts.
-    * *Private Key:* Stored securely on the primary device. Used **only** to sign and authorize new secondary devices (Cross-Signing). 
-* *Note: There is no "Master Encryption Key". If one existed, a single device theft would compromise all past and future chats.*
+    * *Private Key:* Stored securely on the primary device. Used **only** to sign and authorize new secondary devices (Cross-Signing).
 
 ### 2. Device Level (Authentication & Routing)
 Every piece of hardware (phone, PC, web browser) generates its own independent keys that never leave the device's secure hardware enclave (Keystore/Keychain).

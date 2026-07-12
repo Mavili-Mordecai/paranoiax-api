@@ -15,7 +15,5 @@ CREATE TABLE users_devices
 );
 
 ALTER TABLE users_devices
-    ADD CONSTRAINT users_devices_type_check CHECK (
-        type IN ('MOBILE', 'DESKTOP')
-        );
+    ADD CONSTRAINT users_devices_type_check CHECK (type IN ('MOBILE', 'DESKTOP'));
 --rollback DROP TABLE users_devices;
