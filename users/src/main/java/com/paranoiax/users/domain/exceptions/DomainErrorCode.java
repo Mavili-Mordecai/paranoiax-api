@@ -6,7 +6,8 @@ public enum DomainErrorCode {
     INVALID_LENGTH("\"%s\" must be between %d and %d characters long"),
     INVALID_FORMAT("Invalid format for \"%s\""),
     TIMESTAMP_MUST_BE_AFTER("Field '%s' must be after '%s'"),
-    TIMESTAMP_MUST_BE_BEFORE("Field '%s' must be before '%s'");
+    TIMESTAMP_MUST_BE_BEFORE("Field '%s' must be before '%s'"),
+    LOCK_ACQUISITION_FAILED("Failed to acquire lock for operation. Operation ID: %s");
 
     private final String defaultMessage;
 

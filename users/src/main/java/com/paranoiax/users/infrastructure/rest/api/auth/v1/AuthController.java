@@ -1,7 +1,14 @@
 package com.paranoiax.users.infrastructure.rest.api.auth.v1;
 
+import com.paranoiax.users.application.ports.in.auth.invite.InviteUserCommand;
+import com.paranoiax.users.application.ports.in.auth.invite.InviteUserUseCase;
+import com.paranoiax.users.domain.models.invite.Invite;
+import com.paranoiax.users.domain.models.user.UserId;
+import jakarta.servlet.http.HttpServletRequest;
 import jakarta.validation.Valid;
+import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
@@ -13,11 +20,31 @@ import java.util.UUID;
 @RequestMapping("/v1/users")
 public class AuthController {
 
-    @PostMapping("/invite")
-    public ResponseEntity<InviteResponse> invite(
-            @RequestHeader("Idempotency-Key") String idempotencyKey
+    private final InviteUserUseCase inviteUserUseCase;
+    private final String publicHost;
+    private final String spkiPin;
+
+    public AuthController(
+            InviteUserUseCase inviteUserUseCase,
+            @Value("${application.public-host}") String publicHost,
+            @Value("${application.spki-pin}") String spkiPin
     ) {
-        return ResponseEntity.ok(new InviteResponse("test-host", "test-token", "test-fingerprint"));
+        this.inviteUserUseCase = inviteUserUseCase;
+        this.publicHost = publicHost;
+        this.spkiPin = spkiPin;
+    }
+
+    @PostMapping("/invite")
+    public ResponseEntity<InviteResponse> invite(@RequestHeader("Idempotency-Key") String idempotencyKey) {
+        Invite invite = inviteUserUseCase.execute(InviteUserCommand.of(
+                new UserId(UUID.randomUUID()),
+                idempotencyKey
+        ));
+        return ResponseEntity.ok(InviteResponse.of(
+                publicHost,
+                invite.getRegistrationToken().value(),
+                spkiPin
+        ));
     }
 
     @PutMapping

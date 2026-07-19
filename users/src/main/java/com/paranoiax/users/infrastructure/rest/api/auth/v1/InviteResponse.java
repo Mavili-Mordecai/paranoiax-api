@@ -9,4 +9,11 @@ public record InviteResponse(
         String registrationToken,
         String spkiPin
 ) {
+    public static InviteResponse of(String host, String registrationToken, String spkiPin) {
+        return new InviteResponse(
+                host,
+                registrationToken,
+                spkiPin
+        );
+    }
 }

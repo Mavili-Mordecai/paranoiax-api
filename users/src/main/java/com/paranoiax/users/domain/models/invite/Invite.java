@@ -20,9 +20,9 @@ public class Invite {
         this.expiresAt = Require.notNull(expiresAt, DomainErrorCode.MISSING_REQUIRED_FIELD, "Expires at");
     }
 
-    public static Invite create(UserId createdBy, RegistrationToken registrationToken, Duration ttl) {
+    public static Invite create(UserId userId, RegistrationToken registrationToken, Duration ttl) {
         Instant now = Instant.now();
-        return new Invite(createdBy, registrationToken, now, now.plus(ttl));
+        return new Invite(userId, registrationToken, now, now.plus(ttl));
     }
 
     public Instant getExpiresAt() {
