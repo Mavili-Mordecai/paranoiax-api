@@ -20,28 +20,42 @@ public class User implements ActivityTrackable {
     private Instant updatedAt;
     private final Instant createdAt;
 
-    private User(Builder builder) {
-        this.id = builder.id;
-        this.identityKey = builder.identityKey;
-        this.username = builder.username;
-        this.profile = builder.profile;
-        this.invitedBy = builder.invitedBy;
-        this.lastSeenAt = builder.lastSeenAt;
-        this.updatedAt = builder.updatedAt;
-        this.createdAt = builder.createdAt;
+    private User(
+            UserId id, IdentityKey identityKey, Username username, Profile profile, UserId invitedBy, Avatar avatar,
+            Instant lastSeenAt, Instant updatedAt, Instant createdAt
+    ) {
+        this.id = Objects.requireNonNull(id, "id must not be null");
+        this.identityKey = Objects.requireNonNull(identityKey, "identityKey must not be null");
+        this.username = Objects.requireNonNull(username, "username must not be null");
+        this.invitedBy = Objects.requireNonNull(invitedBy, "invitedBy must not be null");
+        this.createdAt = Objects.requireNonNull(createdAt, "createdAt must not be null");
+        this.updatedAt = Objects.requireNonNull(updatedAt, "updatedAt must not be null");
+        this.lastSeenAt = Objects.requireNonNull(lastSeenAt, "lastSeenAt must not be null");
+
+        this.profile = profile;
+        this.avatar = avatar;
     }
 
-    public static User createNew(IdentityKey identityKey, Username username, UserId invitedBy) {
+    public static User create(Username username, UserId invitedBy, IdentityKey identityKey) {
         Instant now = Instant.now();
-        return builder()
-                .id(new UserId(UUID.randomUUID()))
-                .identityKey(identityKey)
-                .username(username)
-                .invitedBy(invitedBy)
-                .createdAt(now)
-                .updatedAt(now)
-                .lastSeenAt(now)
-                .build();
+        return new User(
+                new UserId(UUID.randomUUID()),
+                identityKey,
+                username,
+                null,
+                invitedBy,
+                null,
+                now,
+                now,
+                now
+        );
+    }
+
+    public static User of(
+            UserId id, IdentityKey identityKey, Username username, Profile profile, UserId invitedBy, Avatar avatar,
+            Instant lastSeenAt, Instant updatedAt, Instant createdAt
+    ) {
+        return new User(id, identityKey, username, profile, invitedBy, avatar, lastSeenAt, updatedAt, createdAt);
     }
 
     public void changeUsername(Username username) {
@@ -118,64 +132,5 @@ public class User implements ActivityTrackable {
 
     public UserId getId() {
         return id;
-    }
-
-    public static Builder builder() {
-        return new Builder();
-    }
-
-    public static class Builder {
-        private UserId id;
-        private IdentityKey identityKey;
-        private Username username;
-        private Profile profile;
-        private UserId invitedBy;
-        private Instant lastSeenAt;
-        private Instant updatedAt;
-        private Instant createdAt;
-
-        public Builder id(UserId value) {
-            this.id = value;
-            return this;
-        }
-
-        public Builder identityKey(IdentityKey value) {
-            this.identityKey = value;
-            return this;
-        }
-
-        public Builder username(Username value) {
-            this.username = value;
-            return this;
-        }
-
-        public Builder profile(Profile value) {
-            this.profile = value;
-            return this;
-        }
-
-        public Builder invitedBy(UserId value) {
-            this.invitedBy = value;
-            return this;
-        }
-
-        public Builder lastSeenAt(Instant value) {
-            this.lastSeenAt = value;
-            return this;
-        }
-
-        public Builder updatedAt(Instant value) {
-            this.updatedAt = value;
-            return this;
-        }
-
-        public Builder createdAt(Instant value) {
-            this.createdAt = value;
-            return this;
-        }
-
-        public User build() {
-            return new User(this);
-        }
     }
 }

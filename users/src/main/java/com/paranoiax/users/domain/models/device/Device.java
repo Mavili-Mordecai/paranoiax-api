@@ -20,16 +20,39 @@ public class Device implements ActivityTrackable {
     private Instant lastSeenAt;
     private final Instant createdAt;
 
-    private Device(Builder builder) {
-        this.id = builder.id;
-        this.userId = builder.userId;
-        this.name = builder.name;
-        this.type = builder.type;
-        this.identityKey = builder.identityKey;
-        this.encryptionKey = builder.encryptionKey;
-        this.deviceSignature = builder.deviceSignature;
-        this.lastSeenAt = builder.lastSeenAt;
-        this.createdAt = builder.createdAt;
+    private Device(
+            DeviceId id, UserId userId,
+            DeviceName name, DeviceType type,
+            IdentityKey identityKey, EncryptionKey encryptionKey, DeviceSignature deviceSignature,
+            Instant lastSeenAt, Instant createdAt
+    ) {
+        this.id = Objects.requireNonNull(id, "id must not be null");
+        this.userId = Objects.requireNonNull(userId, "userId must not be null");
+        this.name = Objects.requireNonNull(name, "name must not be null");
+        this.type = Objects.requireNonNull(type, "type must not be null");
+        this.identityKey = Objects.requireNonNull(identityKey, "identityKey must not be null");
+        this.encryptionKey = Objects.requireNonNull(encryptionKey, "encryptionKey must not be null");
+        this.deviceSignature = Objects.requireNonNull(deviceSignature, "deviceSignature must not be null");
+        this.lastSeenAt = Objects.requireNonNull(lastSeenAt, "lastSeenAt must not be null");
+        this.createdAt = Objects.requireNonNull(createdAt, "createdAt must not be null");
+    }
+
+    public static Device create(
+            DeviceId id, UserId userId,
+            DeviceName name, DeviceType type,
+            IdentityKey identityKey, EncryptionKey encryptionKey, DeviceSignature deviceSignature
+    ) {
+        Instant now = Instant.now();
+        return new Device(id, userId, name, type, identityKey, encryptionKey, deviceSignature, now, now);
+    }
+
+    public static Device of(
+            DeviceId id, UserId userId,
+            DeviceName name, DeviceType type,
+            IdentityKey identityKey, EncryptionKey encryptionKey, DeviceSignature deviceSignature,
+            Instant lastSeenAt, Instant createdAt
+    ) {
+        return new Device(id, userId, name, type, identityKey, encryptionKey, deviceSignature, lastSeenAt, createdAt);
     }
 
     @Override
@@ -82,70 +105,5 @@ public class Device implements ActivityTrackable {
 
     public DeviceId getId() {
         return id;
-    }
-
-    public static Builder builder() {
-        return new Builder();
-    }
-
-    public static class Builder {
-        private DeviceId id;
-        private UserId userId;
-        private DeviceName name;
-        private DeviceType type;
-        private IdentityKey identityKey;
-        private EncryptionKey encryptionKey;
-        private DeviceSignature deviceSignature;
-        private Instant lastSeenAt;
-        private Instant createdAt;
-
-        public Builder id(DeviceId value) {
-            this.id = value;
-            return this;
-        }
-
-        public Builder userId(UserId value) {
-            this.userId = value;
-            return this;
-        }
-
-        public Builder name(DeviceName value) {
-            this.name = value;
-            return this;
-        }
-
-        public Builder type(DeviceType value) {
-            this.type = value;
-            return this;
-        }
-
-        public Builder identityKey(IdentityKey value) {
-            this.identityKey = value;
-            return this;
-        }
-
-        public Builder encryptionKey(EncryptionKey value) {
-            this.encryptionKey = value;
-            return this;
-        }
-
-        public Builder deviceSignature(DeviceSignature value) {
-            this.deviceSignature = value;
-            return this;
-        }
-
-        public Builder lastSeenAt(Instant value) {
-            this.lastSeenAt = value;
-            return this;
-        }
-
-        public Builder createdAt(Instant value) {
-            this.createdAt = value;
-            return this;
-        }
-
-        public Device build() {
-            return new Device(this);
-        }
     }
 }

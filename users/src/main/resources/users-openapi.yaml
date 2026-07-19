@@ -322,18 +322,25 @@ components:
           type: string
         registration_token:
           type: string
-        device_id:
-          type: string
-          format: uuid
-        device_name:
-          type: string
-        device_type:
-          type: string
-          enum: [MOBILE, DESKTOP]
         identity_key:
           type: string
-        encryption_key:
-          type: string
+        device:
+          type: object
+          properties:
+            id:
+              type: string
+              format: uuid
+            name:
+              type: string
+            type:
+              type: string
+              enum: [MOBILE, DESKTOP]
+            identity_key:
+              type: string
+            encryption_key:
+              type: string
+            device_signature:
+              type: string
 
     ChallengeResponse:
       type: object
