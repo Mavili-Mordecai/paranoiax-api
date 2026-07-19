@@ -18,7 +18,7 @@ The primary client application executes a fully localized cryptographic initiali
 **Phase 1: Invitation & Secure Connection**
 
 1. **Invite Generation:** An existing user generates a one-time temporary registration token via their client application.
-2. **QR Code Formation:** The server URL, registration token, and SSL/TLS certificate hash (fingerprint) are embedded into a QR code (or invite link).
+2. **QR Code Formation:** The server URL, registration token, and Subject Public Key Info (spki_pin) are embedded into a QR code (or invite link).
 3. **MITM Protection:** The new client scans the QR code and verifies the certificate hash during the very first connection. This guarantees protection against Man-in-the-Middle (MITM) attacks by ISPs or corporate networks.
 
 **Phase 2: Local Cryptographic Initialization**

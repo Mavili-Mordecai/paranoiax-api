@@ -1,9 +1,10 @@
 package com.paranoiax.users.domain.models;
 
-import java.util.Objects;
+import com.paranoiax.users.domain.Require;
+import com.paranoiax.users.domain.exceptions.DomainErrorCode;
 
 public record EncryptionKey(String value) {
     public EncryptionKey {
-        Objects.requireNonNull(value, "Encryption key cannot be null or blank");
+        Require.notNull(value, DomainErrorCode.MISSING_REQUIRED_FIELD, "Encryption key");
     }
 }

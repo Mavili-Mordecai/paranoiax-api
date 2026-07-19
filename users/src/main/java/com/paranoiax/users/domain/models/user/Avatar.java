@@ -1,5 +1,7 @@
 package com.paranoiax.users.domain.models.user;
 
+import com.paranoiax.users.domain.Require;
+import com.paranoiax.users.domain.exceptions.DomainErrorCode;
 import com.paranoiax.users.domain.models.ImageUrl;
 
 import java.time.Instant;
@@ -12,11 +14,15 @@ public class Avatar {
     private final Instant createdAt;
 
     public Avatar(UserId id, ImageUrl small, ImageUrl medium, ImageUrl large, Instant createdAt) {
-        this.id = id;
+        this.id = Require.notNull(id, DomainErrorCode.MISSING_REQUIRED_FIELD, "Id");
         this.small = small;
         this.medium = medium;
         this.large = large;
-        this.createdAt = createdAt;
+        this.createdAt = Require.notNull(createdAt, DomainErrorCode.MISSING_REQUIRED_FIELD, "Created at");
+    }
+
+    public static Avatar create(UserId id, ImageUrl small, ImageUrl medium, ImageUrl large) {
+        return new Avatar(id, small, medium, large, Instant.now());
     }
 
     public void changeImage(ImageUrl small, ImageUrl medium, ImageUrl large) {

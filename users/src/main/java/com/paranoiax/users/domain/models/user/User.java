@@ -1,12 +1,12 @@
 package com.paranoiax.users.domain.models.user;
 
-import com.paranoiax.users.domain.exceptions.DomainValidationException;
+import com.paranoiax.users.domain.Require;
+import com.paranoiax.users.domain.exceptions.DomainErrorCode;
 import com.paranoiax.users.domain.models.ActivityTrackable;
 import com.paranoiax.users.domain.models.IdentityKey;
 import com.paranoiax.users.domain.models.ImageUrl;
 
 import java.time.Instant;
-import java.util.Objects;
 import java.util.UUID;
 
 public class User implements ActivityTrackable {
@@ -24,13 +24,13 @@ public class User implements ActivityTrackable {
             UserId id, IdentityKey identityKey, Username username, Profile profile, UserId invitedBy, Avatar avatar,
             Instant lastSeenAt, Instant updatedAt, Instant createdAt
     ) {
-        this.id = Objects.requireNonNull(id, "id must not be null");
-        this.identityKey = Objects.requireNonNull(identityKey, "identityKey must not be null");
-        this.username = Objects.requireNonNull(username, "username must not be null");
-        this.invitedBy = Objects.requireNonNull(invitedBy, "invitedBy must not be null");
-        this.createdAt = Objects.requireNonNull(createdAt, "createdAt must not be null");
-        this.updatedAt = Objects.requireNonNull(updatedAt, "updatedAt must not be null");
-        this.lastSeenAt = Objects.requireNonNull(lastSeenAt, "lastSeenAt must not be null");
+        this.id = Require.notNull(id, DomainErrorCode.MISSING_REQUIRED_FIELD, "Id");
+        this.identityKey = Require.notNull(identityKey, DomainErrorCode.MISSING_REQUIRED_FIELD, "Identity key");
+        this.username = Require.notNull(username, DomainErrorCode.MISSING_REQUIRED_FIELD, "Username");
+        this.invitedBy = Require.notNull(invitedBy, DomainErrorCode.MISSING_REQUIRED_FIELD, "Invited by");
+        this.createdAt = Require.notNull(createdAt, DomainErrorCode.MISSING_REQUIRED_FIELD, "Created at");
+        this.updatedAt = Require.notNull(updatedAt, DomainErrorCode.MISSING_REQUIRED_FIELD, "Updated at");
+        this.lastSeenAt = Require.notNull(lastSeenAt, DomainErrorCode.MISSING_REQUIRED_FIELD, "Last seen at");
 
         this.profile = profile;
         this.avatar = avatar;
@@ -59,14 +59,12 @@ public class User implements ActivityTrackable {
     }
 
     public void changeUsername(Username username) {
-        Objects.requireNonNull(username, "Username cannot be null");
-        this.username = username;
+        this.username = Require.notNull(username, DomainErrorCode.MISSING_REQUIRED_FIELD, "username");
         this.updatedAt = Instant.now();
     }
 
     public void changeProfile(Profile profile) {
-        Objects.requireNonNull(profile, "Profile cannot be null");
-        this.profile = profile;
+        this.profile = Require.notNull(profile, DomainErrorCode.MISSING_REQUIRED_FIELD, "profile");
         this.updatedAt = Instant.now();
     }
 
@@ -84,17 +82,13 @@ public class User implements ActivityTrackable {
 
     @Override
     public void recordActivity(Instant activityTime) {
-        Objects.requireNonNull(activityTime, "Activity time cannot be null");
+        Require.notNull(activityTime, DomainErrorCode.MISSING_REQUIRED_FIELD, "activityTime");
 
         if (this.lastSeenAt != null && activityTime.isBefore(this.lastSeenAt)) {
             return;
         }
 
-        if (activityTime.isBefore(this.createdAt)) {
-            throw new DomainValidationException("Activity time cannot be before creation time");
-        }
-
-        this.lastSeenAt = activityTime;
+        this.lastSeenAt = Require.after(activityTime, "activityTime", this.createdAt, "createdAt");
     }
 
     @Override

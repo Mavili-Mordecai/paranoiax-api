@@ -1,13 +1,13 @@
 package com.paranoiax.users.domain.models.device;
 
-import com.paranoiax.users.domain.exceptions.DomainValidationException;
+import com.paranoiax.users.domain.Require;
+import com.paranoiax.users.domain.exceptions.DomainErrorCode;
 import com.paranoiax.users.domain.models.ActivityTrackable;
 import com.paranoiax.users.domain.models.EncryptionKey;
 import com.paranoiax.users.domain.models.IdentityKey;
 import com.paranoiax.users.domain.models.user.UserId;
 
 import java.time.Instant;
-import java.util.Objects;
 
 public class Device implements ActivityTrackable {
     private final DeviceId id;
@@ -26,15 +26,15 @@ public class Device implements ActivityTrackable {
             IdentityKey identityKey, EncryptionKey encryptionKey, DeviceSignature deviceSignature,
             Instant lastSeenAt, Instant createdAt
     ) {
-        this.id = Objects.requireNonNull(id, "id must not be null");
-        this.userId = Objects.requireNonNull(userId, "userId must not be null");
-        this.name = Objects.requireNonNull(name, "name must not be null");
-        this.type = Objects.requireNonNull(type, "type must not be null");
-        this.identityKey = Objects.requireNonNull(identityKey, "identityKey must not be null");
-        this.encryptionKey = Objects.requireNonNull(encryptionKey, "encryptionKey must not be null");
-        this.deviceSignature = Objects.requireNonNull(deviceSignature, "deviceSignature must not be null");
-        this.lastSeenAt = Objects.requireNonNull(lastSeenAt, "lastSeenAt must not be null");
-        this.createdAt = Objects.requireNonNull(createdAt, "createdAt must not be null");
+        this.id = Require.notNull(id, DomainErrorCode.MISSING_REQUIRED_FIELD, "Id");
+        this.userId = Require.notNull(userId, DomainErrorCode.MISSING_REQUIRED_FIELD, "User id");
+        this.name = Require.notNull(name, DomainErrorCode.MISSING_REQUIRED_FIELD, "Name");
+        this.type = Require.notNull(type, DomainErrorCode.MISSING_REQUIRED_FIELD, "Type");
+        this.identityKey = Require.notNull(identityKey, DomainErrorCode.MISSING_REQUIRED_FIELD, "Identity key");
+        this.encryptionKey = Require.notNull(encryptionKey, DomainErrorCode.MISSING_REQUIRED_FIELD, "Encryption key");
+        this.deviceSignature = Require.notNull(deviceSignature, DomainErrorCode.MISSING_REQUIRED_FIELD, "Device signature");
+        this.lastSeenAt = Require.notNull(lastSeenAt, DomainErrorCode.MISSING_REQUIRED_FIELD, "Last seen at");
+        this.createdAt = Require.notNull(createdAt, DomainErrorCode.MISSING_REQUIRED_FIELD, "Created at");
     }
 
     public static Device create(
@@ -57,17 +57,13 @@ public class Device implements ActivityTrackable {
 
     @Override
     public void recordActivity(Instant activityTime) {
-        Objects.requireNonNull(activityTime, "Activity time cannot be null");
+        Require.notNull(activityTime, DomainErrorCode.MISSING_REQUIRED_FIELD, "Activity time");
 
         if (this.lastSeenAt != null && activityTime.isBefore(this.lastSeenAt)) {
             return;
         }
 
-        if (activityTime.isBefore(this.createdAt)) {
-            throw new DomainValidationException("Activity time cannot be before creation time");
-        }
-
-        this.lastSeenAt = activityTime;
+        this.lastSeenAt = Require.after(activityTime, "activityTime", this.createdAt, "createdAt");
     }
 
     @Override

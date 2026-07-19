@@ -90,7 +90,7 @@ paths:
     post:
       tags: [Authentication & Onboarding]
       summary: Authenticate via challenge signature
-      description: Verifies client identity via cryptographic signature to issue a JWT session token without transmitting passwords.
+      description: Verifies client identity via cryptographic signature to issue a JWT session token.
       parameters:
         - $ref: '#/components/parameters/IdempotencyKeyRequired'
         - $ref: '#/components/parameters/DeviceIdRequired'
@@ -312,7 +312,7 @@ components:
           type: string
         registration_token:
           type: string
-        fingerprint:
+        spki_pin:
           type: string
 
     RegisterUserRequest:

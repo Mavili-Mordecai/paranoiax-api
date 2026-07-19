@@ -1,10 +1,12 @@
 package com.paranoiax.users.domain.models.device;
 
-import java.util.Objects;
+import com.paranoiax.users.domain.Require;
+import com.paranoiax.users.domain.exceptions.DomainErrorCode;
+
 import java.util.UUID;
 
 public record DeviceId(UUID value) {
     public DeviceId {
-        Objects.requireNonNull(value, "Id cannot be null");
+        Require.notNull(value, DomainErrorCode.EMPTY_VALUE_NOT_ALLOWED, "deviceId");
     }
 }
