@@ -64,9 +64,9 @@ To maintain Perfect Forward Secrecy and ensure a compromised device does not exp
 
 1. **Key Generation:** The new device generates its own independent Ed25519 and X25519 key pairs.
 2. **Cross-Signing (Offline):** The primary device scans the new device's keys and signs them using its Master Private Key, generating a `device_signature`.
-3. **State Encryption:** The primary device encrypts the local database of symmetric AES chat keys using a randomly generated one-time `transfer_key`.
+3. **State Encryption:** The primary device encrypts the local database of symmetric chat keys using a randomly generated one-time `transfer_key`.
 4. **Server Upload:** The encrypted Blob is uploaded to the server. The server acts as a "dumb pipe" and cannot decrypt it.
-5. **Optical Transmission (Offline):** The primary device displays a QR code containing the `link_token`, the `device_signature`, and the `transfer_key`. The AES key never touches the network.
+5. **Optical Transmission (Offline):** The primary device displays a QR code containing the `link_token`, the `device_signature`, and the `transfer_key`. The symmetric key never touches the network.
 6. **Atomic Registration (2-Phase Commit):** The new device fetches the Blob, decrypts it locally, and submits its keys and signature to the server. The server verifies the token, registers the device, and strictly then deletes the transit Blob.
 
 ### Sequence Diagram

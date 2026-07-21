@@ -9,4 +9,8 @@ public record UserId(UUID value) {
     public UserId {
         Require.notNull(value, DomainErrorCode.EMPTY_VALUE_NOT_ALLOWED, "id");
     }
+
+    public static UserId create() {
+        return new UserId(UUID.randomUUID());
+    }
 }

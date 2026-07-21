@@ -1,9 +1,9 @@
 --liquibase formatted sql
 
 --changeset mavili:002-create-users-avatars
-CREATE TABLE users_avatars
+CREATE TABLE users.users_avatars
 (
-    id         UUID PRIMARY KEY REFERENCES users (id) ON DELETE CASCADE ON UPDATE CASCADE,
+    id         UUID PRIMARY KEY REFERENCES users.users (id) ON DELETE CASCADE ON UPDATE CASCADE,
     small      TEXT        NOT NULL,
     medium     TEXT        NOT NULL,
     large      TEXT        NOT NULL,

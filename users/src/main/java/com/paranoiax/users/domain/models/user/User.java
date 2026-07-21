@@ -7,7 +7,6 @@ import com.paranoiax.users.domain.models.IdentityKey;
 import com.paranoiax.users.domain.models.ImageUrl;
 
 import java.time.Instant;
-import java.util.UUID;
 
 public class User implements ActivityTrackable {
     private final UserId id;
@@ -39,7 +38,7 @@ public class User implements ActivityTrackable {
     public static User create(Username username, UserId invitedBy, IdentityKey identityKey) {
         Instant now = Instant.now();
         return new User(
-                new UserId(UUID.randomUUID()),
+                UserId.create(),
                 identityKey,
                 username,
                 null,

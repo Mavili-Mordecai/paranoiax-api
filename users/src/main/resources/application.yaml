@@ -25,6 +25,9 @@ spring:
   application:
     name: users
 
+  liquibase:
+    default-schema: users
+
   jpa:
     open-in-view: false
     hibernate:
