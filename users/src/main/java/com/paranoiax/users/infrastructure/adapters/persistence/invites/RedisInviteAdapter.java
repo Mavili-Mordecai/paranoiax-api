@@ -4,12 +4,12 @@ import com.paranoiax.users.application.ports.out.InvitePort;
 import com.paranoiax.users.domain.models.invite.Invite;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.redis.core.RedisTemplate;
-import org.springframework.stereotype.Service;
+import org.springframework.stereotype.Component;
 
 import java.time.Duration;
 import java.util.Optional;
 
-@Service
+@Component
 @RequiredArgsConstructor
 public class RedisInviteAdapter implements InvitePort {
     private final RedisTemplate<String, Object> redisTemplate;
@@ -23,7 +23,7 @@ public class RedisInviteAdapter implements InvitePort {
     @Override
     public Invite save(Invite invite, Duration ttl) {
         String key = getInviteKey(invite.getRegistrationToken().value());
-        Boolean saved = redisTemplate.opsForValue().setIfAbsent(key, mapper.toDto(invite), ttl);
+        Boolean saved = redisTemplate.opsForValue().setIfAbsent(key, mapper.toEntity(invite), ttl);
         return Boolean.TRUE.equals(saved) ? invite : null;
     }
 

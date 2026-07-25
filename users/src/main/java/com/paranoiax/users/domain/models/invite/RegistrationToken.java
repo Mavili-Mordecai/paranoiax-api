@@ -5,6 +5,6 @@ import com.paranoiax.users.domain.exceptions.DomainErrorCode;
 
 public record RegistrationToken(String value) {
     public RegistrationToken {
-        Require.notNull(value, DomainErrorCode.EMPTY_VALUE_NOT_ALLOWED, "registrationToken");
+        Require.notNull(value, DomainErrorCode.EMPTY_VALUE_NOT_ALLOWED, "inviteToken");
     }
 }

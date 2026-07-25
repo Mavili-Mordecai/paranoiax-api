@@ -2,9 +2,8 @@ package com.paranoiax.users.infrastructure.rest.api.auth.v1;
 
 import com.paranoiax.users.application.ports.in.auth.invite.InviteUserCommand;
 import com.paranoiax.users.application.ports.in.auth.invite.InviteUserUseCase;
+import com.paranoiax.users.application.ports.in.auth.register.RegisterUserUseCase;
 import com.paranoiax.users.domain.models.invite.Invite;
-import com.paranoiax.users.domain.models.user.UserId;
-import jakarta.servlet.http.HttpServletRequest;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -16,28 +15,26 @@ import org.springframework.web.bind.annotation.*;
 import java.util.UUID;
 
 @Slf4j
+@RequiredArgsConstructor
 @RestController
 @RequestMapping("/v1/users")
 public class AuthController {
-
     private final InviteUserUseCase inviteUserUseCase;
-    private final String publicHost;
-    private final String spkiPin;
+    private final RegisterUserUseCase registerUserUseCase;
 
-    public AuthController(
-            InviteUserUseCase inviteUserUseCase,
-            @Value("${application.public-host}") String publicHost,
-            @Value("${application.spki-pin}") String spkiPin
-    ) {
-        this.inviteUserUseCase = inviteUserUseCase;
-        this.publicHost = publicHost;
-        this.spkiPin = spkiPin;
-    }
+    @Value("${application.public-host}")
+    private String publicHost;
+
+    @Value("${application.spki-pin}")
+    private String spkiPin;
 
     @PostMapping("/invite")
-    public ResponseEntity<InviteResponse> invite(@RequestHeader("Idempotency-Key") String idempotencyKey) {
+    public ResponseEntity<InviteResponse> invite(
+            @RequestHeader("Idempotency-Key") String idempotencyKey
+    ) {
         Invite invite = inviteUserUseCase.execute(InviteUserCommand.of(
-                new UserId(UUID.randomUUID()),
+                // TODO: Test implementation. Replace it with getting the UserId from the security context.
+                UUID.randomUUID(),
                 idempotencyKey
         ));
         return ResponseEntity.ok(InviteResponse.of(
@@ -53,7 +50,7 @@ public class AuthController {
             @RequestHeader("Idempotency-Key") String idempotencyKey,
             @Valid @RequestBody RegisterRequest request
     ) {
-        log.info("Registering user with idempotency key {}, {}", idempotencyKey, request.toString());
+        registerUserUseCase.execute(request.toCommand(idempotencyKey));
     }
 
     @PostMapping("/auth/challenge")

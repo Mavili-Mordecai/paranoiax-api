@@ -71,7 +71,7 @@ public class User implements ActivityTrackable {
         Instant now = Instant.now();
 
         if (this.avatar == null) {
-            this.avatar = new Avatar(this.id, small, medium, large, now);
+            this.avatar = new Avatar(small, medium, large, now);
         } else {
             this.avatar.changeImage(small, medium, large);
         }

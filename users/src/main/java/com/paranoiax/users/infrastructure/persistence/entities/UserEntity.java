@@ -37,9 +37,8 @@ public class UserEntity implements Persistable<UUID> {
     @Column(length = 128)
     private String bio;
 
-    @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "invited_by_id")
-    private UserEntity invitedBy;
+    @Column(name = "invited_by_id", nullable = false)
+    private UUID invitedById;
 
     @Column(nullable = false)
     private Instant lastSeenAt;
@@ -54,10 +53,7 @@ public class UserEntity implements Persistable<UUID> {
 
     @OneToOne(cascade = CascadeType.ALL, fetch = FetchType.LAZY)
     @PrimaryKeyJoinColumn
-    private UserAvatarEntity avatar;
-
-    @OneToMany(mappedBy = "user", cascade = CascadeType.ALL, orphanRemoval = true, fetch = FetchType.LAZY)
-    private List<UserDeviceEntity> devices;
+    private AvatarEntity avatar;
 
     @Transient
     @Builder.Default

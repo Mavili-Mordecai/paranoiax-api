@@ -2,11 +2,10 @@ package com.paranoiax.users.domain.models;
 
 import com.paranoiax.users.domain.Require;
 import com.paranoiax.users.domain.exceptions.DomainErrorCode;
-import com.paranoiax.users.domain.exceptions.DomainException;
+import com.paranoiax.users.domain.exceptions.InvalidFormatException;
 
 import java.net.URI;
 import java.net.URISyntaxException;
-import java.util.Map;
 
 public record ImageUrl(String value) {
     private static final String[] ALLOWED_EXTENSIONS = {".jpg", ".jpeg", ".png", ".webp"};
@@ -19,18 +18,10 @@ public record ImageUrl(String value) {
 
             String path = uri.getPath();
             if (path == null || !hasValidExtension(path)) {
-                throw new DomainException(
-                        DomainErrorCode.INVALID_FORMAT,
-                        Map.of("field", "imageUrl"),
-                        String.format(DomainErrorCode.INVALID_FORMAT.getDefaultMessage(), value)
-                );
+                throw new InvalidFormatException("imageUrl");
             }
         } catch (URISyntaxException e) {
-            throw new DomainException(
-                    DomainErrorCode.INVALID_FORMAT,
-                    Map.of("field", "imageUrl"),
-                    String.format(DomainErrorCode.INVALID_FORMAT.getDefaultMessage(), value)
-            );
+            throw new InvalidFormatException("imageUrl");
         }
     }
 

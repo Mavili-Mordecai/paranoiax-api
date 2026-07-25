@@ -15,7 +15,7 @@ import java.util.UUID;
 @AllArgsConstructor
 @Entity
 @Table(name = "users_avatars", schema = "users")
-public class UserAvatarEntity implements Persistable<UUID> {
+public class AvatarEntity implements Persistable<UUID> {
 
     @Id
     private UUID id;

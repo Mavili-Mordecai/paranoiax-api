@@ -25,6 +25,10 @@ public class Invite {
         return new Invite(userId, registrationToken, now, now.plus(ttl));
     }
 
+    public boolean isExpired() {
+        return Instant.now().isAfter(expiresAt);
+    }
+
     public Instant getExpiresAt() {
         return expiresAt;
     }

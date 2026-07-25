@@ -2,8 +2,6 @@
 
 This service is responsible for user lifecycle management, strict authentication, device fleet management, and public key distribution.
 
-Here is the consolidated and structured section for your `README.md`. I have merged the overlapping concepts (like initialization and challenge-response) into a single, cohesive chronological flow, maintaining the professional technical tone and keeping the sequence diagram intact.
-
 ---
 
 ## 1. Onboarding: Invite-Only Registration & Passwordless Authentication
@@ -27,7 +25,7 @@ The primary client application executes a fully localized cryptographic initiali
    - `Master_Identity_Key` (Ed25519): Used exclusively as the root of trust to cross-sign future devices.
    - `Device_Identity_Key` (Ed25519): Used for API authentication (Challenge-Response) and digital signatures.
    - `Device_Encryption_Key` (X25519): Used for ECIES-based key distribution of E2EE chat keys. *(Secondary devices generate only the latter two).*
-2. **Device Identification:** A unique, unpredictable `device_id` is generated via CSPRNG (UUIDv4 format) to securely identify this specific hardware instance and prevent ID enumeration.
+2. **Device Identification:** A unique `device_id` is generated via CSPRNG (UUIDv4 format) to securely identify this specific hardware instance and prevent ID enumeration.
 3. **Hardware Isolation:** The private keys are immediately stored in the OS hardware-backed secure enclave (Keystore on Android / Keychain on iOS/macOS) and **never leave the device** under any circumstances.
 
 **Phase 3: Profile Registration**

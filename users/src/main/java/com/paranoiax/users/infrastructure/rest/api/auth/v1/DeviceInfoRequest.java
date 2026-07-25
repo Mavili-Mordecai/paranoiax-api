@@ -9,7 +9,7 @@ import tools.jackson.databind.annotation.JsonNaming;
 import java.util.UUID;
 
 @JsonNaming(PropertyNamingStrategies.SnakeCaseStrategy.class)
-public record DeviceRequest(
+public record DeviceInfoRequest(
         @NotNull(message = "FIELD_REQUIRED") UUID id,
         @NotBlank(message = "FIELD_REQUIRED") String name,
         @NotNull(message = "FIELD_REQUIRED")

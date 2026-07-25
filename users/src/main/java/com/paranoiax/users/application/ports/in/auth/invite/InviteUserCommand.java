@@ -1,12 +1,12 @@
 package com.paranoiax.users.application.ports.in.auth.invite;
 
-import com.paranoiax.users.domain.models.user.UserId;
+import java.util.UUID;
 
 public record InviteUserCommand(
-        UserId userId,
+        UUID userId,
         String operationId
 ) {
-    public static InviteUserCommand of(UserId userId, String operationId) {
+    public static InviteUserCommand of(UUID userId, String operationId) {
         return new InviteUserCommand(userId, operationId);
     }
 }

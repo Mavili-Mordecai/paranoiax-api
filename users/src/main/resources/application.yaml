@@ -61,5 +61,8 @@ application:
   public-host: ${APP_PUBLIC_HOST:8080}
   spki-pin: ${APP_SPKI_PIN:sha256/AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA=}
   invite:
-    lock-ttl: 5
-    token-ttl: 900
+    lock-ttl: 5s
+    result-ttl: 900s
+  register:
+    lock-ttl: 30s
+    result-ttl: 1d

@@ -12,12 +12,12 @@ public class RedisInviteMapper implements OperationResultsMapper<Invite, RedisIn
     }
 
     @Override
-    public Class<RedisInviteDto> getDtoClass() {
+    public Class<RedisInviteDto> getEntityClass() {
         return RedisInviteDto.class;
     }
 
     @Override
-    public RedisInviteDto toDto(Invite invite) {
+    public RedisInviteDto toEntity(Invite invite) {
         return new RedisInviteDto(
                 invite.getUserId(),
                 invite.getRegistrationToken(),

@@ -42,6 +42,11 @@ public class RedisOperationResultAdapter implements OperationResultPort {
     }
 
     @Override
+    public boolean unlock(String operationId) {
+        return Boolean.TRUE.equals(redisTemplate.delete(getLockKey(operationId)));
+    }
+
+    @Override
     @SuppressWarnings("unchecked")
     public <T> Optional<T> findResult(String operationId, Class<T> clazz) {
         OperationResultsMapper<T, Object> mapper = (OperationResultsMapper<T, Object>) getMapperOrThrow(clazz);
@@ -52,7 +57,7 @@ public class RedisOperationResultAdapter implements OperationResultPort {
         }
 
         try {
-            Object result = objectMapper.readValue(json, mapper.getDtoClass());
+            Object result = objectMapper.readValue(json, mapper.getEntityClass());
             return Optional.of(mapper.toDomain(result));
         } catch (JsonProcessingException e) {
             throw new InfrastructureException("Failed to read operation result from Redis", e);
@@ -65,7 +70,7 @@ public class RedisOperationResultAdapter implements OperationResultPort {
         OperationResultsMapper<T, Object> mapper = (OperationResultsMapper<T, Object>) getMapperOrThrow(result.getClass());
 
         try {
-            Object dto = mapper.toDto(result);
+            Object dto = mapper.toEntity(result);
             String json = objectMapper.writeValueAsString(dto);
             redisTemplate.opsForValue().set(getOperationKey(operationId), json, ttl);
         } catch (JsonProcessingException ex) {

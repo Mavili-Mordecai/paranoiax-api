@@ -1,9 +1,9 @@
 package com.paranoiax.users.infrastructure.common;
 
-public interface OperationResultsMapper<DOMAIN, DTO> {
+public interface OperationResultsMapper<DOMAIN, ENTITY> {
     Class<DOMAIN> getDomainClass();
-    Class<DTO> getDtoClass();
+    Class<ENTITY> getEntityClass();
 
-    DTO toDto(DOMAIN domain);
-    DOMAIN toDomain(DTO dto);
+    ENTITY toEntity(DOMAIN domain);
+    DOMAIN toDomain(ENTITY entity);
 }
