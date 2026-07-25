@@ -1,9 +1,11 @@
 package com.paranoiax.users.infrastructure.config.application;
 
+import com.paranoiax.users.application.ports.in.auth.createChallenge.CreateChallengeUseCase;
 import com.paranoiax.users.application.ports.in.auth.invite.InviteUserUseCase;
 import com.paranoiax.users.application.ports.in.auth.register.RegisterUserUseCase;
 import com.paranoiax.users.application.ports.out.*;
 import com.paranoiax.users.application.services.OperationExecutor;
+import com.paranoiax.users.application.services.auth.CreateChallengeService;
 import com.paranoiax.users.application.services.auth.InviteUserService;
 import com.paranoiax.users.application.services.auth.RegisterUserService;
 import org.springframework.beans.factory.annotation.Value;
@@ -36,5 +38,16 @@ public class AuthConfig {
             @Value("${application.register.result-ttl}") Duration resultTtl
     ) {
         return new RegisterUserService(userPort, devicePort, invitePort, executor, lockTtl, resultTtl);
+    }
+
+    @Bean
+    public CreateChallengeUseCase createChallengeUseCase(
+            ChallengePort challengePort,
+            TokenGenerator tokenGenerator,
+            OperationExecutor executor,
+            @Value("${application.challenge.lock-ttl}") Duration lockTtl,
+            @Value("${application.challenge.result-ttl}") Duration resultTll
+    ) {
+        return new CreateChallengeService(challengePort, tokenGenerator, executor, lockTtl, resultTll);
     }
 }

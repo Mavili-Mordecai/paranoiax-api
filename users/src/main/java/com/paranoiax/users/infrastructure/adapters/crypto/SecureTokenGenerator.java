@@ -13,10 +13,9 @@ public class SecureTokenGenerator implements TokenGenerator {
     private static final Base64.Encoder base64Encoder = Base64.getUrlEncoder().withoutPadding();
 
     @Override
-    public RegistrationToken generate() {
-        byte[] tokenBytes = new byte[32];
+    public String generate(int size) {
+        byte[] tokenBytes = new byte[size];
         secureRandom.nextBytes(tokenBytes);
-        String token = base64Encoder.encodeToString(tokenBytes);
-        return new RegistrationToken(token);
+        return base64Encoder.encodeToString(tokenBytes);
     }
 }

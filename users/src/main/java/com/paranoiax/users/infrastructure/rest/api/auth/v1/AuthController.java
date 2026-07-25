@@ -1,8 +1,11 @@
 package com.paranoiax.users.infrastructure.rest.api.auth.v1;
 
+import com.paranoiax.users.application.ports.in.auth.createChallenge.CreateChallengeCommand;
+import com.paranoiax.users.application.ports.in.auth.createChallenge.CreateChallengeUseCase;
 import com.paranoiax.users.application.ports.in.auth.invite.InviteUserCommand;
 import com.paranoiax.users.application.ports.in.auth.invite.InviteUserUseCase;
 import com.paranoiax.users.application.ports.in.auth.register.RegisterUserUseCase;
+import com.paranoiax.users.domain.models.challenge.Challenge;
 import com.paranoiax.users.domain.models.invite.Invite;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
@@ -21,6 +24,7 @@ import java.util.UUID;
 public class AuthController {
     private final InviteUserUseCase inviteUserUseCase;
     private final RegisterUserUseCase registerUserUseCase;
+    private final CreateChallengeUseCase createChallengeUseCase;
 
     @Value("${application.public-host}")
     private String publicHost;
@@ -56,15 +60,16 @@ public class AuthController {
     @PostMapping("/auth/challenge")
     public ResponseEntity<ChallengeResponse> challenge(
             @RequestHeader("Idempotency-Key") String idempotencyKey,
-            @RequestHeader("Device-Id") String deviceId
+            @RequestHeader("Device-Id") UUID deviceId
     ) {
-        return ResponseEntity.ok(new ChallengeResponse(UUID.randomUUID().toString(), 60L * 1000));
+        Challenge challenge = createChallengeUseCase.execute(new CreateChallengeCommand(deviceId, idempotencyKey));
+        return ResponseEntity.ok(ChallengeResponse.from(challenge));
     }
 
     @PostMapping("/auth")
     public ResponseEntity<TokensResponse> authenticate(
             @RequestHeader("Idempotency-Key") String idempotencyKey,
-            @RequestHeader("Device-Id") String deviceId,
+            @RequestHeader("Device-Id") UUID deviceId,
             @Valid @RequestBody AuthRequest request
     ) {
         return ResponseEntity.ok(new TokensResponse("test-token", "test-token"));
@@ -73,7 +78,7 @@ public class AuthController {
     @PostMapping("/auth/refresh")
     public ResponseEntity<TokensResponse> refresh(
             @RequestHeader("Idempotency-Key") String idempotencyKey,
-            @RequestHeader("Device-Id") String deviceId,
+            @RequestHeader("Device-Id") UUID deviceId,
             @Valid @RequestBody RefreshRequest request
     ) {
         return ResponseEntity.ok(new TokensResponse("test-token", "test-token"));

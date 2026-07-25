@@ -87,7 +87,7 @@ class InviteUserServiceTest {
     void createsAndPersistsFreshInvite() {
         when(operationResultPort.findResult(OPERATION_ID, Invite.class)).thenReturn(Optional.empty());
         when(operationResultPort.tryLock(OPERATION_ID, LOCK_TTL)).thenReturn(true);
-        when(tokenGenerator.generate()).thenReturn(new RegistrationToken("generated-token"));
+        when(tokenGenerator.generate(32)).thenReturn("generated-token");
         Invite persisted = Invite.create(userId, new RegistrationToken("generated-token"), TOKEN_TTL);
         when(invitePort.save(any(Invite.class), eq(TOKEN_TTL))).thenReturn(persisted);
 
@@ -108,7 +108,7 @@ class InviteUserServiceTest {
     void acquiresLockWithConfiguredTtl() {
         when(operationResultPort.findResult(OPERATION_ID, Invite.class)).thenReturn(Optional.empty());
         when(operationResultPort.tryLock(any(), any())).thenReturn(true);
-        when(tokenGenerator.generate()).thenReturn(new RegistrationToken("token"));
+        when(tokenGenerator.generate(32)).thenReturn("token");
         when(invitePort.save(any(Invite.class), any())).thenAnswer(invocation -> invocation.getArgument(0));
 
         service.execute(command);

@@ -62,7 +62,10 @@ application:
   spki-pin: ${APP_SPKI_PIN:sha256/AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA=}
   invite:
     lock-ttl: 5s
-    result-ttl: 900s
+    result-ttl: 15m
   register:
     lock-ttl: 30s
     result-ttl: 1d
+  challenge:
+    lock-ttl: 5s
+    result-ttl: 1m

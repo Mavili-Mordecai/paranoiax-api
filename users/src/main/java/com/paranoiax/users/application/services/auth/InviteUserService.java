@@ -6,6 +6,7 @@ import com.paranoiax.users.application.ports.out.InvitePort;
 import com.paranoiax.users.application.ports.out.TokenGenerator;
 import com.paranoiax.users.application.services.OperationExecutor;
 import com.paranoiax.users.domain.models.invite.Invite;
+import com.paranoiax.users.domain.models.invite.RegistrationToken;
 import com.paranoiax.users.domain.models.user.UserId;
 
 import java.time.Duration;
@@ -16,6 +17,7 @@ public class InviteUserService implements InviteUserUseCase {
     private final OperationExecutor executor;
     private final Duration lockTtl;
     private final Duration resultTtl;
+    private final int tokenSize = 32;
 
     public InviteUserService(
             InvitePort invitePort,
@@ -34,7 +36,11 @@ public class InviteUserService implements InviteUserUseCase {
     @Override
     public Invite execute(InviteUserCommand command) {
         return executor.execute(command.operationId(), Invite.class, lockTtl, resultTtl, () -> {
-            Invite invite = Invite.create(new UserId(command.userId()), tokenGenerator.generate(), resultTtl);
+            Invite invite = Invite.create(
+                    new UserId(command.userId()),
+                    new RegistrationToken(tokenGenerator.generate(tokenSize)),
+                    resultTtl
+            );
             return invitePort.save(invite, resultTtl);
         });
     }
