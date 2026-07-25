@@ -12,6 +12,7 @@ public class User implements ActivityTrackable {
     private final UserId id;
     private final IdentityKey identityKey;
     private Username username;
+    private final UserType type;
     private Profile profile;
     private final UserId invitedBy;
     private Avatar avatar;
@@ -20,12 +21,15 @@ public class User implements ActivityTrackable {
     private final Instant createdAt;
 
     private User(
-            UserId id, IdentityKey identityKey, Username username, Profile profile, UserId invitedBy, Avatar avatar,
+            UserId id, IdentityKey identityKey,
+            Username username, UserType type,
+            Profile profile, UserId invitedBy, Avatar avatar,
             Instant lastSeenAt, Instant updatedAt, Instant createdAt
     ) {
         this.id = Require.notNull(id, DomainErrorCode.MISSING_REQUIRED_FIELD, "Id");
         this.identityKey = Require.notNull(identityKey, DomainErrorCode.MISSING_REQUIRED_FIELD, "Identity key");
         this.username = Require.notNull(username, DomainErrorCode.MISSING_REQUIRED_FIELD, "Username");
+        this.type = Require.notNull(type, DomainErrorCode.MISSING_REQUIRED_FIELD, "User type");
         this.invitedBy = Require.notNull(invitedBy, DomainErrorCode.MISSING_REQUIRED_FIELD, "Invited by");
         this.createdAt = Require.notNull(createdAt, DomainErrorCode.MISSING_REQUIRED_FIELD, "Created at");
         this.updatedAt = Require.notNull(updatedAt, DomainErrorCode.MISSING_REQUIRED_FIELD, "Updated at");
@@ -35,12 +39,13 @@ public class User implements ActivityTrackable {
         this.avatar = avatar;
     }
 
-    public static User create(Username username, UserId invitedBy, IdentityKey identityKey) {
+    public static User create(Username username, UserType type, UserId invitedBy, IdentityKey identityKey) {
         Instant now = Instant.now();
         return new User(
                 UserId.create(),
                 identityKey,
                 username,
+                type,
                 null,
                 invitedBy,
                 null,
@@ -51,10 +56,12 @@ public class User implements ActivityTrackable {
     }
 
     public static User of(
-            UserId id, IdentityKey identityKey, Username username, Profile profile, UserId invitedBy, Avatar avatar,
+            UserId id, IdentityKey identityKey,
+            Username username, UserType type,
+            Profile profile, UserId invitedBy, Avatar avatar,
             Instant lastSeenAt, Instant updatedAt, Instant createdAt
     ) {
-        return new User(id, identityKey, username, profile, invitedBy, avatar, lastSeenAt, updatedAt, createdAt);
+        return new User(id, identityKey, username, type, profile, invitedBy, avatar, lastSeenAt, updatedAt, createdAt);
     }
 
     public void changeUsername(Username username) {
@@ -125,5 +132,9 @@ public class User implements ActivityTrackable {
 
     public UserId getId() {
         return id;
+    }
+
+    public UserType getType() {
+        return type;
     }
 }

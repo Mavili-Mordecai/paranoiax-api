@@ -11,6 +11,7 @@ import com.paranoiax.users.domain.models.IdentityKey;
 import com.paranoiax.users.domain.models.device.*;
 import com.paranoiax.users.domain.models.invite.Invite;
 import com.paranoiax.users.domain.models.user.User;
+import com.paranoiax.users.domain.models.user.UserType;
 import com.paranoiax.users.domain.models.user.Username;
 
 import java.time.Duration;
@@ -50,6 +51,7 @@ public class RegisterUserService implements RegisterUserUseCase {
 
             User createdUser = userPort.insert(User.create(
                     new Username(command.username()),
+                    UserType.USER,
                     invite.getUserId(),
                     new IdentityKey(command.identityKey())
             ));

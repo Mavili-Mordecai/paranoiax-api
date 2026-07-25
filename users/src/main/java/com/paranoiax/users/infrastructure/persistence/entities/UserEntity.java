@@ -1,5 +1,6 @@
 package com.paranoiax.users.infrastructure.persistence.entities;
 
+import com.paranoiax.users.domain.models.user.UserType;
 import jakarta.persistence.*;
 import lombok.*;
 import org.hibernate.annotations.CreationTimestamp;
@@ -27,6 +28,10 @@ public class UserEntity implements Persistable<UUID> {
 
     @Column(nullable = false, length = 32, unique = true)
     private String username;
+
+    @Column(nullable = false, length = 4)
+    @Enumerated(EnumType.STRING)
+    private UserType type;
 
     @Column(length = 64)
     private String firstName;

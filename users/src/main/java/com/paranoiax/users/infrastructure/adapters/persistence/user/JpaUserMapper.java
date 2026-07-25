@@ -29,6 +29,7 @@ public class JpaUserMapper implements OperationResultsMapper<User, UserEntity> {
                 .id(user.getId().value())
                 .identityKey(user.getIdentityKey().value())
                 .username(user.getUsername().value())
+                .type(user.getType())
                 .firstName(profile != null ? profile.firstName() : null)
                 .lastName(profile != null ? profile.lastName() : null)
                 .bio(profile != null ? profile.bio() : null)
@@ -46,6 +47,7 @@ public class JpaUserMapper implements OperationResultsMapper<User, UserEntity> {
                 new UserId(entity.getId()),
                 new IdentityKey(entity.getIdentityKey()),
                 new Username(entity.getUsername()),
+                entity.getType(),
                 toDomainProfile(entity),
                 new UserId(entity.getInvitedById()),
                 toDomainAvatar(entity.getAvatar()),
