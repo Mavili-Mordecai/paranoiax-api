@@ -10,6 +10,7 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Component;
 
 import java.util.List;
+import java.util.Optional;
 
 @Component
 @RequiredArgsConstructor
@@ -27,6 +28,11 @@ public class JpaDeviceAdapter implements DevicePort {
         DeviceEntity entity = mapper.toEntity(device);
         entity.setNew(false);
         return mapper.toDomain(repository.save(entity));
+    }
+
+    @Override
+    public Optional<Device> findById(DeviceId deviceId) {
+        return repository.findById(deviceId.value()).map(mapper::toDomain);
     }
 
     @Override

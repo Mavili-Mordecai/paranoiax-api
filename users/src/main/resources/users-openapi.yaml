@@ -310,7 +310,7 @@ components:
       properties:
         host:
           type: string
-        registration_token:
+        invite_token:
           type: string
         spki_pin:
           type: string
@@ -320,7 +320,7 @@ components:
       properties:
         username:
           type: string
-        registration_token:
+        invite_token:
           type: string
         identity_key:
           type: string
@@ -354,6 +354,8 @@ components:
       type: object
       properties:
         signature:
+          type: string
+        challenge:
           type: string
 
     TokenPairResponse:

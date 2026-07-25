@@ -1,10 +1,7 @@
 package com.paranoiax.users.application.services.auth;
 
 import com.paranoiax.users.application.ports.in.auth.invite.InviteUserCommand;
-import com.paranoiax.users.application.ports.out.InvitePort;
-import com.paranoiax.users.application.ports.out.OperationResultPort;
-import com.paranoiax.users.application.ports.out.TokenGenerator;
-import com.paranoiax.users.application.ports.out.TransactionPort;
+import com.paranoiax.users.application.ports.out.*;
 import com.paranoiax.users.application.services.OperationExecutor;
 import com.paranoiax.users.domain.exceptions.DomainErrorCode;
 import com.paranoiax.users.domain.exceptions.DomainException;
@@ -46,6 +43,8 @@ class InviteUserServiceTest {
     private TokenGenerator tokenGenerator;
     @Mock
     private TransactionPort transactionPort;
+    @Mock
+    private UserPort userPort;
 
     private InviteUserService service;
 
@@ -56,6 +55,7 @@ class InviteUserServiceTest {
     void setUp() {
         service = new InviteUserService(
                 invitePort,
+                userPort,
                 tokenGenerator,
                 new OperationExecutor(operationResultPort, transactionPort),
                 LOCK_TTL,

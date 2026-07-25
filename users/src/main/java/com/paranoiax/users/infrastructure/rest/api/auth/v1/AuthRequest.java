@@ -6,6 +6,7 @@ import tools.jackson.databind.annotation.JsonNaming;
 
 @JsonNaming(PropertyNamingStrategies.SnakeCaseStrategy.class)
 public record AuthRequest(
-        @NotBlank(message = "FIELD_REQUIRED") String signature
+        @NotBlank(message = "FIELD_REQUIRED") String signature,
+        @NotBlank(message = "FIELD_REQUIRED") String challenge
 ) {
 }

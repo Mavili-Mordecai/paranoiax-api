@@ -6,7 +6,7 @@ import tools.jackson.databind.annotation.JsonNaming;
 @JsonNaming(PropertyNamingStrategies.SnakeCaseStrategy.class)
 public record InviteResponse(
         String host,
-        String registrationToken,
+        String inviteToken,
         String spkiPin
 ) {
     public static InviteResponse of(String host, String registrationToken, String spkiPin) {

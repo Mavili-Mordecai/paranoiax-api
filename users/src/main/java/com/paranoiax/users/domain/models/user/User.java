@@ -30,11 +30,11 @@ public class User implements ActivityTrackable {
         this.identityKey = Require.notNull(identityKey, DomainErrorCode.MISSING_REQUIRED_FIELD, "Identity key");
         this.username = Require.notNull(username, DomainErrorCode.MISSING_REQUIRED_FIELD, "Username");
         this.type = Require.notNull(type, DomainErrorCode.MISSING_REQUIRED_FIELD, "User type");
-        this.invitedBy = Require.notNull(invitedBy, DomainErrorCode.MISSING_REQUIRED_FIELD, "Invited by");
         this.createdAt = Require.notNull(createdAt, DomainErrorCode.MISSING_REQUIRED_FIELD, "Created at");
         this.updatedAt = Require.notNull(updatedAt, DomainErrorCode.MISSING_REQUIRED_FIELD, "Updated at");
         this.lastSeenAt = Require.notNull(lastSeenAt, DomainErrorCode.MISSING_REQUIRED_FIELD, "Last seen at");
 
+        this.invitedBy = invitedBy;
         this.profile = profile;
         this.avatar = avatar;
     }

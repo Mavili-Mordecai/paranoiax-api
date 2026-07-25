@@ -2,7 +2,7 @@ package com.paranoiax.users.infrastructure.services;
 
 import com.paranoiax.users.application.ports.out.AuthTokensPort;
 import com.paranoiax.users.domain.models.device.Device;
-import com.paranoiax.users.domain.models.user.User;
+import com.paranoiax.users.domain.models.user.UserType;
 import io.jsonwebtoken.Claims;
 import io.jsonwebtoken.JwtBuilder;
 import io.jsonwebtoken.Jwts;
@@ -30,12 +30,12 @@ public class JwtService implements AuthTokensPort {
     private Duration refreshTtl;
 
     @Override
-    public String generateAccessToken(User user, Device device) {
+    public String generateAccessToken(Device device) {
         Instant now = Instant.now();
 
         JwtBuilder builder = Jwts.builder()
                 .subject(device.getUserId().value().toString())
-                .claim("user_type", user.getType().name())
+                .claim("user_type", UserType.USER.name())
                 .claim("device_id", device.getId().value().toString())
                 .claim("device_type", device.getType().name())
                 .issuedAt(Date.from(now))
@@ -46,7 +46,7 @@ public class JwtService implements AuthTokensPort {
     }
 
     @Override
-    public String generateRefreshToken(User user, Device device) {
+    public String generateRefreshToken(Device device) {
         Instant now = Instant.now();
 
         JwtBuilder builder = Jwts.builder()

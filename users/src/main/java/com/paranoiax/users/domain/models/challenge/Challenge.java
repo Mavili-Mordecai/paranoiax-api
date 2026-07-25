@@ -6,7 +6,6 @@ import com.paranoiax.users.domain.models.device.DeviceId;
 
 import java.time.Duration;
 import java.time.Instant;
-import java.util.UUID;
 
 public class Challenge {
     private final DeviceId deviceId;
@@ -29,6 +28,10 @@ public class Challenge {
                 now,
                 now.plus(ttl)
         );
+    }
+
+    public boolean isExpired() {
+        return Instant.now().isAfter(expiresAt);
     }
 
     public Instant getExpiresAt() {

@@ -1,8 +1,12 @@
 package com.paranoiax.users.application.ports.out;
 
 import com.paranoiax.users.domain.models.user.User;
+import com.paranoiax.users.domain.models.user.UserId;
+
+import java.util.Optional;
 
 public interface UserPort {
     User insert(User user);
     User update(User user);
+    Optional<User> findById(UserId userId);
 }

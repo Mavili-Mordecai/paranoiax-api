@@ -1,5 +1,8 @@
 package com.paranoiax.users.infrastructure.rest.api.auth.v1;
 
+import com.paranoiax.users.application.ports.in.auth.TokenPair;
+import com.paranoiax.users.application.ports.in.auth.challengeAuth.ChallengeAuthCommand;
+import com.paranoiax.users.application.ports.in.auth.challengeAuth.ChallengeAuthUseCase;
 import com.paranoiax.users.application.ports.in.auth.createChallenge.CreateChallengeCommand;
 import com.paranoiax.users.application.ports.in.auth.createChallenge.CreateChallengeUseCase;
 import com.paranoiax.users.application.ports.in.auth.invite.InviteUserCommand;
@@ -14,6 +17,7 @@ import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.UUID;
@@ -26,6 +30,7 @@ public class AuthController {
     private final InviteUserUseCase inviteUserUseCase;
     private final RegisterUserUseCase registerUserUseCase;
     private final CreateChallengeUseCase createChallengeUseCase;
+    private final ChallengeAuthUseCase challengeAuthUseCase;
 
     @Value("${application.public-host}")
     private String publicHost;
@@ -35,11 +40,11 @@ public class AuthController {
 
     @PostMapping("/invite")
     public ResponseEntity<InviteResponse> invite(
-            @RequestHeader("Idempotency-Key") String idempotencyKey
+            @RequestHeader("Idempotency-Key") String idempotencyKey,
+            @AuthenticationPrincipal UUID userId
     ) {
         Invite invite = inviteUserUseCase.execute(InviteUserCommand.of(
-                // TODO: Test implementation. Replace it with getting the UserId from the security context.
-                UUID.randomUUID(),
+                userId,
                 idempotencyKey
         ));
         return ResponseEntity.ok(InviteResponse.of(
@@ -68,20 +73,26 @@ public class AuthController {
     }
 
     @PostMapping("/auth")
-    public ResponseEntity<TokensResponse> authenticate(
+    public ResponseEntity<TokenPairResponse> authenticate(
             @RequestHeader("Idempotency-Key") String idempotencyKey,
             @RequestHeader("Device-Id") UUID deviceId,
             @Valid @RequestBody AuthRequest request
     ) {
-        return ResponseEntity.ok(new TokensResponse("test-token", "test-token"));
+        TokenPair tokenPair = challengeAuthUseCase.execute(new ChallengeAuthCommand(
+                deviceId,
+                request.signature(),
+                request.challenge(),
+                idempotencyKey
+        ));
+        return ResponseEntity.ok(TokenPairResponse.from(tokenPair));
     }
 
     @PostMapping("/auth/refresh")
-    public ResponseEntity<TokensResponse> refresh(
+    public ResponseEntity<TokenPairResponse> refresh(
             @RequestHeader("Idempotency-Key") String idempotencyKey,
             @RequestHeader("Device-Id") UUID deviceId,
             @Valid @RequestBody RefreshRequest request
     ) {
-        return ResponseEntity.ok(new TokensResponse("test-token", "test-token"));
+        return ResponseEntity.ok(new TokenPairResponse("test-token", "test-token"));
     }
 }

@@ -11,14 +11,14 @@ import tools.jackson.databind.annotation.JsonNaming;
 @JsonNaming(PropertyNamingStrategies.SnakeCaseStrategy.class)
 public record RegisterRequest(
         @NotBlank(message = "FIELD_REQUIRED") String username,
-        @NotBlank(message = "FIELD_REQUIRED") String registrationToken,
+        String inviteToken,
         @NotBlank(message = "FIELD_REQUIRED") String identityKey,
         @NotNull(message = "FIELD_REQUIRED") @Valid DeviceInfoRequest device
 ) {
     public RegisterUserCommand toCommand(String operationId) {
         return new RegisterUserCommand(
                 username,
-                registrationToken,
+                inviteToken,
                 identityKey,
                 new DeviceInfo(
                         device.id(),

@@ -64,9 +64,13 @@ application:
     lock-ttl: 5s
     result-ttl: 15m
   register:
+    invite-only: ${APP_REGISTER_INVITE_ONLY:true}
     lock-ttl: 30s
     result-ttl: 1d
   challenge:
+    lock-ttl: 5s
+    result-ttl: 1m
+  challenge-auth:
     lock-ttl: 5s
     result-ttl: 1m
 

@@ -1,8 +1,11 @@
 package com.paranoiax.users.infrastructure.rest.exceptions;
 
+import com.paranoiax.users.domain.exceptions.DomainErrorCode;
 import com.paranoiax.users.domain.exceptions.DomainException;
+import com.paranoiax.users.domain.exceptions.NotFoundException;
 import jakarta.servlet.http.HttpServletRequest;
 import lombok.extern.slf4j.Slf4j;
+import org.jspecify.annotations.NonNull;
 import org.slf4j.MDC;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -33,13 +36,14 @@ public class GlobalExceptionHandler {
         ));
     }
 
+    @ExceptionHandler(value = NotFoundException.class)
+    public ResponseEntity<ErrorResponse<DomainErrorResponse>> handleNotFoundException(NotFoundException e, HttpServletRequest request) {
+        return getErrorResponse(HttpStatus.NOT_FOUND, request, e.getCode(), e.getMessage(), e.getArgs());
+    }
+
     @ExceptionHandler(value = DomainException.class)
     public ResponseEntity<ErrorResponse<DomainErrorResponse>> handleDomainException(DomainException e, HttpServletRequest request) {
-        return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(ErrorResponse.of(
-                MDC.get("traceId"),
-                request.getRequestURI(),
-                new DomainErrorResponse(e.getCode().name(), e.getMessage(), e.getArgs())
-        ));
+        return getErrorResponse(HttpStatus.BAD_REQUEST, request, e.getCode(), e.getMessage(), e.getArgs());
     }
 
     @ExceptionHandler(HttpMessageNotReadableException.class)
@@ -59,6 +63,14 @@ public class GlobalExceptionHandler {
                 MDC.get("traceId"),
                 request.getRequestURI(),
                 ApiErrorCode.INTERNAL_SERVER_ERROR
+        ));
+    }
+
+    private static @NonNull ResponseEntity<ErrorResponse<DomainErrorResponse>> getErrorResponse(HttpStatus status, HttpServletRequest request, DomainErrorCode e, String e1, Map<String, Object> e2) {
+        return ResponseEntity.status(status).body(ErrorResponse.of(
+                MDC.get("traceId"),
+                request.getRequestURI(),
+                new DomainErrorResponse(e.name(), e1, e2)
         ));
     }
 }

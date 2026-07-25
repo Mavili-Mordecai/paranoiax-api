@@ -33,7 +33,7 @@ public class JpaUserMapper implements OperationResultsMapper<User, UserEntity> {
                 .firstName(profile != null ? profile.firstName() : null)
                 .lastName(profile != null ? profile.lastName() : null)
                 .bio(profile != null ? profile.bio() : null)
-                .invitedById(user.getInvitedBy().value())
+                .invitedById(user.getInvitedBy() != null ? user.getInvitedBy().value() : null)
                 .avatar(toEntityAvatar(user.getAvatar()))
                 .lastSeenAt(user.getLastSeenAt())
                 .updatedAt(user.getUpdatedAt())
@@ -49,7 +49,7 @@ public class JpaUserMapper implements OperationResultsMapper<User, UserEntity> {
                 new Username(entity.getUsername()),
                 entity.getType(),
                 toDomainProfile(entity),
-                new UserId(entity.getInvitedById()),
+                entity.getInvitedById() != null ? new UserId(entity.getInvitedById()) : null,
                 toDomainAvatar(entity.getAvatar()),
                 entity.getLastSeenAt(),
                 entity.getUpdatedAt(),

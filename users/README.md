@@ -6,8 +6,7 @@ This service is responsible for user lifecycle management, strict authentication
 
 ## 1. Onboarding: Invite-Only Registration & Passwordless Authentication
 
-ParanoiaX does not allow open registration. The system is strictly invite-only (existing participants can invite new members), 
-and the architecture completely eliminates passwords. Instead, it relies on strict hardware-backed cryptographic verification.
+By default, ParanoiaX operates in a strictly invite-only mode (existing participants can invite new members), though administrators can toggle open registration via system configuration. Regardless of the registration mode, the architecture completely eliminates passwords, relying instead on strict hardware-backed cryptographic verification.
 
 The primary client application executes a fully localized cryptographic initialization before communicating with the backend.
 
