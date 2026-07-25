@@ -6,6 +6,7 @@ import com.paranoiax.users.application.ports.in.auth.invite.InviteUserCommand;
 import com.paranoiax.users.application.ports.in.auth.invite.InviteUserUseCase;
 import com.paranoiax.users.application.ports.in.auth.register.RegisterUserUseCase;
 import com.paranoiax.users.domain.models.challenge.Challenge;
+import com.paranoiax.users.domain.models.device.*;
 import com.paranoiax.users.domain.models.invite.Invite;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
