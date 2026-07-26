@@ -10,7 +10,9 @@ public enum DomainErrorCode {
     LOCK_ACQUISITION_FAILED("Failed to acquire lock for operation. Operation ID: %s"),
     NOT_FOUND("%s not found"),
     EXPIRED_EXCEPTION("%s has expired"),
-    INVALID_SIGNATURE("%s has an invalid signature");
+    INVALID_SIGNATURE("%s has an invalid signature"),
+    ALREADY_REVOKED("%s already revoked"),
+    OPERATION_PARAMETERS_CHANGED("Operation already processed with different parameters");
 
     private final String defaultMessage;
 

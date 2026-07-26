@@ -4,7 +4,7 @@ import com.paranoiax.users.application.ports.in.auth.createChallenge.CreateChall
 import com.paranoiax.users.application.ports.in.auth.createChallenge.CreateChallengeUseCase;
 import com.paranoiax.users.application.ports.out.ChallengePort;
 import com.paranoiax.users.application.ports.out.DevicePort;
-import com.paranoiax.users.application.ports.out.TokenGenerator;
+import com.paranoiax.users.application.ports.out.crypto.TokenGenerator;
 import com.paranoiax.users.application.services.OperationExecutor;
 import com.paranoiax.users.domain.exceptions.NotFoundException;
 import com.paranoiax.users.domain.models.challenge.Challenge;
@@ -41,7 +41,7 @@ public class CreateChallengeService implements CreateChallengeUseCase {
 
     @Override
     public Challenge execute(CreateChallengeCommand command) {
-        return executor.execute(command.operationId(), Challenge.class, lockTtl, resultTll, () -> {
+        return executor.execute(command, Challenge.class, lockTtl, resultTll, () -> {
             Device device = devicePort.findById(new DeviceId(command.deviceId()))
                     .orElseThrow(() -> new NotFoundException("Device"));
 

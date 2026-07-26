@@ -7,6 +7,8 @@ import com.paranoiax.users.application.ports.in.auth.createChallenge.CreateChall
 import com.paranoiax.users.application.ports.in.auth.createChallenge.CreateChallengeUseCase;
 import com.paranoiax.users.application.ports.in.auth.invite.InviteUserCommand;
 import com.paranoiax.users.application.ports.in.auth.invite.InviteUserUseCase;
+import com.paranoiax.users.application.ports.in.auth.refreshTokens.RefreshTokensCommand;
+import com.paranoiax.users.application.ports.in.auth.refreshTokens.RefreshTokensUseCase;
 import com.paranoiax.users.application.ports.in.auth.register.RegisterUserUseCase;
 import com.paranoiax.users.domain.models.challenge.Challenge;
 import com.paranoiax.users.domain.models.device.*;
@@ -31,6 +33,7 @@ public class AuthController {
     private final RegisterUserUseCase registerUserUseCase;
     private final CreateChallengeUseCase createChallengeUseCase;
     private final ChallengeAuthUseCase challengeAuthUseCase;
+    private final RefreshTokensUseCase refreshTokensUseCase;
 
     @Value("${application.public-host}")
     private String publicHost;
@@ -90,9 +93,12 @@ public class AuthController {
     @PostMapping("/auth/refresh")
     public ResponseEntity<TokenPairResponse> refresh(
             @RequestHeader("Idempotency-Key") String idempotencyKey,
-            @RequestHeader("Device-Id") UUID deviceId,
             @Valid @RequestBody RefreshRequest request
     ) {
-        return ResponseEntity.ok(new TokenPairResponse("test-token", "test-token"));
+        TokenPair tokenPair = refreshTokensUseCase.execute(new RefreshTokensCommand(
+                request.refreshToken(),
+                idempotencyKey
+        ));
+        return ResponseEntity.ok(TokenPairResponse.from(tokenPair));
     }
 }

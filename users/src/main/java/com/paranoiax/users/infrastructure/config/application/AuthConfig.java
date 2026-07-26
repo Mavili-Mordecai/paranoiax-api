@@ -3,13 +3,12 @@ package com.paranoiax.users.infrastructure.config.application;
 import com.paranoiax.users.application.ports.in.auth.challengeAuth.ChallengeAuthUseCase;
 import com.paranoiax.users.application.ports.in.auth.createChallenge.CreateChallengeUseCase;
 import com.paranoiax.users.application.ports.in.auth.invite.InviteUserUseCase;
+import com.paranoiax.users.application.ports.in.auth.refreshTokens.RefreshTokensUseCase;
 import com.paranoiax.users.application.ports.in.auth.register.RegisterUserUseCase;
 import com.paranoiax.users.application.ports.out.*;
+import com.paranoiax.users.application.ports.out.crypto.TokenGenerator;
 import com.paranoiax.users.application.services.OperationExecutor;
-import com.paranoiax.users.application.services.auth.ChallengeAuthService;
-import com.paranoiax.users.application.services.auth.CreateChallengeService;
-import com.paranoiax.users.application.services.auth.InviteUserService;
-import com.paranoiax.users.application.services.auth.RegisterUserService;
+import com.paranoiax.users.application.services.auth.*;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
@@ -61,11 +60,23 @@ public class AuthConfig {
             DevicePort devicePort,
             ChallengePort challengePort,
             ChallengeVerifierPort verifierPort,
-            AuthTokensPort authTokensPort,
+            AuthTokenPort authTokenPort,
             OperationExecutor executor,
             @Value("${application.challenge-auth.lock-ttl}") Duration lockTtl,
             @Value("${application.challenge-auth.result-ttl}") Duration resultTtl
     ) {
-        return new ChallengeAuthService(devicePort, challengePort, verifierPort, authTokensPort, executor, lockTtl, resultTtl);
+        return new ChallengeAuthService(devicePort, challengePort, verifierPort, authTokenPort, executor, lockTtl, resultTtl);
+    }
+
+    @Bean
+    public RefreshTokensUseCase refreshTokensUseCase(
+            AuthTokenPort authTokenPort,
+            AuthTokenBlacklistPort blacklistPort,
+            DevicePort devicePort,
+            OperationExecutor executor,
+            @Value("${application.refresh.lock-ttl}") Duration lockTtl,
+            @Value("${application.refresh.result-ttl}") Duration resultTtl
+    ) {
+        return new RefreshTokensService(authTokenPort, blacklistPort, devicePort, executor, lockTtl, resultTtl);
     }
 }

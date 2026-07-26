@@ -10,4 +10,7 @@ public record DeviceInfo(
         String encryptionKey,
         String deviceSignature
 ) {
+    public String getOperationSignature() {
+        return String.join(":", id.toString(), name, type, identityKey, encryptionKey, deviceSignature);
+    }
 }

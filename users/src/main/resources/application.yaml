@@ -73,6 +73,9 @@ application:
   challenge-auth:
     lock-ttl: 5s
     result-ttl: 1m
+  refresh:
+    lock-ttl: 5s
+    result-ttl: 1m
 
 jwt:
   keys:

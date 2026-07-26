@@ -1,9 +1,7 @@
 package com.paranoiax.users.infrastructure.config.security;
 
-import com.paranoiax.users.domain.models.device.DeviceType;
-import com.paranoiax.users.domain.models.user.UserType;
-import com.paranoiax.users.infrastructure.services.JwtService;
-import io.jsonwebtoken.Claims;
+import com.paranoiax.users.application.ports.in.auth.AccessToken;
+import com.paranoiax.users.infrastructure.adapters.crypto.JwtAuthTokenAdapter;
 import io.jsonwebtoken.JwtException;
 import jakarta.servlet.FilterChain;
 import jakarta.servlet.ServletException;
@@ -15,12 +13,11 @@ import org.springframework.stereotype.Component;
 import org.springframework.web.filter.OncePerRequestFilter;
 
 import java.io.IOException;
-import java.util.UUID;
 
 @Component
 @RequiredArgsConstructor
 public class JwtTokenFilter extends OncePerRequestFilter {
-    private final JwtService jwtService;
+    private final JwtAuthTokenAdapter jwtAuthTokensAdapter;
 
     @Override
     protected void doFilterInternal(
@@ -37,14 +34,13 @@ public class JwtTokenFilter extends OncePerRequestFilter {
         String token = header.replace("Bearer ", "");
 
         try {
-            Claims claims = jwtService.getClaims(token);
-
-            UUID userId = UUID.fromString(claims.getSubject());
-            UserType role = UserType.valueOf(claims.get("user_type", String.class));
-            UUID deviceId = UUID.fromString(claims.get("device_id", String.class));
-            DeviceType deviceType = DeviceType.valueOf(claims.get("device_type", String.class));
-
-            CustomJwtAuthentication authentication = new CustomJwtAuthentication(userId, role, deviceId, deviceType);
+            AccessToken accessToken = jwtAuthTokensAdapter.parseAccessToken(token);
+            CustomJwtAuthentication authentication = new CustomJwtAuthentication(
+                    accessToken.getUserId().value(),
+                    accessToken.getType(),
+                    accessToken.getDeviceId().value(),
+                    accessToken.getDeviceType()
+            );
 
             SecurityContextHolder.getContext().setAuthentication(authentication);
         } catch (JwtException | IllegalArgumentException e) {

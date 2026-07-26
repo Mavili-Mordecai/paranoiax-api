@@ -1,6 +1,6 @@
 package com.paranoiax.users.infrastructure.adapters.crypto;
 
-import com.paranoiax.users.application.ports.out.TokenGenerator;
+import com.paranoiax.users.application.ports.out.crypto.TokenGenerator;
 import org.springframework.stereotype.Component;
 
 import java.security.SecureRandom;

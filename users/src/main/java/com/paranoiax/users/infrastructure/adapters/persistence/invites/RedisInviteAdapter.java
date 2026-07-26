@@ -17,7 +17,8 @@ public class RedisInviteAdapter implements InvitePort {
 
     @Override
     public Optional<Invite> findByToken(String token) {
-        return Optional.ofNullable(redisTemplate.opsForValue().get(getInviteKey(token))).map((it) -> mapper.toDomain((RedisInviteDto) it));
+        return Optional.ofNullable(redisTemplate.opsForValue().get(getInviteKey(token)))
+                .map((it) -> mapper.toDomain((RedisInviteDto) it));
     }
 
     @Override

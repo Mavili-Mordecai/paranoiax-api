@@ -2,7 +2,7 @@ package com.paranoiax.users.domain.exceptions;
 
 import java.util.Map;
 
-public class ExpiredException extends DomainException {
+public class ExpiredException extends UnauthorizeException {
     public ExpiredException(String resource) {
         super(
                 DomainErrorCode.EXPIRED_EXCEPTION,

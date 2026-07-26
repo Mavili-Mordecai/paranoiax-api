@@ -7,6 +7,7 @@ import com.paranoiax.users.application.services.OperationExecutor;
 import com.paranoiax.users.domain.exceptions.ExpiredException;
 import com.paranoiax.users.domain.exceptions.MissingRequiredFieldException;
 import com.paranoiax.users.domain.exceptions.NotFoundException;
+import com.paranoiax.users.domain.exceptions.RevokedException;
 import com.paranoiax.users.domain.models.EncryptionKey;
 import com.paranoiax.users.domain.models.IdentityKey;
 import com.paranoiax.users.domain.models.device.*;
@@ -47,11 +48,12 @@ public class RegisterUserService implements RegisterUserUseCase {
 
     @Override
     public void execute(RegisterUserCommand command) {
-        executor.execute(command.operationId(), User.class, lockTtl, resultTtl, () -> {
+        executor.execute(command, User.class, lockTtl, resultTtl, () -> {
+            Invite invite = null;
             UserId invitedById = null;
 
             if (command.inviteToken() != null && !command.inviteToken().isBlank()) {
-                Invite invite = invitePort.findByToken(command.inviteToken()).orElseThrow(() -> new NotFoundException("Invite token"));
+                invite = invitePort.findByToken(command.inviteToken()).orElseThrow(() -> new NotFoundException("Invite token"));
 
                 if (invite.isExpired()) {
                     throw new ExpiredException("Invite token");
@@ -80,6 +82,10 @@ public class RegisterUserService implements RegisterUserUseCase {
                     new EncryptionKey(command.device().encryptionKey()),
                     new DeviceSignature(command.device().deviceSignature())
             ));
+
+            if (invite != null && !invitePort.delete(invite)) {
+                throw new RevokedException("Invite");
+            }
 
             return createdUser;
         });

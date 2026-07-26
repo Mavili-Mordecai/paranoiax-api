@@ -3,7 +3,7 @@ package com.paranoiax.users.application.services.auth;
 import com.paranoiax.users.application.ports.in.auth.invite.InviteUserCommand;
 import com.paranoiax.users.application.ports.in.auth.invite.InviteUserUseCase;
 import com.paranoiax.users.application.ports.out.InvitePort;
-import com.paranoiax.users.application.ports.out.TokenGenerator;
+import com.paranoiax.users.application.ports.out.crypto.TokenGenerator;
 import com.paranoiax.users.application.ports.out.UserPort;
 import com.paranoiax.users.application.services.OperationExecutor;
 import com.paranoiax.users.domain.exceptions.NotFoundException;
@@ -41,7 +41,7 @@ public class InviteUserService implements InviteUserUseCase {
 
     @Override
     public Invite execute(InviteUserCommand command) {
-        return executor.execute(command.operationId(), Invite.class, lockTtl, resultTtl, () -> {
+        return executor.execute(command, Invite.class, lockTtl, resultTtl, () -> {
             User user = userPort.findById(new UserId(command.userId()))
                     .orElseThrow(() -> new NotFoundException("User"));
 

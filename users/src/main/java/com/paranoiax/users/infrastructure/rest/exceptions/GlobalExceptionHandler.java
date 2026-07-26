@@ -3,6 +3,7 @@ package com.paranoiax.users.infrastructure.rest.exceptions;
 import com.paranoiax.users.domain.exceptions.DomainErrorCode;
 import com.paranoiax.users.domain.exceptions.DomainException;
 import com.paranoiax.users.domain.exceptions.NotFoundException;
+import com.paranoiax.users.domain.exceptions.UnauthorizeException;
 import jakarta.servlet.http.HttpServletRequest;
 import lombok.extern.slf4j.Slf4j;
 import org.jspecify.annotations.NonNull;
@@ -39,6 +40,11 @@ public class GlobalExceptionHandler {
     @ExceptionHandler(value = NotFoundException.class)
     public ResponseEntity<ErrorResponse<DomainErrorResponse>> handleNotFoundException(NotFoundException e, HttpServletRequest request) {
         return getErrorResponse(HttpStatus.NOT_FOUND, request, e.getCode(), e.getMessage(), e.getArgs());
+    }
+
+    @ExceptionHandler(value = UnauthorizeException.class)
+    public ResponseEntity<ErrorResponse<DomainErrorResponse>> handleUnauthorizeException(UnauthorizeException e, HttpServletRequest request) {
+        return getErrorResponse(HttpStatus.UNAUTHORIZED, request, e.getCode(), e.getMessage(), e.getArgs());
     }
 
     @ExceptionHandler(value = DomainException.class)

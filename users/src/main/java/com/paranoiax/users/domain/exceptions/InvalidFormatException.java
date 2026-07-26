@@ -2,7 +2,7 @@ package com.paranoiax.users.domain.exceptions;
 
 import java.util.Map;
 
-public class InvalidFormatException extends DomainException {
+public class InvalidFormatException extends UnauthorizeException {
     public InvalidFormatException(String field) {
         super(
                 DomainErrorCode.INVALID_FORMAT,

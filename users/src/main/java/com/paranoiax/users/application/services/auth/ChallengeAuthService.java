@@ -3,7 +3,7 @@ package com.paranoiax.users.application.services.auth;
 import com.paranoiax.users.application.ports.in.auth.TokenPair;
 import com.paranoiax.users.application.ports.in.auth.challengeAuth.ChallengeAuthCommand;
 import com.paranoiax.users.application.ports.in.auth.challengeAuth.ChallengeAuthUseCase;
-import com.paranoiax.users.application.ports.out.AuthTokensPort;
+import com.paranoiax.users.application.ports.out.AuthTokenPort;
 import com.paranoiax.users.application.ports.out.ChallengePort;
 import com.paranoiax.users.application.ports.out.ChallengeVerifierPort;
 import com.paranoiax.users.application.ports.out.DevicePort;
@@ -22,7 +22,7 @@ public class ChallengeAuthService implements ChallengeAuthUseCase {
     private final DevicePort devicePort;
     private final ChallengePort challengePort;
     private final ChallengeVerifierPort verifierPort;
-    private final AuthTokensPort authTokensPort;
+    private final AuthTokenPort authTokenPort;
     private final OperationExecutor executor;
     private final Duration lockTtl;
     private final Duration resultTtl;
@@ -31,7 +31,7 @@ public class ChallengeAuthService implements ChallengeAuthUseCase {
             DevicePort devicePort,
             ChallengePort challengePort,
             ChallengeVerifierPort verifierPort,
-            AuthTokensPort authTokensPort,
+            AuthTokenPort authTokenPort,
             OperationExecutor executor,
             Duration lockTtl,
             Duration resultTtl
@@ -39,7 +39,7 @@ public class ChallengeAuthService implements ChallengeAuthUseCase {
         this.devicePort = devicePort;
         this.challengePort = challengePort;
         this.verifierPort = verifierPort;
-        this.authTokensPort = authTokensPort;
+        this.authTokenPort = authTokenPort;
         this.executor = executor;
         this.lockTtl = lockTtl;
         this.resultTtl = resultTtl;
@@ -47,7 +47,7 @@ public class ChallengeAuthService implements ChallengeAuthUseCase {
 
     @Override
     public TokenPair execute(ChallengeAuthCommand command) {
-        return executor.execute(command.operationId(), TokenPair.class, lockTtl, resultTtl, () -> {
+        return executor.execute(command, TokenPair.class, lockTtl, resultTtl, () -> {
             Challenge challenge = challengePort.find(command.challenge()).orElseThrow(() -> new NotFoundException("Challenge"));
             challengePort.delete(challenge);
 
@@ -71,10 +71,7 @@ public class ChallengeAuthService implements ChallengeAuthUseCase {
                 throw new InvalidSignatureException("Challenge");
             }
 
-            return new TokenPair(
-                    authTokensPort.generateAccessToken(device),
-                    authTokensPort.generateRefreshToken(device)
-            );
+            return authTokenPort.generateTokenPair(device);
         });
     }
 }

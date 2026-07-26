@@ -115,7 +115,6 @@ paths:
       description: Exchanges a valid refresh token for a new pair of JWT access and refresh tokens.
       parameters:
         - $ref: '#/components/parameters/IdempotencyKeyRequired'
-        - $ref: '#/components/parameters/DeviceIdRequired'
       requestBody:
         required: true
         content:
