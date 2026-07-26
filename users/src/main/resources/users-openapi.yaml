@@ -133,7 +133,7 @@ paths:
     post:
       tags: [Device Management]
       summary: Upload state blob and generate link token
-      description: Uploads an encrypted blob containing the old device's state (encrypted client-side) and returns a short-lived token to authorize a new secondary device.
+      description: Uploads an encrypted blob.
       security:
         - BearerAuth: []
       parameters:
@@ -153,12 +153,16 @@ paths:
                 $ref: '#/components/schemas/LinkTokenResponse'
 
   /v1/users/devices/link-token/blob:
-    get:
+    post:
       tags: [Device Management]
       summary: Download encrypted state blob
-      description: Retrieves the encrypted state blob for a new device. The server deletes the blob immediately after a successful response (one-time read).
-      security:
-        - LinkTokenAuth: []
+      description: Retrieves the encrypted state blob for a new device.
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/DownloadBlobRequest'
       responses:
         '200':
           description: Encrypted state blob retrieved
@@ -187,8 +191,12 @@ paths:
             schema:
               $ref: '#/components/schemas/RegisterDeviceRequest'
       responses:
-        '204':
-          description: Secondary device registered successfully (No Content)
+        '201':
+          description: Secondary device registered successfully
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/TokenPairResponse'
     delete:
       tags: [Device Management]
       summary: Revoke device session
@@ -270,10 +278,6 @@ components:
       type: http
       scheme: bearer
       bearerFormat: JWT
-    LinkTokenAuth:
-      type: http
-      scheme: bearer
-      description: Uses the link_token instead of JWT for authorization. Works exclusively for GET /v1/users/devices/link-token/blob.
 
   parameters:
     IdempotencyKeyOptional:
@@ -376,6 +380,8 @@ components:
       properties:
         link_token:
           type: string
+        challenge:
+          type: string
         expires_in:
           type: integer
 
@@ -383,6 +389,17 @@ components:
       type: object
       properties:
         encrypted_blob:
+          type: string
+        identity_key:
+          type: string
+          description: Public identity signing key (e.g., Ed25519) for the new device
+
+    DownloadBlobRequest:
+      type: object
+      properties:
+        link_token:
+          type: string
+        signature:
           type: string
 
     DownloadBlobResponse:
@@ -396,6 +413,8 @@ components:
       properties:
         link_token:
           type: string
+        signature:
+          type: string
         identity_key:
           type: string
           description: Public identity signing key (e.g., Ed25519) for the new device
@@ -405,6 +424,8 @@ components:
         device_name:
           type: string
         device_type:
+          type: string
+        device_signature:
           type: string
 
     UpdateProfileRequest:

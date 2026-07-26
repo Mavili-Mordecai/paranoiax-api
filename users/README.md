@@ -15,8 +15,8 @@ The primary client application executes a fully localized cryptographic initiali
 **Phase 1: Invitation & Secure Connection**
 
 1. **Invite Generation:** An existing user generates a one-time temporary registration token via their client application.
-2. **QR Code Formation:** The server URL, registration token, and Subject Public Key Info (spki_pin) are embedded into a QR code (or invite link).
-3. **MITM Protection:** The new client scans the QR code and verifies the certificate hash during the very first connection. This guarantees protection against Man-in-the-Middle (MITM) attacks by ISPs or corporate networks.
+2. **Payload Formation:** The server URL, registration token, and Subject Public Key Info (spki_pin) are embedded into a payload for out-of-band transmission.
+3. **MITM Protection:** The new client reads the payload and verifies the certificate hash during the very first connection. This guarantees protection against Man-in-the-Middle (MITM) attacks by ISPs or corporate networks.
 
 **Phase 2: Local Cryptographic Initialization**
 
@@ -62,9 +62,14 @@ To maintain Perfect Forward Secrecy and ensure a compromised device does not exp
 1. **Key Generation:** The new device generates its own independent Ed25519 and X25519 key pairs.
 2. **Cross-Signing (Offline):** The primary device scans the new device's keys and signs them using its Master Private Key, generating a `device_signature`.
 3. **State Encryption:** The primary device encrypts the local database of symmetric chat keys using a randomly generated one-time `transfer_key`.
-4. **Server Upload:** The encrypted Blob is uploaded to the server. The server acts as a "dumb pipe" and cannot decrypt it.
-5. **Optical Transmission (Offline):** The primary device displays a QR code containing the `link_token`, the `device_signature`, and the `transfer_key`. The symmetric key never touches the network.
-6. **Atomic Registration (2-Phase Commit):** The new device fetches the Blob, decrypts it locally, and submits its keys and signature to the server. The server verifies the token, registers the device, and strictly then deletes the transit Blob.
+4. **Server Upload:** The primary device uploads the encrypted Blob along with the new device's identity key to the server. The server returns an `invite_token` and a one-time `challenge`.
+5. **Out-of-Band Transmission (Offline):** The primary device transfers the migration context via a secure out-of-band channel. The payload contains:
+   * `invite_token`: The session identifier for the server.
+   * `challenge`: The server-generated challenge to prevent replay attacks.
+   * `transfer_key`: The symmetric key to decrypt the Blob locally (never touches the network).
+   * `device_signature`: The Master Key's authorization of the new device.
+6. **Server Fetch:** The new device reads the payload, signs the challenge using its private `identity_key`, and requests the Blob. The server verifies the signature.
+7. **Registration:** The new device submits the final registration request containing the `invite_token`, the signed `challenge`, and the `device_signature`. The server validates the signature, registers the device, and then deletes the migration session and deletes the Blob.
 
 ### Sequence Diagram
 ![NewDeviceLinkingProcess.png](docs/assets/NewDeviceLinkingProcess.png)
