@@ -29,6 +29,7 @@ public class SecurityConfig {
                         .requestMatchers(HttpMethod.PUT, "/v1/users").permitAll()
                         .requestMatchers(HttpMethod.POST, "/v1/users/auth/**").permitAll()
                         .requestMatchers(HttpMethod.PUT, "/v1/users/devices/*").permitAll()
+                        .requestMatchers("/error").permitAll()
                         .anyRequest().authenticated()
                 )
                 .addFilterBefore(jwtTokenFilter, UsernamePasswordAuthenticationFilter.class);

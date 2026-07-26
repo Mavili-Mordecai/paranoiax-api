@@ -141,9 +141,16 @@ paths:
       requestBody:
         required: true
         content:
-          application/json:
+          multipart/form-data:
             schema:
-              $ref: '#/components/schemas/UploadBlobRequest'
+              type: object
+              properties:
+                encrypted_blob:
+                  type: string
+                  format: binary
+                identity_key:
+                  type: string
+                  description: Public identity signing key (e.g., Ed25519) for the new device
       responses:
         '201':
           description: Blob uploaded and link token generated successfully
@@ -156,7 +163,7 @@ paths:
     post:
       tags: [Device Management]
       summary: Download encrypted state blob
-      description: Retrieves the encrypted state blob for a new device.
+      description: Retrieves the encrypted state blob for a new device as a binary stream. The server deletes the blob immediately after a successful response (one-time read).
       requestBody:
         required: true
         content:
@@ -165,11 +172,12 @@ paths:
               $ref: '#/components/schemas/DownloadBlobRequest'
       responses:
         '200':
-          description: Encrypted state blob retrieved
+          description: Encrypted state blob binary stream retrieved successfully
           content:
-            application/json:
+            application/octet-stream:
               schema:
-                $ref: '#/components/schemas/DownloadBlobResponse'
+                type: string
+                format: binary
 
   /v1/users/devices/{device_id}:
     put:
@@ -191,12 +199,8 @@ paths:
             schema:
               $ref: '#/components/schemas/RegisterDeviceRequest'
       responses:
-        '201':
-          description: Secondary device registered successfully
-          content:
-            application/json:
-              schema:
-                $ref: '#/components/schemas/TokenPairResponse'
+        '204':
+          description: Device registered successfully (No Content)
     delete:
       tags: [Device Management]
       summary: Revoke device session
@@ -384,15 +388,6 @@ components:
           type: string
         expires_in:
           type: integer
-
-    UploadBlobRequest:
-      type: object
-      properties:
-        encrypted_blob:
-          type: string
-        identity_key:
-          type: string
-          description: Public identity signing key (e.g., Ed25519) for the new device
 
     DownloadBlobRequest:
       type: object
