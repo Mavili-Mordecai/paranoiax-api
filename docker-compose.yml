@@ -43,7 +43,25 @@ services:
       - kafka_data:/tmp/kraft-combined-logs
     restart: unless-stopped
 
+  seaweedfs:
+    image: chrislusf/seaweedfs:4.40
+    container_name: paranoiax-storage
+    command: 'server -dir=/data -s3 -s3.config=/etc/seaweedfs/seaweed-config.json'
+    ports:
+      - "8333:8333" # S3 API
+      - "9333:9333" # Master
+      - "8888:8888" # Filer
+    volumes:
+      - ./storage_data:/data
+      - ./seaweedfs.json:/etc/seaweedfs/seaweed-config.json:ro
+    restart: unless-stopped
+    deploy:
+      resources:
+        limits:
+          memory: 512M
+
 volumes:
   postgres_data:
   redis_data:
   kafka_data:
+  storage_data:
