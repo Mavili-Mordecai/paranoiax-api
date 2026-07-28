@@ -129,11 +129,28 @@ paths:
               schema:
                 $ref: '#/components/schemas/TokenPairResponse'
 
-  /v1/users/devices/link-token:
+  /v1/users/devices/migrations/upload-url:
     post:
       tags: [Device Management]
-      summary: Upload state blob and generate link token
-      description: Uploads an encrypted blob.
+      summary: Request S3 presigned URL for blob upload
+      description: Generates a temporary presigned URL for direct secure upload of the encrypted state blob to an S3 Storage.
+      security:
+        - BearerAuth: []
+      parameters:
+        - $ref: '#/components/parameters/IdempotencyKeyRequired'
+      responses:
+        '200':
+          description: Presigned URL generated successfully
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/PresignedUrlResponse'
+
+  /v1/users/devices/migrations/link-token:
+    post:
+      tags: [Device Management]
+      summary: Generate link token for uploaded blob
+      description: Associates a previously uploaded blob in S3 Storage with a new link token.
       security:
         - BearerAuth: []
       parameters:
@@ -141,43 +158,39 @@ paths:
       requestBody:
         required: true
         content:
-          multipart/form-data:
+          application/json:
             schema:
-              type: object
-              properties:
-                encrypted_blob:
-                  type: string
-                  format: binary
-                identity_key:
-                  type: string
-                  description: Public identity signing key (e.g., Ed25519) for the new device
+              $ref: '#/components/schemas/GenerateLinkTokenRequest'
       responses:
         '201':
-          description: Blob uploaded and link token generated successfully
+          description: Link token generated successfully
           content:
             application/json:
               schema:
                 $ref: '#/components/schemas/LinkTokenResponse'
 
-  /v1/users/devices/link-token/blob:
+  /v1/users/devices/migrations/download-url:
     post:
       tags: [Device Management]
-      summary: Download encrypted state blob
-      description: Retrieves the encrypted state blob for a new device as a binary stream. The server deletes the blob immediately after a successful response (one-time read).
+      summary: Request S3 presigned URL for blob download
+      description: Verifies the link token signature and returns a short-lived presigned URL to download the encrypted state blob directly from S3 Storage.
       requestBody:
         required: true
         content:
           application/json:
             schema:
-              $ref: '#/components/schemas/DownloadBlobRequest'
+              $ref: '#/components/schemas/DownloadUrlRequest'
       responses:
         '200':
-          description: Encrypted state blob binary stream retrieved successfully
+          description: Presigned URL generated successfully
           content:
-            application/octet-stream:
+            application/json:
               schema:
-                type: string
-                format: binary
+                type: object
+                properties:
+                  download_url:
+                    type: string
+                    format: uri
 
   /v1/users/devices/{device_id}:
     put:
@@ -379,6 +392,26 @@ components:
         refresh_token:
           type: string
 
+    PresignedUrlResponse:
+      type: object
+      properties:
+        blob_id:
+          type: string
+          format: uuid
+        upload_url:
+          type: string
+          format: uri
+
+    GenerateLinkTokenRequest:
+      type: object
+      properties:
+        blob_id:
+          type: string
+          format: uuid
+        identity_key:
+          type: string
+          description: Public identity signing key (e.g., Ed25519) for the new device
+
     LinkTokenResponse:
       type: object
       properties:
@@ -389,7 +422,7 @@ components:
         expires_in:
           type: integer
 
-    DownloadBlobRequest:
+    DownloadUrlRequest:
       type: object
       properties:
         link_token:

@@ -62,14 +62,14 @@ To maintain Perfect Forward Secrecy and ensure a compromised device does not exp
 1. **Key Generation:** The new device generates its own independent Ed25519 and X25519 key pairs.
 2. **Cross-Signing (Offline):** The primary device scans the new device's keys and signs them using its Master Private Key, generating a `device_signature`.
 3. **State Encryption:** The primary device encrypts the local database of symmetric chat keys using a randomly generated one-time `transfer_key`.
-4. **Server Upload:** The primary device uploads the encrypted Blob along with the new device's identity key to the server. The server returns an `invite_token` and a one-time `challenge`.
+4. **Server Upload:** The primary device requests a presigned URL to upload the encrypted Blob directly to an S3 Storage. It then submits the blob reference along with the new device's identity key to the server. The server returns an `link_token` and a one-time `challenge`.
 5. **Out-of-Band Transmission (Offline):** The primary device transfers the migration context via a secure out-of-band channel. The payload contains:
-   * `invite_token`: The session identifier for the server.
+   * `link_token`: The session identifier for the server.
    * `challenge`: The server-generated challenge to prevent replay attacks.
    * `transfer_key`: The symmetric key to decrypt the Blob locally (never touches the network).
    * `device_signature`: The Master Key's authorization of the new device.
 6. **Server Fetch:** The new device reads the payload, signs the challenge using its private `identity_key`, and requests the Blob. The server verifies the signature.
-7. **Registration:** The new device submits the final registration request containing the `invite_token`, the signed `challenge`, and the `device_signature`. The server validates the signature, registers the device, and then deletes the migration session and deletes the Blob.
+7. **Registration:** The new device submits the final registration request containing the `link_token`, the signed `challenge`, and the `device_signature`. The server validates the signature, registers the device, and then deletes the migration session and deletes the Blob.
 
 ### Sequence Diagram
 ![NewDeviceLinkingProcess.png](docs/assets/NewDeviceLinkingProcess.png)

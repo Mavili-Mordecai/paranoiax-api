@@ -4,9 +4,8 @@ import tools.jackson.databind.PropertyNamingStrategies;
 import tools.jackson.databind.annotation.JsonNaming;
 
 @JsonNaming(PropertyNamingStrategies.SnakeCaseStrategy.class)
-public record GenerateLinkTokenResponse(
-        String linkToken,
-        String challenge,
-        Long expiresIn
+public record CreateUploadUrlResponse(
+        String blobId,
+        String uploadUrl
 ) {
 }

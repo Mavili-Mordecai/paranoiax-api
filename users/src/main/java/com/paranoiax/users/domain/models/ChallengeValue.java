@@ -1,4 +1,4 @@
-package com.paranoiax.users.domain.models.challenge;
+package com.paranoiax.users.domain.models;
 
 import com.paranoiax.users.domain.Require;
 import com.paranoiax.users.domain.exceptions.DomainErrorCode;

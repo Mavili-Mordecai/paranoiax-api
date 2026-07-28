@@ -4,19 +4,13 @@ ParanoiaX is a highly secure, zero-knowledge, End-to-End Encrypted (E2EE) messag
 
 The core philosophy of ParanoiaX is absolute trustlessness in the server infrastructure. The server operates strictly as a "dumb pipe" for routing encrypted data and managing device states.
 
-## System Architecture
+## Modules & Services
 
-The backend is built as a modular system (or microservices architecture), separating concerns like user management, message routing.
-
-![ParanoiaX System Architecture](docs/assets/architecture-diagram.png)
-
-### Modules & Services
-
-* **[Users Service](./users/README.md)** — Core service handling invite-only registration, passwordless Challenge-Response authentication, device fleet management, and Cross-Signing attestation.
-* **Chats Service** — Manages chat rooms, group metadata, and participant lists.
-* **Messages Service** — Handles the routing of E2EE payloads, offline message queues, and delivery receipts.
-* **Sessions Service** — Manages persistent WebSocket connections for real-time, instant message delivery to online devices.
-* **Notifications Service** — Responsible for dispatching push notifications (via Firebase Cloud Messaging) to wake up offline devices when new E2EE payloads arrive.
+* **[Users](./users/README.md)** — Core service handling invite-only registration, passwordless Challenge-Response authentication, device fleet management, and Cross-Signing attestation.
+* **Chats** — Manages chat rooms, group metadata, and participant lists.
+* **Messages** — Handles the routing of E2EE payloads, offline message queues, and delivery receipts.
+* **Sessions** — Manages persistent WebSocket connections for real-time, instant message delivery to online devices.
+* **Notifications** — Responsible for dispatching push notifications (via Firebase Cloud Messaging).
 
 ---
 
