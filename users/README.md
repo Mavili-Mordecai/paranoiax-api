@@ -59,17 +59,18 @@ To maintain Perfect Forward Secrecy and ensure a compromised device does not exp
 
 ### 2.2. The Migration Protocol
 
-1. **Key Generation:** The new device generates its own independent Ed25519 and X25519 key pairs.
-2. **Cross-Signing (Offline):** The primary device scans the new device's keys and signs them using its Master Private Key, generating a `device_signature`.
-3. **State Encryption:** The primary device encrypts the local database of symmetric chat keys using a randomly generated one-time `transfer_key`.
-4. **Server Upload:** The primary device requests a presigned URL to upload the encrypted Blob directly to an S3 Storage. It then submits the blob reference along with the new device's identity key to the server. The server returns an `link_token` and a one-time `challenge`.
-5. **Out-of-Band Transmission (Offline):** The primary device transfers the migration context via a secure out-of-band channel. The payload contains:
-   * `link_token`: The session identifier for the server.
-   * `challenge`: The server-generated challenge to prevent replay attacks.
-   * `transfer_key`: The symmetric key to decrypt the Blob locally (never touches the network).
-   * `device_signature`: The Master Key's authorization of the new device.
-6. **Server Fetch:** The new device reads the payload, signs the challenge using its private `identity_key`, and requests the Blob. The server verifies the signature.
-7. **Registration:** The new device submits the final registration request containing the `link_token`, the signed `challenge`, and the `device_signature`. The server validates the signature, registers the device, and then deletes the migration session and deletes the Blob.
+### 2.2. The Migration Protocol
+
+1. **Initialization & Polling:** The new device generates its own Ed25519 and X25519 key pairs, a unique `device_id`, and a one-time `transfer_key`. It provides the migration context via a secure out-of-band channel. The payload contains:
+   * `device_id`: The unique identifier for the new device and the migration session.
+   * `identity_key`: The public Ed25519 signing key of the new device.
+   * `encryption_key`: The public X25519 encryption key of the new device.
+   * `transfer_key`: The symmetric key to encrypt/decrypt the Blob locally.
+2. **Cross-Signing & Encryption (Offline):** The primary device reads the out-of-band payload. It signs the new device's public keys using its Master Private Key, generating a `device_signature`. It then encrypts the local database of symmetric chat keys using the scanned `transfer_key`.
+3. **Session Creation:** The primary device initiates the migration session on the server for the scanned `device_id` and submits the new device's public keys alongside the `device_signature`. The server returns an S3 presigned `upload_url`.
+4. **Server Upload:** The primary device uploads the encrypted Blob directly to the S3 Storage and explicitly notifies the server upon completion. The server validates the upload, transitions the session state, and generates a one-time `challenge`.
+5. **Authorization & Fetch:** The new device receives the `challenge` via its polling mechanism. It signs the challenge using its private `identity_key` and submits it to request a download link. The server verifies the signature and returns a short-lived S3 presigned `download_url`. The new device downloads the Blob directly from S3 and decrypts it locally.
+6. **Registration & Two-Tier Cleanup:** The new device submits the final registration request containing the signed `challenge` and `device_signature`. The server validates the signatures, registers the new device, explicitly deletes the Blob from S3, and destroys the migration session.
 
 ### Sequence Diagram
 ![NewDeviceLinkingProcess.png](docs/assets/NewDeviceLinkingProcess.png)

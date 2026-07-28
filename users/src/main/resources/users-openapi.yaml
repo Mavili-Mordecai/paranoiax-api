@@ -129,74 +129,107 @@ paths:
               schema:
                 $ref: '#/components/schemas/TokenPairResponse'
 
-  /v1/users/devices/migrations/upload-url:
-    post:
+  /v1/users/devices/migrations/{device_id}/status:
+    get:
       tags: [Device Management]
-      summary: Request S3 presigned URL for blob upload
-      description: Generates a temporary presigned URL for direct secure upload of the encrypted state blob to an S3 Storage.
+      summary: Poll migration session status
+      description: Used by the new device to poll the state machine of the migration session.
+      parameters:
+        - name: device_id
+          in: path
+          required: true
+          schema:
+            type: string
+            format: uuid
+      responses:
+        '200':
+          description: Session status retrieved successfully
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/MigrationStatusResponse'
+        '404':
+          description: Migration session not found (Pending creation by primary device)
+
+  /v1/users/devices/migrations/{device_id}:
+    put:
+      tags: [Device Management]
+      summary: Create migration session & get upload URL
+      description: Initiated by the primary device after scanning the out-of-band payload. Creates a migration session for the target device and returns an S3 presigned URL for blob upload.
       security:
         - BearerAuth: []
       parameters:
         - $ref: '#/components/parameters/IdempotencyKeyRequired'
+        - name: device_id
+          in: path
+          required: true
+          schema:
+            type: string
+            format: uuid
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/CreateMigrationSessionRequest'
       responses:
         '200':
-          description: Presigned URL generated successfully
+          description: Session created, upload URL generated
           content:
             application/json:
               schema:
                 $ref: '#/components/schemas/PresignedUrlResponse'
 
-  /v1/users/devices/migrations/link-token:
+  /v1/users/devices/migrations/{device_id}/complete-upload:
     post:
       tags: [Device Management]
-      summary: Generate link token for uploaded blob
-      description: Associates a previously uploaded blob in S3 Storage with a new link token.
+      summary: Confirm blob upload completion
+      description: Called by the primary device after successfully uploading the blob to S3. Transitions the session state to READY_FOR_AUTH.
       security:
         - BearerAuth: []
       parameters:
         - $ref: '#/components/parameters/IdempotencyKeyRequired'
-      requestBody:
-        required: true
-        content:
-          application/json:
-            schema:
-              $ref: '#/components/schemas/GenerateLinkTokenRequest'
+        - name: device_id
+          in: path
+          required: true
+          schema:
+            type: string
+            format: uuid
       responses:
-        '201':
-          description: Link token generated successfully
-          content:
-            application/json:
-              schema:
-                $ref: '#/components/schemas/LinkTokenResponse'
+        '204':
+          description: Upload confirmed successfully (No Content)
 
-  /v1/users/devices/migrations/download-url:
+  /v1/users/devices/migrations/{device_id}/download-url:
     post:
       tags: [Device Management]
       summary: Request S3 presigned URL for blob download
-      description: Verifies the link token signature and returns a short-lived presigned URL to download the encrypted state blob directly from S3 Storage.
+      description: Called by the new device. Verifies the challenge signature and returns a short-lived presigned URL to download the state blob, along with the device signature provided by the primary device.
+      parameters:
+        - name: device_id
+          in: path
+          required: true
+          schema:
+            type: string
+            format: uuid
       requestBody:
         required: true
         content:
           application/json:
             schema:
-              $ref: '#/components/schemas/DownloadUrlRequest'
+              $ref: '#/components/schemas/DownloadBlobRequest'
       responses:
         '200':
-          description: Presigned URL generated successfully
+          description: Presigned URL and device signature retrieved successfully
           content:
             application/json:
               schema:
-                type: object
-                properties:
-                  download_url:
-                    type: string
-                    format: uri
+                $ref: '#/components/schemas/DownloadUrlResponse'
 
   /v1/users/devices/{device_id}:
     put:
       tags: [Device Management]
       summary: Register a secondary device
-      description: Exchanges the link token for a new device session.
+      description: Finalizes the migration process by registering the new device.
       parameters:
         - $ref: '#/components/parameters/IdempotencyKeyRequired'
         - name: device_id
@@ -392,6 +425,30 @@ components:
         refresh_token:
           type: string
 
+    MigrationStatusResponse:
+      type: object
+      properties:
+        status:
+          type: string
+          enum: [WAITING_FOR_UPLOAD, READY_FOR_AUTH, DOWNLOADING]
+          description: Current state of the migration session
+        challenge:
+          type: string
+          description: Provided only when status is READY_FOR_AUTH
+
+    CreateMigrationSessionRequest:
+      type: object
+      properties:
+        identity_key:
+          type: string
+          description: Public identity signing key (e.g., Ed25519) of the new device
+        encryption_key:
+          type: string
+          description: Public ephemeral encryption key (e.g., X25519) of the new device
+        device_signature:
+          type: string
+          description: Master key signature generated by the primary device authorizing the new device
+
     PresignedUrlResponse:
       type: object
       properties:
@@ -402,59 +459,40 @@ components:
           type: string
           format: uri
 
-    GenerateLinkTokenRequest:
+    DownloadBlobRequest:
       type: object
       properties:
-        blob_id:
-          type: string
-          format: uuid
-        identity_key:
-          type: string
-          description: Public identity signing key (e.g., Ed25519) for the new device
-
-    LinkTokenResponse:
-      type: object
-      properties:
-        link_token:
-          type: string
-        challenge:
-          type: string
-        expires_in:
-          type: integer
-
-    DownloadUrlRequest:
-      type: object
-      properties:
-        link_token:
-          type: string
         signature:
           type: string
+          description: Signature of the challenge string provided in the polling endpoint
 
-    DownloadBlobResponse:
+    DownloadUrlResponse:
       type: object
       properties:
-        encrypted_blob:
+        download_url:
           type: string
+          format: uri
+        device_signature:
+          type: string
+          description: The Master key signature previously uploaded by the primary device
 
     RegisterDeviceRequest:
       type: object
       properties:
-        link_token:
-          type: string
         signature:
           type: string
+          description: Signature of the challenge proving possession of the identity private key
         identity_key:
           type: string
-          description: Public identity signing key (e.g., Ed25519) for the new device
         encryption_key:
           type: string
-          description: Public ephemeral encryption key (e.g., X25519) for the new device
         device_name:
           type: string
         device_type:
           type: string
         device_signature:
           type: string
+          description: Master key signature authorizing this device
 
     UpdateProfileRequest:
       type: object
