@@ -129,29 +129,7 @@ paths:
               schema:
                 $ref: '#/components/schemas/TokenPairResponse'
 
-  /v1/users/devices/migrations/{device_id}/status:
-    get:
-      tags: [Device Management]
-      summary: Poll migration session status
-      description: Used by the new device to poll the state machine of the migration session.
-      parameters:
-        - name: device_id
-          in: path
-          required: true
-          schema:
-            type: string
-            format: uuid
-      responses:
-        '200':
-          description: Session status retrieved successfully
-          content:
-            application/json:
-              schema:
-                $ref: '#/components/schemas/MigrationStatusResponse'
-        '404':
-          description: Migration session not found (Pending creation by primary device)
-
-  /v1/users/devices/migrations/{device_id}:
+  /v1/users/devices/migrations/{migration_id}:
     put:
       tags: [Device Management]
       summary: Create migration session & get upload URL
@@ -160,7 +138,7 @@ paths:
         - BearerAuth: []
       parameters:
         - $ref: '#/components/parameters/IdempotencyKeyRequired'
-        - name: device_id
+        - name: migration_id
           in: path
           required: true
           schema:
@@ -180,7 +158,29 @@ paths:
               schema:
                 $ref: '#/components/schemas/PresignedUrlResponse'
 
-  /v1/users/devices/migrations/{device_id}/complete-upload:
+  /v1/users/devices/migrations/{migration_id}/status:
+    get:
+      tags: [Device Management]
+      summary: Poll migration session status
+      description: Used by the new device to poll the state machine of the migration session.
+      parameters:
+        - name: migration_id
+          in: path
+          required: true
+          schema:
+            type: string
+            format: uuid
+      responses:
+        '200':
+          description: Session status retrieved successfully
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/MigrationStatusResponse'
+        '404':
+          description: Migration session not found (Pending creation by primary device)
+
+  /v1/users/devices/migrations/{migration_id}/complete-upload:
     post:
       tags: [Device Management]
       summary: Confirm blob upload completion
@@ -189,7 +189,7 @@ paths:
         - BearerAuth: []
       parameters:
         - $ref: '#/components/parameters/IdempotencyKeyRequired'
-        - name: device_id
+        - name: migration_id
           in: path
           required: true
           schema:
@@ -199,13 +199,13 @@ paths:
         '204':
           description: Upload confirmed successfully (No Content)
 
-  /v1/users/devices/migrations/{device_id}/download-url:
+  /v1/users/devices/migrations/{migration_id}/download-url:
     post:
       tags: [Device Management]
       summary: Request S3 presigned URL for blob download
       description: Called by the new device. Verifies the challenge signature and returns a short-lived presigned URL to download the state blob, along with the device signature provided by the primary device.
       parameters:
-        - name: device_id
+        - name: migration_id
           in: path
           required: true
           schema:

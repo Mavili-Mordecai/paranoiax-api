@@ -4,8 +4,8 @@ import tools.jackson.databind.PropertyNamingStrategies;
 import tools.jackson.databind.annotation.JsonNaming;
 
 @JsonNaming(PropertyNamingStrategies.SnakeCaseStrategy.class)
-public record CreateUploadUrlResponse(
-        String blobId,
-        String uploadUrl
+public record MigrationStatusResponse(
+        String status,
+        String challenge
 ) {
 }
