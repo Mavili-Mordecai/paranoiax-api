@@ -1,5 +1,7 @@
 package com.paranoiax.users.infrastructure.rest.api.devices.v1;
 
+import com.paranoiax.users.application.ports.in.devices.migrations.createMigration.CreateDeviceMigrationCommand;
+import com.paranoiax.users.application.ports.in.devices.migrations.createMigration.CreateDeviceMigrationUseCase;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
@@ -13,6 +15,7 @@ import java.util.UUID;
 @RestController
 @RequestMapping("/v1/users/devices/migrations")
 public class DeviceMigrationController {
+    private final CreateDeviceMigrationUseCase createDeviceMigrationUseCase;
 
     @PutMapping("/{migration_id}")
     public ResponseEntity<MigrationResponse> createMigration(
@@ -21,10 +24,15 @@ public class DeviceMigrationController {
             @AuthenticationPrincipal UUID userId,
             @Valid @RequestBody CreateMigrationRequest request
     ) {
-        return ResponseEntity.status(HttpStatus.CREATED).body(new MigrationResponse(
-                "test-link-token",
-                "test-challenge"
+        String uploadUrl = createDeviceMigrationUseCase.execute(new CreateDeviceMigrationCommand(
+                migrationId,
+                userId,
+                request.identityKey(),
+                request.encryptionKey(),
+                request.deviceSignature(),
+                idempotencyKey
         ));
+        return ResponseEntity.status(HttpStatus.CREATED).body(new MigrationResponse(uploadUrl));
     }
 
     @GetMapping("/{migration_id}/status")

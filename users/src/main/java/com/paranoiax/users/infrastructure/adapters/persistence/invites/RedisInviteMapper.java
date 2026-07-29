@@ -1,7 +1,7 @@
 package com.paranoiax.users.infrastructure.adapters.persistence.invites;
 
 import com.paranoiax.users.domain.models.invite.Invite;
-import com.paranoiax.users.infrastructure.common.OperationResultsMapper;
+import com.paranoiax.users.infrastructure.common.operationResultMapper.OperationResultsMapper;
 import org.springframework.stereotype.Component;
 
 @Component

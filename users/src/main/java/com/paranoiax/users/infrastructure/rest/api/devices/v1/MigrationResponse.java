@@ -5,7 +5,6 @@ import tools.jackson.databind.annotation.JsonNaming;
 
 @JsonNaming(PropertyNamingStrategies.SnakeCaseStrategy.class)
 public record MigrationResponse(
-        String blobId,
         String uploadUrl
 ) {
 }

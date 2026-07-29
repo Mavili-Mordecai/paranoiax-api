@@ -3,7 +3,7 @@ package com.paranoiax.users.infrastructure.adapters.persistence.user;
 import com.paranoiax.users.domain.models.IdentityKey;
 import com.paranoiax.users.domain.models.ImageUrl;
 import com.paranoiax.users.domain.models.user.*;
-import com.paranoiax.users.infrastructure.common.OperationResultsMapper;
+import com.paranoiax.users.infrastructure.common.operationResultMapper.OperationResultsMapper;
 import com.paranoiax.users.infrastructure.persistence.entities.AvatarEntity;
 import com.paranoiax.users.infrastructure.persistence.entities.UserEntity;
 import org.springframework.stereotype.Component;

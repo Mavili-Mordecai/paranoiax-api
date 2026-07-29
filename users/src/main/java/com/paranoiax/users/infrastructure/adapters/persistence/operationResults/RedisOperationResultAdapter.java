@@ -5,7 +5,7 @@ import com.fasterxml.jackson.databind.JavaType;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.paranoiax.users.application.ports.out.operationResult.OperationRecord;
 import com.paranoiax.users.application.ports.out.operationResult.OperationResultPort;
-import com.paranoiax.users.infrastructure.common.OperationResultsMapper;
+import com.paranoiax.users.infrastructure.common.operationResultMapper.OperationResultsMapper;
 import com.paranoiax.users.infrastructure.exceptions.InfrastructureException;
 import org.springframework.data.redis.core.RedisTemplate;
 import org.springframework.stereotype.Component;

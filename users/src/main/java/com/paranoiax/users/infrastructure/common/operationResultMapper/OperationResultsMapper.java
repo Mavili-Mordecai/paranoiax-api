@@ -1,4 +1,4 @@
-package com.paranoiax.users.infrastructure.common;
+package com.paranoiax.users.infrastructure.common.operationResultMapper;
 
 public interface OperationResultsMapper<DOMAIN, ENTITY> {
     Class<DOMAIN> getDomainClass();

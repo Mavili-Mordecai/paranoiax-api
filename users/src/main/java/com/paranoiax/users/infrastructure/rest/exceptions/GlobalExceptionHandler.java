@@ -15,6 +15,7 @@ import org.springframework.http.converter.HttpMessageNotReadableException;
 import org.springframework.validation.FieldError;
 import org.springframework.web.HttpMediaTypeNotSupportedException;
 import org.springframework.web.bind.MethodArgumentNotValidException;
+import org.springframework.web.bind.MissingRequestHeaderException;
 import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.RestControllerAdvice;
 
@@ -81,6 +82,23 @@ public class GlobalExceptionHandler {
                                 "UNSUPPORTED_MEDIA_TYPE",
                                 "Expected multipart/form-data",
                                 null
+                        )
+                ));
+    }
+
+    @ExceptionHandler(MissingRequestHeaderException.class)
+    public ResponseEntity<ErrorResponse<DomainErrorResponse>> handleMissingRequestHeaderException(
+            MissingRequestHeaderException ex, HttpServletRequest request
+    ) {
+        return ResponseEntity.status(HttpStatus.BAD_REQUEST)
+                .contentType(MediaType.APPLICATION_JSON)
+                .body(ErrorResponse.of(
+                        MDC.get("traceId"),
+                        request.getRequestURI(),
+                        new DomainErrorResponse(
+                                "MISSING_REQUEST_HEADER",
+                                "Missing request header: " + ex.getHeaderName(),
+                                Map.of("resource", ex.getHeaderName())
                         )
                 ));
     }

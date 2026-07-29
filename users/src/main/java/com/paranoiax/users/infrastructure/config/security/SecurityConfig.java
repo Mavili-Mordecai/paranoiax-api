@@ -29,6 +29,8 @@ public class SecurityConfig {
                         .requestMatchers(HttpMethod.PUT, "/v1/users").permitAll()
                         .requestMatchers(HttpMethod.POST, "/v1/users/auth/**").permitAll()
                         .requestMatchers(HttpMethod.PUT, "/v1/users/devices/*").permitAll()
+                        .requestMatchers("/v1/users/devices/migrations/*/status").permitAll()
+                        .requestMatchers("/v1/users/devices/migrations/*/download-url").permitAll()
                         .requestMatchers("/error").permitAll()
                         .anyRequest().authenticated()
                 )

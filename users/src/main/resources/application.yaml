@@ -91,3 +91,16 @@ jwt:
     ttl: 15m
   refresh:
     ttl: 30d
+
+s3:
+  endpoint: ${S3_ENDPOINT:http://localhost:8333}
+  access-key: ${S3_ACCESS_KEY}
+  secret-key: ${S3_SECRET_KEY}
+  lock-ttl: 10s
+  result-ttl: 15m
+  migration:
+    bucket: migrations
+    upload-url:
+      ttl: 15m
+    download-url:
+      ttl: 10m

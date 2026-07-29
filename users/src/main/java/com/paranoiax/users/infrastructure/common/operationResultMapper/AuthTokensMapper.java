@@ -1,7 +1,6 @@
-package com.paranoiax.users.infrastructure.adapters.persistence;
+package com.paranoiax.users.infrastructure.common.operationResultMapper;
 
 import com.paranoiax.users.application.ports.in.auth.TokenPair;
-import com.paranoiax.users.infrastructure.common.OperationResultsMapper;
 import org.springframework.stereotype.Component;
 
 @Component

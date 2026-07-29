@@ -452,9 +452,6 @@ components:
     PresignedUrlResponse:
       type: object
       properties:
-        blob_id:
-          type: string
-          format: uuid
         upload_url:
           type: string
           format: uri
