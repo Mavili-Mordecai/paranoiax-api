@@ -66,27 +66,33 @@ eureka:
 application:
   public-host: ${APP_PUBLIC_HOST:localhost:8080}
   spki-pin: ${APP_SPKI_PIN:sha256/AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA=}
-  invite:
-    lock-ttl: 5s
-    result-ttl: 15m
-  register:
-    invite-only: ${APP_REGISTER_INVITE_ONLY:true}
-    lock-ttl: 30s
-    result-ttl: 1d
-  challenge:
-    lock-ttl: 5s
-    result-ttl: 1m
-  challenge-auth:
-    lock-ttl: 5s
-    result-ttl: 1m
-  refresh:
-    lock-ttl: 5s
-    result-ttl: 1m
+  auth:
+    invite:
+      lock-ttl: 5s
+      result-ttl: 15m
+      token-size: 32
+    register:
+      invite-only: ${APP_REGISTER_INVITE_ONLY:true}
+      lock-ttl: 30s
+      result-ttl: 1d
+    challenge:
+      lock-ttl: 5s
+      result-ttl: 1m
+      token-size: 32
+    challenge-auth:
+      lock-ttl: 5s
+      result-ttl: 1m
+    refresh:
+      lock-ttl: 5s
+      result-ttl: 1m
   devices:
     migrations:
+      migration:
+        token-size: 32
       complete-upload:
         lock-ttl: 5s
         result-ttl: 1m
+        token-size: 32
 jwt:
   keys:
     private: ${JWT_PRIVATE_KEY}

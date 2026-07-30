@@ -19,20 +19,22 @@ public class CompleteDeviceMigrationUploadService implements CompleteDeviceMigra
     private final OperationExecutor executor;
     private final Duration lockTtl;
     private final Duration resultTtl;
-    private final int size = 32;
+    private final int tokenSize;
 
     public CompleteDeviceMigrationUploadService(
             DeviceMigrationPort deviceMigrationPort,
             TokenGenerator tokenGenerator,
             OperationExecutor executor,
             Duration lockTtl,
-            Duration resultTtl
+            Duration resultTtl,
+            int tokenSize
     ) {
         this.deviceMigrationPort = deviceMigrationPort;
         this.tokenGenerator = tokenGenerator;
         this.executor = executor;
         this.lockTtl = lockTtl;
         this.resultTtl = resultTtl;
+        this.tokenSize = tokenSize;
     }
 
     @Override
@@ -45,7 +47,7 @@ public class CompleteDeviceMigrationUploadService implements CompleteDeviceMigra
                 throw new AccessDeniedException();
             }
 
-            migration.confirmUpload(new ChallengeValue(tokenGenerator.generate(size)));
+            migration.confirmUpload(new ChallengeValue(tokenGenerator.generate(tokenSize)));
 
             return deviceMigrationPort.update(migration, migration.getRemainingTtl());
         });

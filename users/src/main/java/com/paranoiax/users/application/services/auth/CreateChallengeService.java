@@ -21,7 +21,7 @@ public class CreateChallengeService implements CreateChallengeUseCase {
     private final OperationExecutor executor;
     private final Duration lockTtl;
     private final Duration resultTll;
-    private final int size = 32;
+    private final int tokenSize;
 
     public CreateChallengeService(
             ChallengePort challengePort,
@@ -29,7 +29,8 @@ public class CreateChallengeService implements CreateChallengeUseCase {
             TokenGenerator tokenGenerator,
             OperationExecutor executor,
             Duration lockTtl,
-            Duration resultTll
+            Duration resultTll,
+            int tokenSize
     ) {
         this.devicePort = devicePort;
         this.executor = executor;
@@ -37,6 +38,7 @@ public class CreateChallengeService implements CreateChallengeUseCase {
         this.tokenGenerator = tokenGenerator;
         this.lockTtl = lockTtl;
         this.resultTll = resultTll;
+        this.tokenSize = tokenSize;
     }
 
     @Override
@@ -47,7 +49,7 @@ public class CreateChallengeService implements CreateChallengeUseCase {
 
             Challenge challenge = Challenge.create(
                     device.getId(),
-                    new ChallengeValue(tokenGenerator.generate(size)),
+                    new ChallengeValue(tokenGenerator.generate(tokenSize)),
                     resultTll
             );
             return challengePort.save(challenge, resultTll);

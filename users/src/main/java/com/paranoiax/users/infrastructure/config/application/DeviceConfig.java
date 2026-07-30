@@ -27,7 +27,8 @@ public class DeviceConfig {
             TokenGenerator tokenGenerator,
             OperationExecutor executor,
             @Value("${s3.lock-ttl}") Duration lockTtl,
-            @Value("${s3.result-ttl}") Duration resultTtl
+            @Value("${s3.result-ttl}") Duration resultTtl,
+            @Value("${application.devices.migrations.migration.token-size}") int tokenSize
     ) {
          return new CreateDeviceMigrationService(
                  s3Port,
@@ -36,7 +37,8 @@ public class DeviceConfig {
                  tokenGenerator,
                  executor,
                  lockTtl,
-                 resultTtl
+                 resultTtl,
+                 tokenSize
          );
     }
 
@@ -51,14 +53,16 @@ public class DeviceConfig {
             TokenGenerator tokenGenerator,
             OperationExecutor executor,
             @Value("${application.devices.migrations.complete-upload.lock-ttl}") Duration lockTtl,
-            @Value("${application.devices.migrations.complete-upload.result-ttl}") Duration resultTtl
+            @Value("${application.devices.migrations.complete-upload.result-ttl}") Duration resultTtl,
+            @Value("${application.devices.migrations.complete-upload.token-size}") int tokenSize
     ) {
         return new CompleteDeviceMigrationUploadService(
                 deviceMigrationPort,
                 tokenGenerator,
                 executor,
                 lockTtl,
-                resultTtl
+                resultTtl,
+                tokenSize
         );
     }
 }
