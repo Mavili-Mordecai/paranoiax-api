@@ -9,8 +9,7 @@ The core philosophy of ParanoiaX is absolute trustlessness in the server infrast
 * **[Users](./users/README.md)** — Core service handling invite-only registration, passwordless Challenge-Response authentication, device fleet management, and Cross-Signing attestation.
 * **Chats** — Manages chat rooms, group metadata, and participant lists.
 * **Messages** — Handles the routing of E2EE payloads, offline message queues, and delivery receipts.
-* **Sessions** — Manages persistent WebSocket connections for real-time, instant message delivery to online devices.
-* **Notifications** — Responsible for dispatching push notifications (via Firebase Cloud Messaging).
+* **MessageGateway** — delivers events through the appropriate transport (WebSocket or FCM).
 
 ---
 
