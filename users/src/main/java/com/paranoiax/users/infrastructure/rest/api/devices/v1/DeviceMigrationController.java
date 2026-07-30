@@ -2,6 +2,8 @@ package com.paranoiax.users.infrastructure.rest.api.devices.v1;
 
 import com.paranoiax.users.application.ports.in.devices.migrations.createMigration.CreateDeviceMigrationCommand;
 import com.paranoiax.users.application.ports.in.devices.migrations.createMigration.CreateDeviceMigrationUseCase;
+import com.paranoiax.users.application.ports.in.devices.migrations.getMigrationStatus.DeviceMigrationStatusResult;
+import com.paranoiax.users.application.ports.in.devices.migrations.getMigrationStatus.GetDeviceMigrationStatusUseCase;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
@@ -16,6 +18,7 @@ import java.util.UUID;
 @RequestMapping("/v1/users/devices/migrations")
 public class DeviceMigrationController {
     private final CreateDeviceMigrationUseCase createDeviceMigrationUseCase;
+    private final GetDeviceMigrationStatusUseCase getDeviceMigrationStatusUseCase;
 
     @PutMapping("/{migration_id}")
     public ResponseEntity<MigrationResponse> createMigration(
@@ -39,9 +42,10 @@ public class DeviceMigrationController {
     public ResponseEntity<MigrationStatusResponse> getMigrationStatus(
             @PathVariable("migration_id") UUID migrationId
     ) {
+        DeviceMigrationStatusResult result = getDeviceMigrationStatusUseCase.execute(migrationId);
         return ResponseEntity.ok(new MigrationStatusResponse(
-                "test-status",
-                "test-challenge"
+                result.status().name(),
+                result.challenge() != null ? result.challenge().value() : null
         ));
     }
 
