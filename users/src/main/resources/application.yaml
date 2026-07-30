@@ -82,7 +82,11 @@ application:
   refresh:
     lock-ttl: 5s
     result-ttl: 1m
-
+  devices:
+    migrations:
+      complete-upload:
+        lock-ttl: 5s
+        result-ttl: 1m
 jwt:
   keys:
     private: ${JWT_PRIVATE_KEY}

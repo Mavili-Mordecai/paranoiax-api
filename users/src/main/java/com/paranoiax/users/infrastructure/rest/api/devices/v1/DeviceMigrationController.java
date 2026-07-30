@@ -1,5 +1,7 @@
 package com.paranoiax.users.infrastructure.rest.api.devices.v1;
 
+import com.paranoiax.users.application.ports.in.devices.migrations.completeUpload.CompleteDeviceMigrationUploadCommand;
+import com.paranoiax.users.application.ports.in.devices.migrations.completeUpload.CompleteDeviceMigrationUploadUseCase;
 import com.paranoiax.users.application.ports.in.devices.migrations.createMigration.CreateDeviceMigrationCommand;
 import com.paranoiax.users.application.ports.in.devices.migrations.createMigration.CreateDeviceMigrationUseCase;
 import com.paranoiax.users.application.ports.in.devices.migrations.getMigrationStatus.DeviceMigrationStatusResult;
@@ -19,6 +21,7 @@ import java.util.UUID;
 public class DeviceMigrationController {
     private final CreateDeviceMigrationUseCase createDeviceMigrationUseCase;
     private final GetDeviceMigrationStatusUseCase getDeviceMigrationStatusUseCase;
+    private final CompleteDeviceMigrationUploadUseCase completeDeviceMigrationUploadUseCase;
 
     @PutMapping("/{migration_id}")
     public ResponseEntity<MigrationResponse> createMigration(
@@ -56,6 +59,7 @@ public class DeviceMigrationController {
             @RequestHeader("Idempotency-Key") String idempotencyKey,
             @AuthenticationPrincipal UUID userId
     ) {
+        completeDeviceMigrationUploadUseCase.execute(new CompleteDeviceMigrationUploadCommand(migrationId, userId, idempotencyKey));
     }
 
     @PostMapping("/{migration_id}/download-url")

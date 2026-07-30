@@ -1,9 +1,6 @@
 package com.paranoiax.users.infrastructure.rest.exceptions;
 
-import com.paranoiax.users.domain.exceptions.DomainErrorCode;
-import com.paranoiax.users.domain.exceptions.DomainException;
-import com.paranoiax.users.domain.exceptions.NotFoundException;
-import com.paranoiax.users.domain.exceptions.UnauthorizeException;
+import com.paranoiax.users.domain.exceptions.*;
 import jakarta.servlet.http.HttpServletRequest;
 import lombok.extern.slf4j.Slf4j;
 import org.jspecify.annotations.NonNull;
@@ -14,11 +11,13 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.http.converter.HttpMessageNotReadableException;
 import org.springframework.validation.FieldError;
 import org.springframework.web.HttpMediaTypeNotSupportedException;
+import org.springframework.web.HttpRequestMethodNotSupportedException;
 import org.springframework.web.bind.MethodArgumentNotValidException;
 import org.springframework.web.bind.MissingRequestHeaderException;
 import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.RestControllerAdvice;
 
+import java.util.Collections;
 import java.util.HashMap;
 import java.util.Map;
 
@@ -33,6 +32,11 @@ public class GlobalExceptionHandler {
     @ExceptionHandler(value = UnauthorizeException.class)
     public ResponseEntity<ErrorResponse<DomainErrorResponse>> handleUnauthorizeException(UnauthorizeException e, HttpServletRequest request) {
         return getErrorResponse(HttpStatus.UNAUTHORIZED, request, e.getCode(), e.getMessage(), e.getArgs());
+    }
+
+    @ExceptionHandler(value = AccessDeniedException.class)
+    public ResponseEntity<ErrorResponse<DomainErrorResponse>> handleAccessDeniedException(AccessDeniedException e, HttpServletRequest request) {
+        return getErrorResponse(HttpStatus.FORBIDDEN, request, e.getCode(), e.getMessage(), e.getArgs());
     }
 
     @ExceptionHandler(value = DomainException.class)
@@ -68,11 +72,26 @@ public class GlobalExceptionHandler {
                 ));
     }
 
+    @ExceptionHandler(value = HttpRequestMethodNotSupportedException.class)
+    public ResponseEntity<ErrorResponse<DomainErrorResponse>> handleHttpRequestMethodNotSupportedException(HttpRequestMethodNotSupportedException e, HttpServletRequest request) {
+        String[] supportedMethods = e.getSupportedMethods();
+        return ResponseEntity.status(HttpStatus.METHOD_NOT_ALLOWED)
+                .contentType(MediaType.APPLICATION_JSON)
+                .body(ErrorResponse.of(
+                        MDC.get("traceId"),
+                        request.getRequestURI(),
+                        new DomainErrorResponse(
+                                "METHOD_NOT_ALLOWED",
+                                "Method not allowed",
+                                Map.of("supportedMethods", supportedMethods != null ? supportedMethods : Collections.emptyList())
+                        )
+                ));
+    }
+
     @ExceptionHandler(HttpMediaTypeNotSupportedException.class)
     public ResponseEntity<ErrorResponse<DomainErrorResponse>> handleMediaTypeNotSupported(
             HttpMediaTypeNotSupportedException ex, HttpServletRequest request
     ) {
-
         return ResponseEntity.status(HttpStatus.UNSUPPORTED_MEDIA_TYPE)
                 .contentType(MediaType.APPLICATION_JSON)
                 .body(ErrorResponse.of(

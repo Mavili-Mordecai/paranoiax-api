@@ -7,6 +7,7 @@ import com.paranoiax.users.application.ports.out.S3Port;
 import com.paranoiax.users.application.ports.out.UserPort;
 import com.paranoiax.users.application.ports.out.crypto.TokenGenerator;
 import com.paranoiax.users.application.services.OperationExecutor;
+import com.paranoiax.users.application.services.devices.migrations.CompleteDeviceMigrationUploadService;
 import com.paranoiax.users.application.services.devices.migrations.CreateDeviceMigrationService;
 import com.paranoiax.users.application.services.devices.migrations.GetDeviceMigrationStatusService;
 import org.springframework.beans.factory.annotation.Value;
@@ -42,5 +43,22 @@ public class DeviceConfig {
     @Bean
     public GetDeviceMigrationStatusUseCase getDeviceMigrationStatusUseCase(DeviceMigrationPort deviceMigrationPort) {
         return new GetDeviceMigrationStatusService(deviceMigrationPort);
+    }
+
+    @Bean
+    public CompleteDeviceMigrationUploadService completeDeviceMigrationUploadService(
+            DeviceMigrationPort deviceMigrationPort,
+            TokenGenerator tokenGenerator,
+            OperationExecutor executor,
+            @Value("${application.devices.migrations.complete-upload.lock-ttl}") Duration lockTtl,
+            @Value("${application.devices.migrations.complete-upload.result-ttl}") Duration resultTtl
+    ) {
+        return new CompleteDeviceMigrationUploadService(
+                deviceMigrationPort,
+                tokenGenerator,
+                executor,
+                lockTtl,
+                resultTtl
+        );
     }
 }

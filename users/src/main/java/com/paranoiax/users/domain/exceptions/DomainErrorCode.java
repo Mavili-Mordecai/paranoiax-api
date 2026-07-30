@@ -12,7 +12,8 @@ public enum DomainErrorCode {
     EXPIRED_EXCEPTION("%s has expired"),
     INVALID_SIGNATURE("%s has an invalid signature"),
     ALREADY_REVOKED("%s already revoked"),
-    OPERATION_PARAMETERS_CHANGED("Operation already processed with different parameters");
+    OPERATION_PARAMETERS_CHANGED("Operation already processed with different parameters"),
+    ACCESS_DENIED("Access denied");
 
     private final String defaultMessage;
 
