@@ -3,7 +3,7 @@ package com.paranoiax.users.application.services.devices.migrations;
 import com.paranoiax.users.application.ports.in.devices.migrations.generateDownloadUrl.DeviceMigrationDownloadUrlResult;
 import com.paranoiax.users.application.ports.in.devices.migrations.generateDownloadUrl.GenerateDeviceMigrationDownloadUrlCommand;
 import com.paranoiax.users.application.ports.in.devices.migrations.generateDownloadUrl.GenerateDeviceMigrationDownloadUrlUseCase;
-import com.paranoiax.users.application.ports.out.ChallengeVerifierPort;
+import com.paranoiax.users.application.ports.out.SignatureVerifierPort;
 import com.paranoiax.users.application.ports.out.DeviceMigrationPort;
 import com.paranoiax.users.application.ports.out.MediaStoragePort;
 import com.paranoiax.users.application.ports.out.UserPort;
@@ -15,13 +15,12 @@ import com.paranoiax.users.domain.models.device.migration.DeviceMigration;
 import com.paranoiax.users.domain.models.device.migration.DeviceMigrationId;
 
 import java.time.Duration;
-import java.util.Base64;
 
 public class GenerateDeviceMigrationDownloadUrlService implements GenerateDeviceMigrationDownloadUrlUseCase {
     private final MediaStoragePort mediaStoragePort;
     private final DeviceMigrationPort deviceMigrationPort;
     private final UserPort userPort;
-    private final ChallengeVerifierPort verifierPort;
+    private final SignatureVerifierPort verifierPort;
     private final OperationExecutor executor;
     private final Duration lockTtl;
     private final Duration resultTtl;
@@ -30,7 +29,7 @@ public class GenerateDeviceMigrationDownloadUrlService implements GenerateDevice
             MediaStoragePort mediaStoragePort,
             DeviceMigrationPort deviceMigrationPort,
             UserPort userPort,
-            ChallengeVerifierPort verifierPort,
+            SignatureVerifierPort verifierPort,
             OperationExecutor executor,
             Duration lockTtl,
             Duration resultTtl
@@ -58,9 +57,9 @@ public class GenerateDeviceMigrationDownloadUrlService implements GenerateDevice
 
             try {
                 boolean verified = verifierPort.verify(
-                        Base64.getDecoder().decode(migration.getIdentityKey().value()),
-                        Base64.getDecoder().decode(migration.getChallenge().value()),
-                        Base64.getDecoder().decode(command.signature())
+                        migration.getIdentityKey().value(),
+                        migration.getChallenge().value(),
+                        command.signature()
                 );
 
                 if (!verified) {

@@ -3,7 +3,7 @@ package com.paranoiax.users.infrastructure.config.application;
 import com.paranoiax.users.application.ports.in.devices.migrations.createMigration.CreateDeviceMigrationUseCase;
 import com.paranoiax.users.application.ports.in.devices.migrations.generateDownloadUrl.GenerateDeviceMigrationDownloadUrlUseCase;
 import com.paranoiax.users.application.ports.in.devices.migrations.getMigrationStatus.GetDeviceMigrationStatusUseCase;
-import com.paranoiax.users.application.ports.out.ChallengeVerifierPort;
+import com.paranoiax.users.application.ports.out.SignatureVerifierPort;
 import com.paranoiax.users.application.ports.out.DeviceMigrationPort;
 import com.paranoiax.users.application.ports.out.MediaStoragePort;
 import com.paranoiax.users.application.ports.out.UserPort;
@@ -74,7 +74,7 @@ public class DeviceConfig {
             MediaStoragePort mediaStoragePort,
             DeviceMigrationPort deviceMigrationPort,
             UserPort userPort,
-            ChallengeVerifierPort verifierPort,
+            SignatureVerifierPort verifierPort,
             OperationExecutor executor,
             @Value("${application.devices.migrations.generate-download-url.lock-ttl}") Duration lockTtl,
             @Value("${application.devices.migrations.generate-download-url.result-ttl}") Duration resultTtl

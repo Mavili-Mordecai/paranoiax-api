@@ -61,7 +61,7 @@ public class AuthConfig {
     public ChallengeAuthUseCase challengeAuthUseCase(
             DevicePort devicePort,
             ChallengePort challengePort,
-            ChallengeVerifierPort verifierPort,
+            SignatureVerifierPort verifierPort,
             AuthTokenPort authTokenPort,
             OperationExecutor executor,
             @Value("${application.auth.challenge-auth.lock-ttl}") Duration lockTtl,
