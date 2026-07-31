@@ -2,9 +2,11 @@ package com.paranoiax.users.domain.models.device.migration;
 
 import com.paranoiax.users.domain.Require;
 import com.paranoiax.users.domain.exceptions.DomainErrorCode;
+import com.paranoiax.users.domain.exceptions.ExpiredException;
 import com.paranoiax.users.domain.models.ChallengeValue;
 import com.paranoiax.users.domain.models.EncryptionKey;
 import com.paranoiax.users.domain.models.IdentityKey;
+import com.paranoiax.users.domain.models.device.DeviceId;
 import com.paranoiax.users.domain.models.device.DeviceSignature;
 import com.paranoiax.users.domain.models.user.UserId;
 
@@ -14,8 +16,9 @@ import java.util.UUID;
 
 public class DeviceMigration {
     private final DeviceMigrationId id;
+    /** The new device's id */
+    private final DeviceId deviceId;
     private final UserId userId;
-    private final String linkToken;
     private final UUID blobId;
     private ChallengeValue challenge;
     private DeviceMigrationStatus status;
@@ -28,14 +31,14 @@ public class DeviceMigration {
     private final Instant expiresAt;
 
     private DeviceMigration(
-            DeviceMigrationId id, UserId userId,
-            String linkToken, UUID blobId, ChallengeValue challenge, DeviceMigrationStatus status,
+            DeviceMigrationId id, DeviceId deviceId, UserId userId,
+            UUID blobId, ChallengeValue challenge, DeviceMigrationStatus status,
             IdentityKey identityKey, EncryptionKey encryptionKey, DeviceSignature deviceSignature,
             Instant createdAt, Instant expiresAt
     ) {
         this.id = Require.notNull(id, DomainErrorCode.MISSING_REQUIRED_FIELD, "id");
+        this.deviceId = Require.notNull(deviceId, DomainErrorCode.MISSING_REQUIRED_FIELD, "deviceId");
         this.userId = Require.notNull(userId, DomainErrorCode.MISSING_REQUIRED_FIELD, "userId");
-        this.linkToken = Require.notBlank(linkToken, DomainErrorCode.MISSING_REQUIRED_FIELD, "token");
         this.blobId = Require.notNull(blobId, DomainErrorCode.MISSING_REQUIRED_FIELD, "blobId");
         this.status = Require.notNull(status, DomainErrorCode.MISSING_REQUIRED_FIELD, "status");
         this.identityKey = Require.notNull(identityKey, DomainErrorCode.MISSING_REQUIRED_FIELD, "identityKey");
@@ -47,15 +50,15 @@ public class DeviceMigration {
     }
 
     public static DeviceMigration of(
-            DeviceMigrationId id, UserId userId,
-            String linkToken, UUID blobId, ChallengeValue challenge, DeviceMigrationStatus status,
+            DeviceMigrationId id, DeviceId deviceId, UserId userId,
+            UUID blobId, ChallengeValue challenge, DeviceMigrationStatus status,
             IdentityKey identityKey, EncryptionKey encryptionKey, DeviceSignature deviceSignature,
             Instant createdAt, Instant expiresAt
     ) {
         return new DeviceMigration(
                 id,
+                deviceId,
                 userId,
-                linkToken,
                 blobId,
                 challenge,
                 status,
@@ -68,16 +71,16 @@ public class DeviceMigration {
     }
 
     public static DeviceMigration create(
-            DeviceMigrationId id, UserId userId,
-            String linkToken, UUID blobId,
+            DeviceMigrationId id, DeviceId deviceId, UserId userId,
+            UUID blobId,
             IdentityKey identityKey, EncryptionKey encryptionKey, DeviceSignature deviceSignature,
             Duration ttl
     ) {
         Instant now = Instant.now();
         return new DeviceMigration(
                 id,
+                deviceId,
                 userId,
-                linkToken,
                 blobId,
                 null,
                 DeviceMigrationStatus.WAITING_FOR_UPLOAD,
@@ -91,6 +94,12 @@ public class DeviceMigration {
 
     public boolean isExpired() {
         return Instant.now().isAfter(expiresAt);
+    }
+
+    public void checkNotExpired() {
+        if (isExpired()) {
+            throw new ExpiredException("Device migration");
+        }
     }
 
     public Duration getRemainingTtl() {
@@ -137,12 +146,12 @@ public class DeviceMigration {
         return challenge;
     }
 
-    public String getLinkToken() {
-        return linkToken;
-    }
-
     public UserId getUserId() {
         return userId;
+    }
+
+    public DeviceId getDeviceId() {
+        return deviceId;
     }
 
     public DeviceMigrationId getId() {

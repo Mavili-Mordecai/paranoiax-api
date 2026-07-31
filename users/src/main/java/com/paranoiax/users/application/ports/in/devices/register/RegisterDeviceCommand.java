@@ -1,13 +1,15 @@
-package com.paranoiax.users.application.ports.in.devices.migrations.createMigration;
+package com.paranoiax.users.application.ports.in.devices.register;
 
 import com.paranoiax.users.application.ports.out.operationResult.OperationCommand;
 
 import java.util.UUID;
 
-public record CreateDeviceMigrationCommand(
+public record RegisterDeviceCommand(
         UUID migrationId,
         UUID deviceId,
-        UUID userId,
+        String deviceName,
+        String deviceType,
+        String signature,
         String identityKey,
         String encryptionKey,
         String deviceSignature,
@@ -18,7 +20,9 @@ public record CreateDeviceMigrationCommand(
         return String.join(":",
                 migrationId.toString(),
                 deviceId.toString(),
-                userId.toString(),
+                deviceName,
+                deviceType,
+                signature,
                 identityKey,
                 encryptionKey,
                 deviceSignature,

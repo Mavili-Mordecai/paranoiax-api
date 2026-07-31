@@ -10,6 +10,7 @@ import com.paranoiax.users.application.services.OperationExecutor;
 import com.paranoiax.users.domain.exceptions.NotFoundException;
 import com.paranoiax.users.domain.models.EncryptionKey;
 import com.paranoiax.users.domain.models.IdentityKey;
+import com.paranoiax.users.domain.models.device.DeviceId;
 import com.paranoiax.users.domain.models.device.DeviceSignature;
 import com.paranoiax.users.domain.models.device.migration.DeviceMigration;
 import com.paranoiax.users.domain.models.device.migration.DeviceMigrationId;
@@ -23,30 +24,24 @@ public class CreateDeviceMigrationService implements CreateDeviceMigrationUseCas
     private final MediaStoragePort mediaStoragePort;
     private final DeviceMigrationPort deviceMigrationPort;
     private final UserPort userPort;
-    private final TokenGenerator tokenGenerator;
     private final OperationExecutor executor;
     private final Duration lockTtl;
     private final Duration resultTtl;
-    private final int tokenSize;
 
     public CreateDeviceMigrationService(
             MediaStoragePort mediaStoragePort,
             DeviceMigrationPort deviceMigrationPort,
             UserPort userPort,
-            TokenGenerator tokenGenerator,
             OperationExecutor executor,
             Duration lockTtl,
-            Duration resultTtl,
-            int tokenSize
+            Duration resultTtl
     ) {
         this.mediaStoragePort = mediaStoragePort;
         this.userPort = userPort;
         this.deviceMigrationPort = deviceMigrationPort;
-        this.tokenGenerator = tokenGenerator;
         this.executor = executor;
         this.lockTtl = lockTtl;
         this.resultTtl = resultTtl;
-        this.tokenSize = tokenSize;
     }
 
     @Override
@@ -56,8 +51,8 @@ public class CreateDeviceMigrationService implements CreateDeviceMigrationUseCas
 
             DeviceMigration migration = deviceMigrationPort.insert(DeviceMigration.create(
                     new DeviceMigrationId(command.migrationId()),
+                    new DeviceId(command.deviceId()),
                     user.getId(),
-                    tokenGenerator.generate(tokenSize),
                     UUID.randomUUID(),
                     new IdentityKey(command.identityKey()),
                     new EncryptionKey(command.encryptionKey()),

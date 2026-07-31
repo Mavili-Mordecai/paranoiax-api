@@ -5,8 +5,8 @@ import java.util.UUID;
 
 public class RedisDeviceMigrationDto {
     private UUID id;
+    private UUID deviceId;
     private UUID userId;
-    private String linkToken;
     private UUID blobId;
     private String challenge;
     private String status;
@@ -19,10 +19,10 @@ public class RedisDeviceMigrationDto {
     public RedisDeviceMigrationDto() {
     }
 
-    public RedisDeviceMigrationDto(UUID id, UUID userId, String linkToken, UUID blobId, String challenge, String status, String identityKey, String encryptionKey, String deviceSignature, Instant createdAt, Instant expiresAt) {
+    public RedisDeviceMigrationDto(UUID id, UUID deviceId, UUID userId, UUID blobId, String challenge, String status, String identityKey, String encryptionKey, String deviceSignature, Instant createdAt, Instant expiresAt) {
         this.id = id;
+        this.deviceId = deviceId;
         this.userId = userId;
-        this.linkToken = linkToken;
         this.blobId = blobId;
         this.challenge = challenge;
         this.status = status;
@@ -89,14 +89,6 @@ public class RedisDeviceMigrationDto {
         this.blobId = blobId;
     }
 
-    public String getLinkToken() {
-        return linkToken;
-    }
-
-    public void setLinkToken(String linkToken) {
-        this.linkToken = linkToken;
-    }
-
     public UUID getUserId() {
         return userId;
     }
@@ -119,5 +111,13 @@ public class RedisDeviceMigrationDto {
 
     public void setDeviceSignature(String deviceSignature) {
         this.deviceSignature = deviceSignature;
+    }
+
+    public UUID getDeviceId() {
+        return deviceId;
+    }
+
+    public void setDeviceId(UUID deviceId) {
+        this.deviceId = deviceId;
     }
 }

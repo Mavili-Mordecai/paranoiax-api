@@ -3,12 +3,11 @@ package com.paranoiax.users.infrastructure.config.application;
 import com.paranoiax.users.application.ports.in.devices.migrations.createMigration.CreateDeviceMigrationUseCase;
 import com.paranoiax.users.application.ports.in.devices.migrations.generateDownloadUrl.GenerateDeviceMigrationDownloadUrlUseCase;
 import com.paranoiax.users.application.ports.in.devices.migrations.getMigrationStatus.GetDeviceMigrationStatusUseCase;
-import com.paranoiax.users.application.ports.out.SignatureVerifierPort;
-import com.paranoiax.users.application.ports.out.DeviceMigrationPort;
-import com.paranoiax.users.application.ports.out.MediaStoragePort;
-import com.paranoiax.users.application.ports.out.UserPort;
+import com.paranoiax.users.application.ports.in.devices.register.RegisterDeviceUseCase;
+import com.paranoiax.users.application.ports.out.*;
 import com.paranoiax.users.application.ports.out.crypto.TokenGenerator;
 import com.paranoiax.users.application.services.OperationExecutor;
+import com.paranoiax.users.application.services.devices.RegisterDeviceService;
 import com.paranoiax.users.application.services.devices.migrations.CompleteDeviceMigrationUploadService;
 import com.paranoiax.users.application.services.devices.migrations.CreateDeviceMigrationService;
 import com.paranoiax.users.application.services.devices.migrations.GenerateDeviceMigrationDownloadUrlService;
@@ -27,21 +26,17 @@ public class DeviceConfig {
             MediaStoragePort mediaStoragePort,
             UserPort userPort,
             DeviceMigrationPort deviceMigrationPort,
-            TokenGenerator tokenGenerator,
             OperationExecutor executor,
             @Value("${s3.lock-ttl}") Duration lockTtl,
-            @Value("${s3.result-ttl}") Duration resultTtl,
-            @Value("${application.devices.migrations.migration.token-size}") int tokenSize
+            @Value("${s3.result-ttl}") Duration resultTtl
     ) {
          return new CreateDeviceMigrationService(
                  mediaStoragePort,
                  deviceMigrationPort,
                  userPort,
-                 tokenGenerator,
                  executor,
                  lockTtl,
-                 resultTtl,
-                 tokenSize
+                 resultTtl
          );
     }
 
@@ -85,6 +80,25 @@ public class DeviceConfig {
                 userPort,
                 verifierPort,
                 executor,
+                lockTtl,
+                resultTtl
+        );
+    }
+
+    @Bean
+    public RegisterDeviceUseCase registerDeviceUseCase(
+            DeviceMigrationPort deviceMigrationPort,
+            DevicePort devicePort,
+            SignatureVerifierPort verifierPort,
+            OperationExecutor operationExecutor,
+            @Value("${application.devices.register.lock-ttl}") Duration lockTtl,
+            @Value("${application.devices.register.result-ttl}") Duration resultTtl
+    ) {
+        return new RegisterDeviceService(
+                deviceMigrationPort,
+                devicePort,
+                verifierPort,
+                operationExecutor,
                 lockTtl,
                 resultTtl
         );

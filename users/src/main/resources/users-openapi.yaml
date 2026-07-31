@@ -427,6 +427,9 @@ components:
     CreateMigrationSessionRequest:
       type: object
       properties:
+        device_id:
+          type: string
+          description: UUID of the new device
         identity_key:
           type: string
           description: Public identity signing key (e.g., Ed25519) of the new device
@@ -464,6 +467,9 @@ components:
     RegisterDeviceRequest:
       type: object
       properties:
+        migration_id:
+          type: string
+          format: uuid
         signature:
           type: string
           description: Signature of the challenge proving possession of the identity private key

@@ -13,6 +13,7 @@ import com.paranoiax.users.domain.exceptions.InvalidSignatureException;
 import com.paranoiax.users.domain.exceptions.NotFoundException;
 import com.paranoiax.users.domain.models.device.migration.DeviceMigration;
 import com.paranoiax.users.domain.models.device.migration.DeviceMigrationId;
+import com.paranoiax.users.domain.models.device.migration.DeviceMigrationStatus;
 
 import java.time.Duration;
 
@@ -55,17 +56,17 @@ public class GenerateDeviceMigrationDownloadUrlService implements GenerateDevice
                 throw new ExpiredException("Device migration");
             }
 
-            try {
-                boolean verified = verifierPort.verify(
-                        migration.getIdentityKey().value(),
-                        migration.getChallenge().value(),
-                        command.signature()
-                );
+            if (migration.getStatus() != DeviceMigrationStatus.READY_FOR_AUTH) {
+                throw new IllegalStateException("Device migration is not ready for registration");
+            }
 
-                if (!verified) {
-                    throw new InvalidSignatureException("Challenge");
-                }
-            } catch (IllegalArgumentException e) {
+            boolean verified = verifierPort.verify(
+                    migration.getIdentityKey().value(),
+                    migration.getChallenge().value(),
+                    command.signature()
+            );
+
+            if (!verified) {
                 throw new InvalidSignatureException("Challenge");
             }
 

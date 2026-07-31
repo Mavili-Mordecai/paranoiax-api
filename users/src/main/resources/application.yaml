@@ -87,8 +87,6 @@ application:
       result-ttl: 1m
   devices:
     migrations:
-      migration:
-        token-size: 32
       complete-upload:
         lock-ttl: 5s
         result-ttl: 1m
@@ -96,6 +94,9 @@ application:
       generate-download-url:
         lock-ttl: 5s
         result-ttl: 1m
+    register:
+      lock-ttl: 30s
+      result-ttl: 1d
 
 jwt:
   keys:

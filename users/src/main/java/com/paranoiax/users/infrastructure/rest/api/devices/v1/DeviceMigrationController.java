@@ -37,6 +37,7 @@ public class DeviceMigrationController {
     ) {
         String uploadUrl = createDeviceMigrationUseCase.execute(new CreateDeviceMigrationCommand(
                 migrationId,
+                request.deviceId(),
                 userId,
                 request.identityKey(),
                 request.encryptionKey(),
