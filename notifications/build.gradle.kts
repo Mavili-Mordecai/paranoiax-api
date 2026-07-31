@@ -6,7 +6,7 @@ plugins {
 
 group = "com.paranoiax"
 version = "0.0.1-SNAPSHOT"
-description = "users"
+description = "notifications"
 
 java {
     toolchain {
@@ -35,6 +35,8 @@ dependencies {
     implementation("org.springframework.cloud:spring-cloud-starter-netflix-eureka-client")
     implementation("org.springframework.cloud:spring-cloud-starter-openfeign")
     implementation("io.jsonwebtoken:jjwt-api:0.13.0")
+    implementation("org.springframework.boot:spring-boot-starter-oauth2-resource-server")
+    implementation("com.google.firebase:firebase-admin:9.2.0")
     compileOnly("org.projectlombok:lombok")
     runtimeOnly("io.micrometer:micrometer-registry-prometheus")
     runtimeOnly("org.postgresql:postgresql")
