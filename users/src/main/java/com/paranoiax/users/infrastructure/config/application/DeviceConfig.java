@@ -4,10 +4,12 @@ import com.paranoiax.users.application.ports.in.devices.migrations.createMigrati
 import com.paranoiax.users.application.ports.in.devices.migrations.generateDownloadUrl.GenerateDeviceMigrationDownloadUrlUseCase;
 import com.paranoiax.users.application.ports.in.devices.migrations.getMigrationStatus.GetDeviceMigrationStatusUseCase;
 import com.paranoiax.users.application.ports.in.devices.register.RegisterDeviceUseCase;
+import com.paranoiax.users.application.ports.in.devices.revoke.RevokeDeviceUseCase;
 import com.paranoiax.users.application.ports.out.*;
 import com.paranoiax.users.application.ports.out.crypto.TokenGenerator;
 import com.paranoiax.users.application.services.OperationExecutor;
 import com.paranoiax.users.application.services.devices.RegisterDeviceService;
+import com.paranoiax.users.application.services.devices.RevokeDeviceService;
 import com.paranoiax.users.application.services.devices.migrations.CompleteDeviceMigrationUploadService;
 import com.paranoiax.users.application.services.devices.migrations.CreateDeviceMigrationService;
 import com.paranoiax.users.application.services.devices.migrations.GenerateDeviceMigrationDownloadUrlService;
@@ -30,14 +32,14 @@ public class DeviceConfig {
             @Value("${s3.lock-ttl}") Duration lockTtl,
             @Value("${s3.result-ttl}") Duration resultTtl
     ) {
-         return new CreateDeviceMigrationService(
-                 mediaStoragePort,
-                 deviceMigrationPort,
-                 userPort,
-                 executor,
-                 lockTtl,
-                 resultTtl
-         );
+        return new CreateDeviceMigrationService(
+                mediaStoragePort,
+                deviceMigrationPort,
+                userPort,
+                executor,
+                lockTtl,
+                resultTtl
+        );
     }
 
     @Bean
@@ -102,5 +104,13 @@ public class DeviceConfig {
                 lockTtl,
                 resultTtl
         );
+    }
+
+    @Bean
+    public RevokeDeviceUseCase revokeDeviceUseCase(
+            DevicePort devicePort,
+            TransactionPort transactionPort
+    ) {
+        return new RevokeDeviceService(devicePort, transactionPort);
     }
 }

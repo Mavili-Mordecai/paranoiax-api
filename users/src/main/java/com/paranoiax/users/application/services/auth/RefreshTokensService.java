@@ -9,7 +9,7 @@ import com.paranoiax.users.application.ports.out.AuthTokenPort;
 import com.paranoiax.users.application.ports.out.DevicePort;
 import com.paranoiax.users.application.services.OperationExecutor;
 import com.paranoiax.users.domain.exceptions.NotFoundException;
-import com.paranoiax.users.domain.exceptions.RevokedException;
+import com.paranoiax.users.domain.exceptions.AlreadyRevokedException;
 import com.paranoiax.users.domain.models.device.Device;
 
 import java.time.Duration;
@@ -44,14 +44,16 @@ public class RefreshTokensService implements RefreshTokensUseCase {
 
         return executor.execute(command, TokenPair.class, lockTtl, resultTtl, () -> {
             if (blacklistPort.contains(refreshToken.getId())) {
-                throw new RevokedException("Refresh token");
+                throw new AlreadyRevokedException("Refresh token");
             }
 
             Device device = devicePort.findById(refreshToken.getDeviceId())
                     .orElseThrow(() -> new NotFoundException("Device"));
 
+            device.checkRevoked();
+
             if (!blacklistPort.addIfAbsent(refreshToken.getId(), refreshToken.getRemainingTtl())) {
-                throw new RevokedException("Refresh token");
+                throw new AlreadyRevokedException("Refresh token");
             }
 
             return authTokenPort.generateTokenPair(device);

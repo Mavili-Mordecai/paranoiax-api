@@ -40,6 +40,9 @@ public class DeviceEntity implements Persistable<UUID> {
     @Column(nullable = false, columnDefinition = "TEXT", unique = true)
     private String deviceSignature;
 
+    @Column
+    private Instant revokedAt;
+
     @Column(nullable = false)
     private Instant lastSeenAt;
 

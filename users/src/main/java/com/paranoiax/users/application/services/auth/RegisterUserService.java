@@ -7,7 +7,7 @@ import com.paranoiax.users.application.services.OperationExecutor;
 import com.paranoiax.users.domain.exceptions.ExpiredException;
 import com.paranoiax.users.domain.exceptions.MissingRequiredFieldException;
 import com.paranoiax.users.domain.exceptions.NotFoundException;
-import com.paranoiax.users.domain.exceptions.RevokedException;
+import com.paranoiax.users.domain.exceptions.AlreadyRevokedException;
 import com.paranoiax.users.domain.models.EncryptionKey;
 import com.paranoiax.users.domain.models.IdentityKey;
 import com.paranoiax.users.domain.models.device.*;
@@ -84,7 +84,7 @@ public class RegisterUserService implements RegisterUserUseCase {
             ));
 
             if (invite != null && !invitePort.delete(invite)) {
-                throw new RevokedException("Invite");
+                throw new AlreadyRevokedException("Invite");
             }
 
             return createdUser;

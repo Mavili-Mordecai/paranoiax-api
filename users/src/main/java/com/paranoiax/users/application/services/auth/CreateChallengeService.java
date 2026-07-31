@@ -47,6 +47,8 @@ public class CreateChallengeService implements CreateChallengeUseCase {
             Device device = devicePort.findById(new DeviceId(command.deviceId()))
                     .orElseThrow(() -> new NotFoundException("Device"));
 
+            device.checkRevoked();
+
             Challenge challenge = Challenge.create(
                     device.getId(),
                     new ChallengeValue(tokenGenerator.generate(tokenSize)),

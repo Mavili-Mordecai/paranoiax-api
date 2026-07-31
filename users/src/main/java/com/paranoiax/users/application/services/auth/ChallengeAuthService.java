@@ -60,6 +60,8 @@ public class ChallengeAuthService implements ChallengeAuthUseCase {
 
             Device device = devicePort.findById(new DeviceId(command.deviceId())).orElseThrow(() -> new NotFoundException("Device"));
 
+            device.checkRevoked();
+
             boolean verified = verifierPort.verify(
                     device.getEncryptionKey().value(),
                     challenge.getChallenge().value(),

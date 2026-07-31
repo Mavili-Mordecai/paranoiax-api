@@ -33,6 +33,7 @@ public class JpaDeviceMapper implements OperationResultsMapper<Device, DeviceEnt
                 new IdentityKey(entity.getIdentityKey()),
                 new EncryptionKey(entity.getEncryptionKey()),
                 new DeviceSignature(entity.getDeviceSignature()),
+                entity.getRevokedAt(),
                 entity.getLastSeenAt(),
                 entity.getCreatedAt()
         );
@@ -48,6 +49,7 @@ public class JpaDeviceMapper implements OperationResultsMapper<Device, DeviceEnt
                 .identityKey(device.getIdentityKey().value())
                 .encryptionKey(device.getEncryptionKey().value())
                 .deviceSignature(device.getDeviceSignature().value())
+                .revokedAt(device.getRevokedAt())
                 .lastSeenAt(device.getLastSeenAt())
                 .createdAt(device.getCreatedAt())
                 .build();
