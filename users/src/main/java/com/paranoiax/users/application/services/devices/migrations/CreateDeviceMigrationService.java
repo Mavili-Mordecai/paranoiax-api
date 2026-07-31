@@ -3,7 +3,7 @@ package com.paranoiax.users.application.services.devices.migrations;
 import com.paranoiax.users.application.ports.in.devices.migrations.createMigration.CreateDeviceMigrationCommand;
 import com.paranoiax.users.application.ports.in.devices.migrations.createMigration.CreateDeviceMigrationUseCase;
 import com.paranoiax.users.application.ports.out.DeviceMigrationPort;
-import com.paranoiax.users.application.ports.out.S3Port;
+import com.paranoiax.users.application.ports.out.MediaStoragePort;
 import com.paranoiax.users.application.ports.out.UserPort;
 import com.paranoiax.users.application.ports.out.crypto.TokenGenerator;
 import com.paranoiax.users.application.services.OperationExecutor;
@@ -20,26 +20,26 @@ import java.time.Duration;
 import java.util.UUID;
 
 public class CreateDeviceMigrationService implements CreateDeviceMigrationUseCase {
-    private final S3Port s3Port;
+    private final MediaStoragePort mediaStoragePort;
+    private final DeviceMigrationPort deviceMigrationPort;
     private final UserPort userPort;
+    private final TokenGenerator tokenGenerator;
     private final OperationExecutor executor;
     private final Duration lockTtl;
     private final Duration resultTtl;
-    private final DeviceMigrationPort deviceMigrationPort;
-    private final TokenGenerator tokenGenerator;
     private final int tokenSize;
 
     public CreateDeviceMigrationService(
-            S3Port s3Port,
-            UserPort userPort,
+            MediaStoragePort mediaStoragePort,
             DeviceMigrationPort deviceMigrationPort,
+            UserPort userPort,
             TokenGenerator tokenGenerator,
             OperationExecutor executor,
             Duration lockTtl,
             Duration resultTtl,
             int tokenSize
     ) {
-        this.s3Port = s3Port;
+        this.mediaStoragePort = mediaStoragePort;
         this.userPort = userPort;
         this.deviceMigrationPort = deviceMigrationPort;
         this.tokenGenerator = tokenGenerator;
@@ -65,7 +65,7 @@ public class CreateDeviceMigrationService implements CreateDeviceMigrationUseCas
                     resultTtl
             ), resultTtl);
 
-            return s3Port.generateUploadUrl(migration.getBlobId());
+            return mediaStoragePort.generateUploadUrl(migration.getBlobId(), resultTtl);
         });
     }
 }

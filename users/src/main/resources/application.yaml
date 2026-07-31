@@ -93,6 +93,10 @@ application:
         lock-ttl: 5s
         result-ttl: 1m
         token-size: 32
+      generate-download-url:
+        lock-ttl: 5s
+        result-ttl: 1m
+
 jwt:
   keys:
     private: ${JWT_PRIVATE_KEY}
@@ -110,7 +114,3 @@ s3:
   result-ttl: 15m
   migration:
     bucket: migrations
-    upload-url:
-      ttl: 15m
-    download-url:
-      ttl: 10m

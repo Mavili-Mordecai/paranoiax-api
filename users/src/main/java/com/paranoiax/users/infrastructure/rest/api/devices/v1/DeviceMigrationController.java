@@ -4,10 +4,14 @@ import com.paranoiax.users.application.ports.in.devices.migrations.completeUploa
 import com.paranoiax.users.application.ports.in.devices.migrations.completeUpload.CompleteDeviceMigrationUploadUseCase;
 import com.paranoiax.users.application.ports.in.devices.migrations.createMigration.CreateDeviceMigrationCommand;
 import com.paranoiax.users.application.ports.in.devices.migrations.createMigration.CreateDeviceMigrationUseCase;
+import com.paranoiax.users.application.ports.in.devices.migrations.generateDownloadUrl.DeviceMigrationDownloadUrlResult;
+import com.paranoiax.users.application.ports.in.devices.migrations.generateDownloadUrl.GenerateDeviceMigrationDownloadUrlCommand;
+import com.paranoiax.users.application.ports.in.devices.migrations.generateDownloadUrl.GenerateDeviceMigrationDownloadUrlUseCase;
 import com.paranoiax.users.application.ports.in.devices.migrations.getMigrationStatus.DeviceMigrationStatusResult;
 import com.paranoiax.users.application.ports.in.devices.migrations.getMigrationStatus.GetDeviceMigrationStatusUseCase;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
@@ -22,6 +26,7 @@ public class DeviceMigrationController {
     private final CreateDeviceMigrationUseCase createDeviceMigrationUseCase;
     private final GetDeviceMigrationStatusUseCase getDeviceMigrationStatusUseCase;
     private final CompleteDeviceMigrationUploadUseCase completeDeviceMigrationUploadUseCase;
+    private final GenerateDeviceMigrationDownloadUrlUseCase generateDeviceMigrationDownloadUrlUseCase;
 
     @PutMapping("/{migration_id}")
     public ResponseEntity<MigrationResponse> createMigration(
@@ -65,11 +70,14 @@ public class DeviceMigrationController {
     @PostMapping("/{migration_id}/download-url")
     public ResponseEntity<DownloadUrlResponse> generateDownloadUrl(
             @PathVariable("migration_id") UUID migrationId,
+            @RequestHeader("Idempotency-Key") String idempotencyKey,
             @Valid @RequestBody DownloadUrlRequest request
     ) {
-        return ResponseEntity.ok(new DownloadUrlResponse(
-                "test-download-url",
-                "test-device-signature"
+        DeviceMigrationDownloadUrlResult result = generateDeviceMigrationDownloadUrlUseCase.execute(new GenerateDeviceMigrationDownloadUrlCommand(
+                migrationId,
+                request.signature(),
+                idempotencyKey
         ));
+        return ResponseEntity.ok(new DownloadUrlResponse(result.downloadUrl(), result.deviceSignature()));
     }
 }

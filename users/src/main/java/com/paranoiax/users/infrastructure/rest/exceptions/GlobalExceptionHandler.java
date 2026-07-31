@@ -16,41 +16,41 @@ import org.springframework.web.bind.MethodArgumentNotValidException;
 import org.springframework.web.bind.MissingRequestHeaderException;
 import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.RestControllerAdvice;
+import org.springframework.web.method.annotation.MethodArgumentTypeMismatchException;
 
-import java.util.Collections;
-import java.util.HashMap;
-import java.util.Map;
+import java.util.*;
+import java.util.stream.Collectors;
 
 @Slf4j
 @RestControllerAdvice
 public class GlobalExceptionHandler {
-    @ExceptionHandler(value = NotFoundException.class)
-    public ResponseEntity<ErrorResponse<DomainErrorResponse>> handleNotFoundException(NotFoundException e, HttpServletRequest request) {
-        return getErrorResponse(HttpStatus.NOT_FOUND, request, e.getCode(), e.getMessage(), e.getArgs());
-    }
 
-    @ExceptionHandler(value = UnauthorizeException.class)
-    public ResponseEntity<ErrorResponse<DomainErrorResponse>> handleUnauthorizeException(UnauthorizeException e, HttpServletRequest request) {
-        return getErrorResponse(HttpStatus.UNAUTHORIZED, request, e.getCode(), e.getMessage(), e.getArgs());
-    }
-
-    @ExceptionHandler(value = AccessDeniedException.class)
-    public ResponseEntity<ErrorResponse<DomainErrorResponse>> handleAccessDeniedException(AccessDeniedException e, HttpServletRequest request) {
-        return getErrorResponse(HttpStatus.FORBIDDEN, request, e.getCode(), e.getMessage(), e.getArgs());
-    }
-
-    @ExceptionHandler(value = DomainException.class)
+    // Domain exceptions
+    @ExceptionHandler(DomainException.class)
     public ResponseEntity<ErrorResponse<DomainErrorResponse>> handleDomainException(DomainException e, HttpServletRequest request) {
         return getErrorResponse(HttpStatus.BAD_REQUEST, request, e.getCode(), e.getMessage(), e.getArgs());
     }
 
-    @ExceptionHandler(value = MethodArgumentNotValidException.class)
-    public ResponseEntity<ErrorResponse<ApiErrorResponse>> handleException(MethodArgumentNotValidException e, HttpServletRequest request) {
-        Map<String, String> errors = new HashMap<>();
+    @ExceptionHandler(UnauthorizeException.class)
+    public ResponseEntity<ErrorResponse<DomainErrorResponse>> handleUnauthorizeException(UnauthorizeException e, HttpServletRequest request) {
+        return getErrorResponse(HttpStatus.UNAUTHORIZED, request, e.getCode(), e.getMessage(), e.getArgs());
+    }
 
-        for (FieldError error : e.getBindingResult().getFieldErrors()) {
-            errors.put(error.getField(), error.getDefaultMessage());
-        }
+    @ExceptionHandler(AccessDeniedException.class)
+    public ResponseEntity<ErrorResponse<DomainErrorResponse>> handleAccessDeniedException(AccessDeniedException e, HttpServletRequest request) {
+        return getErrorResponse(HttpStatus.FORBIDDEN, request, e.getCode(), e.getMessage(), e.getArgs());
+    }
+
+    @ExceptionHandler(NotFoundException.class)
+    public ResponseEntity<ErrorResponse<DomainErrorResponse>> handleNotFoundException(NotFoundException e, HttpServletRequest request) {
+        return getErrorResponse(HttpStatus.NOT_FOUND, request, e.getCode(), e.getMessage(), e.getArgs());
+    }
+
+    // Validation and parsing
+    @ExceptionHandler(MethodArgumentNotValidException.class)
+    public ResponseEntity<ErrorResponse<ApiErrorResponse>> handleValidationException(MethodArgumentNotValidException e, HttpServletRequest request) {
+        Map<String, String> errors = e.getBindingResult().getFieldErrors().stream()
+                .collect(Collectors.toMap(FieldError::getField, FieldError::getDefaultMessage, (existing, replacement) -> existing));
 
         return ResponseEntity.status(HttpStatus.BAD_REQUEST)
                 .contentType(MediaType.APPLICATION_JSON)
@@ -62,7 +62,7 @@ public class GlobalExceptionHandler {
     }
 
     @ExceptionHandler(HttpMessageNotReadableException.class)
-    public ResponseEntity<ErrorResponse<ApiErrorCode>> handleBadRequest(HttpMessageNotReadableException e, HttpServletRequest request) {
+    public ResponseEntity<ErrorResponse<ApiErrorCode>> handleMessageNotReadable(HttpMessageNotReadableException e, HttpServletRequest request) {
         return ResponseEntity.status(HttpStatus.BAD_REQUEST)
                 .contentType(MediaType.APPLICATION_JSON)
                 .body(ErrorResponse.of(
@@ -72,59 +72,74 @@ public class GlobalExceptionHandler {
                 ));
     }
 
-    @ExceptionHandler(value = HttpRequestMethodNotSupportedException.class)
-    public ResponseEntity<ErrorResponse<DomainErrorResponse>> handleHttpRequestMethodNotSupportedException(HttpRequestMethodNotSupportedException e, HttpServletRequest request) {
-        String[] supportedMethods = e.getSupportedMethods();
-        return ResponseEntity.status(HttpStatus.METHOD_NOT_ALLOWED)
-                .contentType(MediaType.APPLICATION_JSON)
-                .body(ErrorResponse.of(
-                        MDC.get("traceId"),
-                        request.getRequestURI(),
-                        new DomainErrorResponse(
-                                "METHOD_NOT_ALLOWED",
-                                "Method not allowed",
-                                Map.of("supportedMethods", supportedMethods != null ? supportedMethods : Collections.emptyList())
-                        )
-                ));
-    }
-
-    @ExceptionHandler(HttpMediaTypeNotSupportedException.class)
-    public ResponseEntity<ErrorResponse<DomainErrorResponse>> handleMediaTypeNotSupported(
-            HttpMediaTypeNotSupportedException ex, HttpServletRequest request
-    ) {
-        return ResponseEntity.status(HttpStatus.UNSUPPORTED_MEDIA_TYPE)
-                .contentType(MediaType.APPLICATION_JSON)
-                .body(ErrorResponse.of(
-                        MDC.get("traceId"),
-                        request.getRequestURI(),
-                        new DomainErrorResponse(
-                                "UNSUPPORTED_MEDIA_TYPE",
-                                "Expected multipart/form-data",
-                                null
-                        )
-                ));
-    }
-
+    // Api Exceptions
     @ExceptionHandler(MissingRequestHeaderException.class)
-    public ResponseEntity<ErrorResponse<DomainErrorResponse>> handleMissingRequestHeaderException(
-            MissingRequestHeaderException ex, HttpServletRequest request
-    ) {
+    public ResponseEntity<ErrorResponse<DomainErrorResponse>> handleMissingHeader(MissingRequestHeaderException ex, HttpServletRequest request) {
         return ResponseEntity.status(HttpStatus.BAD_REQUEST)
                 .contentType(MediaType.APPLICATION_JSON)
                 .body(ErrorResponse.of(
                         MDC.get("traceId"),
                         request.getRequestURI(),
                         new DomainErrorResponse(
-                                "MISSING_REQUEST_HEADER",
+                                ApiErrorCode.MISSING_REQUEST_HEADER.name(),
                                 "Missing request header: " + ex.getHeaderName(),
                                 Map.of("resource", ex.getHeaderName())
                         )
                 ));
     }
 
+    @ExceptionHandler(HttpRequestMethodNotSupportedException.class)
+    public ResponseEntity<ErrorResponse<DomainErrorResponse>> handleMethodNotSupported(HttpRequestMethodNotSupportedException e, HttpServletRequest request) {
+        String[] supportedMethods = e.getSupportedMethods();
+        List<String> methodsList = supportedMethods != null ? Arrays.asList(supportedMethods) : Collections.emptyList();
+
+        return ResponseEntity.status(HttpStatus.METHOD_NOT_ALLOWED)
+                .contentType(MediaType.APPLICATION_JSON)
+                .body(ErrorResponse.of(
+                        MDC.get("traceId"),
+                        request.getRequestURI(),
+                        new DomainErrorResponse(
+                                ApiErrorCode.METHOD_NOT_ALLOWED.name(),
+                                "Method not allowed: " + e.getMethod(),
+                                Map.of("supportedMethods", methodsList)
+                        )
+                ));
+    }
+
+    @ExceptionHandler(HttpMediaTypeNotSupportedException.class)
+    public ResponseEntity<ErrorResponse<DomainErrorResponse>> handleMediaTypeNotSupported(HttpMediaTypeNotSupportedException ex, HttpServletRequest request) {
+        return ResponseEntity.status(HttpStatus.UNSUPPORTED_MEDIA_TYPE)
+                .contentType(MediaType.APPLICATION_JSON)
+                .body(ErrorResponse.of(
+                        MDC.get("traceId"),
+                        request.getRequestURI(),
+                        new DomainErrorResponse(
+                                ApiErrorCode.UNSUPPORTED_MEDIA_TYPE.name(),
+                                "Unsupported media type: " + ex.getContentType(),
+                                null
+                        )
+                ));
+    }
+
+    @ExceptionHandler(MethodArgumentTypeMismatchException.class)
+    public ResponseEntity<ErrorResponse<DomainErrorResponse>> handleMethodArgumentTypeMismatchException(MethodArgumentTypeMismatchException ex, HttpServletRequest request) {
+        return ResponseEntity.status(HttpStatus.BAD_REQUEST)
+                .contentType(MediaType.APPLICATION_JSON)
+                .body(ErrorResponse.of(
+                        MDC.get("traceId"),
+                        request.getRequestURI(),
+                        new DomainErrorResponse(
+                                ApiErrorCode.METHOD_ARGUMENT_TYPE_MISMATCH.name(),
+                                "Method argument type mismatch: " + ex.getName(),
+                                Map.of("argument", ex.getName())
+                        )
+                ));
+    }
+
+    // Other exceptions
     @ExceptionHandler(Exception.class)
-    public ResponseEntity<ErrorResponse<ApiErrorCode>> handleAll(Exception e, HttpServletRequest request) {
-        log.error("Internal server error: ", e);
+    public ResponseEntity<ErrorResponse<ApiErrorCode>> handleAllExceptions(Exception e, HttpServletRequest request) {
+        log.error("Internal server error at URI: {}", request.getRequestURI(), e);
 
         return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR)
                 .contentType(MediaType.APPLICATION_JSON)
@@ -135,13 +150,19 @@ public class GlobalExceptionHandler {
                 ));
     }
 
-    private static @NonNull ResponseEntity<ErrorResponse<DomainErrorResponse>> getErrorResponse(HttpStatus status, HttpServletRequest request, DomainErrorCode e, String e1, Map<String, Object> e2) {
+    private static @NonNull ResponseEntity<ErrorResponse<DomainErrorResponse>> getErrorResponse(
+            HttpStatus status,
+            HttpServletRequest request,
+            DomainErrorCode code,
+            String message,
+            Map<String, Object> args
+    ) {
         return ResponseEntity.status(status)
                 .contentType(MediaType.APPLICATION_JSON)
                 .body(ErrorResponse.of(
                         MDC.get("traceId"),
                         request.getRequestURI(),
-                        new DomainErrorResponse(e.name(), e1, e2)
+                        new DomainErrorResponse(code.name(), message, args)
                 ));
     }
 }

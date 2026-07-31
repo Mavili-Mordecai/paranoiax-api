@@ -203,6 +203,7 @@ paths:
       summary: Request S3 presigned URL for blob download
       description: Called by the new device. Verifies the challenge signature and returns a short-lived presigned URL to download the state blob, along with the device signature provided by the primary device.
       parameters:
+        - $ref: '#/components/parameters/IdempotencyKeyRequired'
         - name: migration_id
           in: path
           required: true

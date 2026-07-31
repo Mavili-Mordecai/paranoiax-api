@@ -1,14 +1,17 @@
 package com.paranoiax.users.infrastructure.config.application;
 
 import com.paranoiax.users.application.ports.in.devices.migrations.createMigration.CreateDeviceMigrationUseCase;
+import com.paranoiax.users.application.ports.in.devices.migrations.generateDownloadUrl.GenerateDeviceMigrationDownloadUrlUseCase;
 import com.paranoiax.users.application.ports.in.devices.migrations.getMigrationStatus.GetDeviceMigrationStatusUseCase;
+import com.paranoiax.users.application.ports.out.ChallengeVerifierPort;
 import com.paranoiax.users.application.ports.out.DeviceMigrationPort;
-import com.paranoiax.users.application.ports.out.S3Port;
+import com.paranoiax.users.application.ports.out.MediaStoragePort;
 import com.paranoiax.users.application.ports.out.UserPort;
 import com.paranoiax.users.application.ports.out.crypto.TokenGenerator;
 import com.paranoiax.users.application.services.OperationExecutor;
 import com.paranoiax.users.application.services.devices.migrations.CompleteDeviceMigrationUploadService;
 import com.paranoiax.users.application.services.devices.migrations.CreateDeviceMigrationService;
+import com.paranoiax.users.application.services.devices.migrations.GenerateDeviceMigrationDownloadUrlService;
 import com.paranoiax.users.application.services.devices.migrations.GetDeviceMigrationStatusService;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.Bean;
@@ -21,7 +24,7 @@ public class DeviceConfig {
 
     @Bean
     public CreateDeviceMigrationUseCase createDeviceMigrationUseCase(
-            S3Port s3Port,
+            MediaStoragePort mediaStoragePort,
             UserPort userPort,
             DeviceMigrationPort deviceMigrationPort,
             TokenGenerator tokenGenerator,
@@ -31,9 +34,9 @@ public class DeviceConfig {
             @Value("${application.devices.migrations.migration.token-size}") int tokenSize
     ) {
          return new CreateDeviceMigrationService(
-                 s3Port,
-                 userPort,
+                 mediaStoragePort,
                  deviceMigrationPort,
+                 userPort,
                  tokenGenerator,
                  executor,
                  lockTtl,
@@ -63,6 +66,27 @@ public class DeviceConfig {
                 lockTtl,
                 resultTtl,
                 tokenSize
+        );
+    }
+
+    @Bean
+    public GenerateDeviceMigrationDownloadUrlUseCase generateDeviceMigrationDownloadUrlUseCase(
+            MediaStoragePort mediaStoragePort,
+            DeviceMigrationPort deviceMigrationPort,
+            UserPort userPort,
+            ChallengeVerifierPort verifierPort,
+            OperationExecutor executor,
+            @Value("${application.devices.migrations.generate-download-url.lock-ttl}") Duration lockTtl,
+            @Value("${application.devices.migrations.generate-download-url.result-ttl}") Duration resultTtl
+    ) {
+        return new GenerateDeviceMigrationDownloadUrlService(
+                mediaStoragePort,
+                deviceMigrationPort,
+                userPort,
+                verifierPort,
+                executor,
+                lockTtl,
+                resultTtl
         );
     }
 }
