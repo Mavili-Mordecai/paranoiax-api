@@ -12,10 +12,11 @@ public enum DomainErrorCode {
     NOT_FOUND("%s not found"),
     EXPIRED_EXCEPTION("%s has expired"),
     INVALID_SIGNATURE("%s has an invalid signature"),
-    REVOKED("%S revoked"),
+    REVOKED("%s revoked"),
     ALREADY_REVOKED("%s already revoked"),
     OPERATION_PARAMETERS_CHANGED("Operation already processed with different parameters"),
-    ACCESS_DENIED("Access denied");
+    ACCESS_DENIED("Access denied"),
+    ALREADY_TAKEN("%s already taken");
 
     private final String defaultMessage;
 

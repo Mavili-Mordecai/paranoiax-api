@@ -41,9 +41,24 @@ public class GlobalExceptionHandler {
         return getErrorResponse(HttpStatus.FORBIDDEN, request, e.getCode(), e.getMessage(), e.getArgs());
     }
 
+    @ExceptionHandler(RevokedException.class)
+    public ResponseEntity<ErrorResponse<DomainErrorResponse>> handleRevokedException(RevokedException e, HttpServletRequest request) {
+        return getErrorResponse(HttpStatus.FORBIDDEN, request, e.getCode(), e.getMessage(), e.getArgs());
+    }
+
     @ExceptionHandler(NotFoundException.class)
     public ResponseEntity<ErrorResponse<DomainErrorResponse>> handleNotFoundException(NotFoundException e, HttpServletRequest request) {
         return getErrorResponse(HttpStatus.NOT_FOUND, request, e.getCode(), e.getMessage(), e.getArgs());
+    }
+
+    @ExceptionHandler(AlreadyTakenException.class)
+    public ResponseEntity<ErrorResponse<DomainErrorResponse>> handleAlreadyTakenException(AlreadyTakenException e, HttpServletRequest request) {
+        return getErrorResponse(HttpStatus.CONFLICT, request, e.getCode(), e.getMessage(), e.getArgs());
+    }
+
+    @ExceptionHandler(AlreadyRevokedException.class)
+    public ResponseEntity<ErrorResponse<DomainErrorResponse>> handleAlreadyRevokedException(AlreadyRevokedException e, HttpServletRequest request) {
+        return getErrorResponse(HttpStatus.CONFLICT, request, e.getCode(), e.getMessage(), e.getArgs());
     }
 
     // Validation and parsing

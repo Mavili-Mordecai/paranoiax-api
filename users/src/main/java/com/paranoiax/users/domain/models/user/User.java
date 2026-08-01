@@ -69,8 +69,12 @@ public class User implements ActivityTrackable {
         this.updatedAt = Instant.now();
     }
 
-    public void changeProfile(Profile profile) {
-        this.profile = Require.notNull(profile, DomainErrorCode.MISSING_REQUIRED_FIELD, "profile");
+    public void changeProfile(ProfileChanges changes) {
+        if (this.profile == null) {
+            this.profile = Profile.from(changes);
+        } else {
+            this.profile = this.profile.mergeWith(changes);
+        }
         this.updatedAt = Instant.now();
     }
 
