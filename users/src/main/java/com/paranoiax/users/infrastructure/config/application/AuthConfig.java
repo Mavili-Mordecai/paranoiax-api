@@ -24,10 +24,11 @@ public class AuthConfig {
             UserPort userPort,
             TokenGenerator tokenGenerator,
             OperationExecutor executor,
-            @Value("${application.invite.lock-ttl}") Duration lockTtl,
-            @Value("${application.invite.result-ttl}") Duration resultTtl
+            @Value("${application.auth.invite.lock-ttl}") Duration lockTtl,
+            @Value("${application.auth.invite.result-ttl}") Duration resultTtl,
+            @Value("${application.auth.invite.token-size}") int tokenSize
     ) {
-        return new InviteUserService(invitePort, userPort, tokenGenerator, executor, lockTtl, resultTtl);
+        return new InviteUserService(invitePort, userPort, tokenGenerator, executor, lockTtl, resultTtl, tokenSize);
     }
 
     @Bean
@@ -36,9 +37,9 @@ public class AuthConfig {
             DevicePort devicePort,
             InvitePort invitePort,
             OperationExecutor executor,
-            @Value("${application.register.invite-only}") boolean isInviteOnly,
-            @Value("${application.register.lock-ttl}") Duration lockTtl,
-            @Value("${application.register.result-ttl}") Duration resultTtl
+            @Value("${application.auth.register.invite-only}") boolean isInviteOnly,
+            @Value("${application.auth.register.lock-ttl}") Duration lockTtl,
+            @Value("${application.auth.register.result-ttl}") Duration resultTtl
     ) {
         return new RegisterUserService(userPort, devicePort, invitePort, executor, isInviteOnly, lockTtl, resultTtl);
     }
@@ -49,21 +50,22 @@ public class AuthConfig {
             DevicePort devicePort,
             TokenGenerator tokenGenerator,
             OperationExecutor executor,
-            @Value("${application.challenge.lock-ttl}") Duration lockTtl,
-            @Value("${application.challenge.result-ttl}") Duration resultTll
+            @Value("${application.auth.challenge.lock-ttl}") Duration lockTtl,
+            @Value("${application.auth.challenge.result-ttl}") Duration resultTll,
+            @Value("${application.auth.challenge.token-size}") int tokenSize
     ) {
-        return new CreateChallengeService(challengePort, devicePort, tokenGenerator, executor, lockTtl, resultTll);
+        return new CreateChallengeService(challengePort, devicePort, tokenGenerator, executor, lockTtl, resultTll, tokenSize);
     }
 
     @Bean
     public ChallengeAuthUseCase challengeAuthUseCase(
             DevicePort devicePort,
             ChallengePort challengePort,
-            ChallengeVerifierPort verifierPort,
+            SignatureVerifierPort verifierPort,
             AuthTokenPort authTokenPort,
             OperationExecutor executor,
-            @Value("${application.challenge-auth.lock-ttl}") Duration lockTtl,
-            @Value("${application.challenge-auth.result-ttl}") Duration resultTtl
+            @Value("${application.auth.challenge-auth.lock-ttl}") Duration lockTtl,
+            @Value("${application.auth.challenge-auth.result-ttl}") Duration resultTtl
     ) {
         return new ChallengeAuthService(devicePort, challengePort, verifierPort, authTokenPort, executor, lockTtl, resultTtl);
     }
@@ -74,8 +76,8 @@ public class AuthConfig {
             AuthTokenBlacklistPort blacklistPort,
             DevicePort devicePort,
             OperationExecutor executor,
-            @Value("${application.refresh.lock-ttl}") Duration lockTtl,
-            @Value("${application.refresh.result-ttl}") Duration resultTtl
+            @Value("${application.auth.refresh.lock-ttl}") Duration lockTtl,
+            @Value("${application.auth.refresh.result-ttl}") Duration resultTtl
     ) {
         return new RefreshTokensService(authTokenPort, blacklistPort, devicePort, executor, lockTtl, resultTtl);
     }

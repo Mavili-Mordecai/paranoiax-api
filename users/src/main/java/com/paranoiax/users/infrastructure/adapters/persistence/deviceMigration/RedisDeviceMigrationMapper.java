@@ -3,6 +3,7 @@ package com.paranoiax.users.infrastructure.adapters.persistence.deviceMigration;
 import com.paranoiax.users.domain.models.ChallengeValue;
 import com.paranoiax.users.domain.models.EncryptionKey;
 import com.paranoiax.users.domain.models.IdentityKey;
+import com.paranoiax.users.domain.models.device.DeviceId;
 import com.paranoiax.users.domain.models.device.DeviceSignature;
 import com.paranoiax.users.domain.models.device.migration.DeviceMigration;
 import com.paranoiax.users.domain.models.device.migration.DeviceMigrationId;
@@ -27,8 +28,8 @@ public class RedisDeviceMigrationMapper implements OperationResultsMapper<Device
     public RedisDeviceMigrationDto toEntity(DeviceMigration migration) {
         return new RedisDeviceMigrationDto(
                 migration.getId().value(),
+                migration.getDeviceId().value(),
                 migration.getUserId().value(),
-                migration.getLinkToken(),
                 migration.getBlobId(),
                 migration.getChallenge() != null ? migration.getChallenge().value() : null,
                 migration.getStatus().name(),
@@ -44,8 +45,8 @@ public class RedisDeviceMigrationMapper implements OperationResultsMapper<Device
     public DeviceMigration toDomain(RedisDeviceMigrationDto entity) {
         return DeviceMigration.of(
                 new DeviceMigrationId(entity.getId()),
+                new DeviceId(entity.getDeviceId()),
                 new UserId(entity.getUserId()),
-                entity.getLinkToken(),
                 entity.getBlobId(),
                 entity.getChallenge() != null ? new ChallengeValue(entity.getChallenge()) : null,
                 DeviceMigrationStatus.valueOf(entity.getStatus()),

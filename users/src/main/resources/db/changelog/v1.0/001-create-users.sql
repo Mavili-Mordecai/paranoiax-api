@@ -1,7 +1,7 @@
 --liquibase formatted sql
 
 --changeset mavili:001-create-users
-CREATE TABLE users.users
+CREATE TABLE IF NOT EXISTS users.users
 (
     id                UUID PRIMARY KEY     DEFAULT gen_random_uuid(),
     identity_key      TEXT        NOT NULL UNIQUE,
@@ -13,8 +13,7 @@ CREATE TABLE users.users
     invited_by_id     UUID REFERENCES users.users (id),
     last_seen_at      TIMESTAMPTZ NOT NULL DEFAULT CURRENT_TIMESTAMP,
     updated_at        TIMESTAMPTZ NOT NULL DEFAULT CURRENT_TIMESTAMP,
-    created_at        TIMESTAMPTZ NOT NULL DEFAULT CURRENT_TIMESTAMP
+    created_at        TIMESTAMPTZ NOT NULL DEFAULT CURRENT_TIMESTAMP,
+    CONSTRAINT users_type_check CHECK (type IN ('USER', 'BOT'))
 );
-
-ALTER TABLE users.users ADD CONSTRAINT users_type_check CHECK (type IN ('USER', 'BOT'));
 --rollback DROP TABLE users;

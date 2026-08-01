@@ -1,6 +1,6 @@
 package com.paranoiax.users.infrastructure.adapters;
 
-import com.paranoiax.users.application.ports.out.S3Port;
+import com.paranoiax.users.application.ports.out.MediaStoragePort;
 import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Component;
@@ -17,20 +17,14 @@ import java.util.UUID;
 
 @Component
 @RequiredArgsConstructor
-public class SeaweedfsS3Adapter implements S3Port {
+public class SeaweedfsMediaStorageAdapter implements MediaStoragePort {
     private final S3Presigner s3Presigner;
 
     @Value("${s3.migration.bucket}")
     private String migrationBucketName;
 
-    @Value("${s3.migration.upload-url.ttl}")
-    private Duration uploadUrlTtl;
-
-    @Value("${s3.migration.download-url.ttl}")
-    private Duration downloadUrlTtl;
-
     @Override
-    public String generateUploadUrl(UUID blobId) {
+    public String generateUploadUrl(UUID blobId, Duration ttl) {
         PutObjectRequest request = PutObjectRequest.builder()
                 .bucket(migrationBucketName)
                 .key(blobId.toString())
@@ -38,7 +32,7 @@ public class SeaweedfsS3Adapter implements S3Port {
                 .build();
 
         PutObjectPresignRequest presignRequest = PutObjectPresignRequest.builder()
-                .signatureDuration(uploadUrlTtl)
+                .signatureDuration(ttl)
                 .putObjectRequest(request)
                 .build();
 
@@ -47,14 +41,14 @@ public class SeaweedfsS3Adapter implements S3Port {
     }
 
     @Override
-    public String generateDownloadUrl(UUID blobId) {
+    public String generateDownloadUrl(UUID blobId, Duration ttl) {
         GetObjectRequest objectRequest = GetObjectRequest.builder()
                 .bucket(migrationBucketName)
                 .key(blobId.toString())
                 .build();
 
         GetObjectPresignRequest presignRequest = GetObjectPresignRequest.builder()
-                .signatureDuration(downloadUrlTtl)
+                .signatureDuration(ttl)
                 .getObjectRequest(objectRequest)
                 .build();
 

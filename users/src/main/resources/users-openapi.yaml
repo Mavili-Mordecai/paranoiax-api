@@ -1,7 +1,7 @@
 openapi: 3.1.0
 info:
   title: ParanoiaX Users API
-  description: User profile management, device handling, authentication, and presence subsystem.
+  description: User profile management, device handling and authentication.
   version: 1.0.0
 
 servers:
@@ -15,8 +15,6 @@ tags:
     description: Device session management and state migration (Transfer Blob)
   - name: Profile Management & Discovery
     description: User search and public ECC key exchange
-  - name: Presence
-    description: Online status tracking subsystem
 
 paths:
   /v1/users/invite:
@@ -205,6 +203,7 @@ paths:
       summary: Request S3 presigned URL for blob download
       description: Called by the new device. Verifies the challenge signature and returns a short-lived presigned URL to download the state blob, along with the device signature provided by the primary device.
       parameters:
+        - $ref: '#/components/parameters/IdempotencyKeyRequired'
         - name: migration_id
           in: path
           required: true
@@ -310,17 +309,6 @@ paths:
                 type: array
                 items:
                   $ref: '#/components/schemas/UserKeysResponse'
-
-  /v1/users/heartbeat:
-    post:
-      tags: [Presence]
-      summary: Send online status heartbeat
-      description: Background signal sent by the client to maintain the "Online" status in the Redis-backed presence system.
-      security:
-        - BearerAuth: []
-      responses:
-        '204':
-          description: Status updated successfully (No Content)
 
 components:
   securitySchemes:
@@ -439,6 +427,9 @@ components:
     CreateMigrationSessionRequest:
       type: object
       properties:
+        device_id:
+          type: string
+          description: UUID of the new device
         identity_key:
           type: string
           description: Public identity signing key (e.g., Ed25519) of the new device
@@ -476,6 +467,9 @@ components:
     RegisterDeviceRequest:
       type: object
       properties:
+        migration_id:
+          type: string
+          format: uuid
         signature:
           type: string
           description: Signature of the challenge proving possession of the identity private key

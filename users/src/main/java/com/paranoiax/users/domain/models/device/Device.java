@@ -1,7 +1,9 @@
 package com.paranoiax.users.domain.models.device;
 
 import com.paranoiax.users.domain.Require;
+import com.paranoiax.users.domain.exceptions.AlreadyRevokedException;
 import com.paranoiax.users.domain.exceptions.DomainErrorCode;
+import com.paranoiax.users.domain.exceptions.RevokedException;
 import com.paranoiax.users.domain.models.ActivityTrackable;
 import com.paranoiax.users.domain.models.EncryptionKey;
 import com.paranoiax.users.domain.models.IdentityKey;
@@ -17,6 +19,7 @@ public class Device implements ActivityTrackable {
     private final IdentityKey identityKey;
     private final EncryptionKey encryptionKey;
     private final DeviceSignature deviceSignature;
+    private Instant revokedAt;
     private Instant lastSeenAt;
     private final Instant createdAt;
 
@@ -24,7 +27,7 @@ public class Device implements ActivityTrackable {
             DeviceId id, UserId userId,
             DeviceName name, DeviceType type,
             IdentityKey identityKey, EncryptionKey encryptionKey, DeviceSignature deviceSignature,
-            Instant lastSeenAt, Instant createdAt
+            Instant revokedAt, Instant lastSeenAt, Instant createdAt
     ) {
         this.id = Require.notNull(id, DomainErrorCode.MISSING_REQUIRED_FIELD, "Id");
         this.userId = Require.notNull(userId, DomainErrorCode.MISSING_REQUIRED_FIELD, "User id");
@@ -35,6 +38,8 @@ public class Device implements ActivityTrackable {
         this.deviceSignature = Require.notNull(deviceSignature, DomainErrorCode.MISSING_REQUIRED_FIELD, "Device signature");
         this.lastSeenAt = Require.notNull(lastSeenAt, DomainErrorCode.MISSING_REQUIRED_FIELD, "Last seen at");
         this.createdAt = Require.notNull(createdAt, DomainErrorCode.MISSING_REQUIRED_FIELD, "Created at");
+
+        this.revokedAt = revokedAt;
     }
 
     public static Device create(
@@ -43,16 +48,16 @@ public class Device implements ActivityTrackable {
             IdentityKey identityKey, EncryptionKey encryptionKey, DeviceSignature deviceSignature
     ) {
         Instant now = Instant.now();
-        return new Device(id, userId, name, type, identityKey, encryptionKey, deviceSignature, now, now);
+        return new Device(id, userId, name, type, identityKey, encryptionKey, deviceSignature, null, now, now);
     }
 
     public static Device of(
             DeviceId id, UserId userId,
             DeviceName name, DeviceType type,
             IdentityKey identityKey, EncryptionKey encryptionKey, DeviceSignature deviceSignature,
-            Instant lastSeenAt, Instant createdAt
+            Instant revokedAt, Instant lastSeenAt, Instant createdAt
     ) {
-        return new Device(id, userId, name, type, identityKey, encryptionKey, deviceSignature, lastSeenAt, createdAt);
+        return new Device(id, userId, name, type, identityKey, encryptionKey, deviceSignature, revokedAt, lastSeenAt, createdAt);
     }
 
     @Override
@@ -66,6 +71,23 @@ public class Device implements ActivityTrackable {
         this.lastSeenAt = Require.after(activityTime, "activityTime", this.createdAt, "createdAt");
     }
 
+    public void revoke() {
+        if (this.revokedAt != null) {
+            throw new AlreadyRevokedException("Device");
+        }
+        this.revokedAt = Instant.now();
+    }
+
+    public boolean isRevoked() {
+        return revokedAt != null;
+    }
+
+    public void checkRevoked() {
+        if (this.revokedAt != null) {
+            throw new RevokedException("Device");
+        }
+    }
+
     @Override
     public Instant getLastSeenAt() {
         return lastSeenAt;
@@ -73,6 +95,10 @@ public class Device implements ActivityTrackable {
 
     public Instant getCreatedAt() {
         return createdAt;
+    }
+
+    public Instant getRevokedAt() {
+        return revokedAt;
     }
 
     public DeviceSignature getDeviceSignature() {

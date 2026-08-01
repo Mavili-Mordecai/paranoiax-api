@@ -21,7 +21,7 @@ public class InviteUserService implements InviteUserUseCase {
     private final OperationExecutor executor;
     private final Duration lockTtl;
     private final Duration resultTtl;
-    private final int tokenSize = 32;
+    private final int tokenSize;
 
     public InviteUserService(
             InvitePort invitePort,
@@ -29,7 +29,8 @@ public class InviteUserService implements InviteUserUseCase {
             TokenGenerator tokenGenerator,
             OperationExecutor executor,
             Duration lockTtl,
-            Duration resultTtl
+            Duration resultTtl,
+            int tokenSize
     ) {
         this.invitePort = invitePort;
         this.userPort = userPort;
@@ -37,6 +38,7 @@ public class InviteUserService implements InviteUserUseCase {
         this.executor = executor;
         this.lockTtl = lockTtl;
         this.resultTtl = resultTtl;
+        this.tokenSize = tokenSize;
     }
 
     @Override

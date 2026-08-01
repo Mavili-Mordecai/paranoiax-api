@@ -1,9 +1,17 @@
 package com.paranoiax.users.infrastructure.rest.api.devices.v1;
 
+import com.paranoiax.users.application.ports.in.devices.migrations.completeUpload.CompleteDeviceMigrationUploadCommand;
+import com.paranoiax.users.application.ports.in.devices.migrations.completeUpload.CompleteDeviceMigrationUploadUseCase;
 import com.paranoiax.users.application.ports.in.devices.migrations.createMigration.CreateDeviceMigrationCommand;
 import com.paranoiax.users.application.ports.in.devices.migrations.createMigration.CreateDeviceMigrationUseCase;
+import com.paranoiax.users.application.ports.in.devices.migrations.generateDownloadUrl.DeviceMigrationDownloadUrlResult;
+import com.paranoiax.users.application.ports.in.devices.migrations.generateDownloadUrl.GenerateDeviceMigrationDownloadUrlCommand;
+import com.paranoiax.users.application.ports.in.devices.migrations.generateDownloadUrl.GenerateDeviceMigrationDownloadUrlUseCase;
+import com.paranoiax.users.application.ports.in.devices.migrations.getMigrationStatus.DeviceMigrationStatusResult;
+import com.paranoiax.users.application.ports.in.devices.migrations.getMigrationStatus.GetDeviceMigrationStatusUseCase;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
@@ -16,6 +24,9 @@ import java.util.UUID;
 @RequestMapping("/v1/users/devices/migrations")
 public class DeviceMigrationController {
     private final CreateDeviceMigrationUseCase createDeviceMigrationUseCase;
+    private final GetDeviceMigrationStatusUseCase getDeviceMigrationStatusUseCase;
+    private final CompleteDeviceMigrationUploadUseCase completeDeviceMigrationUploadUseCase;
+    private final GenerateDeviceMigrationDownloadUrlUseCase generateDeviceMigrationDownloadUrlUseCase;
 
     @PutMapping("/{migration_id}")
     public ResponseEntity<MigrationResponse> createMigration(
@@ -26,6 +37,7 @@ public class DeviceMigrationController {
     ) {
         String uploadUrl = createDeviceMigrationUseCase.execute(new CreateDeviceMigrationCommand(
                 migrationId,
+                request.deviceId(),
                 userId,
                 request.identityKey(),
                 request.encryptionKey(),
@@ -39,9 +51,10 @@ public class DeviceMigrationController {
     public ResponseEntity<MigrationStatusResponse> getMigrationStatus(
             @PathVariable("migration_id") UUID migrationId
     ) {
+        DeviceMigrationStatusResult result = getDeviceMigrationStatusUseCase.execute(migrationId);
         return ResponseEntity.ok(new MigrationStatusResponse(
-                "test-status",
-                "test-challenge"
+                result.status().name(),
+                result.challenge() != null ? result.challenge().value() : null
         ));
     }
 
@@ -52,16 +65,20 @@ public class DeviceMigrationController {
             @RequestHeader("Idempotency-Key") String idempotencyKey,
             @AuthenticationPrincipal UUID userId
     ) {
+        completeDeviceMigrationUploadUseCase.execute(new CompleteDeviceMigrationUploadCommand(migrationId, userId, idempotencyKey));
     }
 
     @PostMapping("/{migration_id}/download-url")
     public ResponseEntity<DownloadUrlResponse> generateDownloadUrl(
             @PathVariable("migration_id") UUID migrationId,
+            @RequestHeader("Idempotency-Key") String idempotencyKey,
             @Valid @RequestBody DownloadUrlRequest request
     ) {
-        return ResponseEntity.ok(new DownloadUrlResponse(
-                "test-download-url",
-                "test-device-signature"
+        DeviceMigrationDownloadUrlResult result = generateDeviceMigrationDownloadUrlUseCase.execute(new GenerateDeviceMigrationDownloadUrlCommand(
+                migrationId,
+                request.signature(),
+                idempotencyKey
         ));
+        return ResponseEntity.ok(new DownloadUrlResponse(result.downloadUrl(), result.deviceSignature()));
     }
 }

@@ -5,7 +5,7 @@ import com.paranoiax.users.application.ports.in.auth.challengeAuth.ChallengeAuth
 import com.paranoiax.users.application.ports.in.auth.challengeAuth.ChallengeAuthUseCase;
 import com.paranoiax.users.application.ports.out.AuthTokenPort;
 import com.paranoiax.users.application.ports.out.ChallengePort;
-import com.paranoiax.users.application.ports.out.ChallengeVerifierPort;
+import com.paranoiax.users.application.ports.out.SignatureVerifierPort;
 import com.paranoiax.users.application.ports.out.DevicePort;
 import com.paranoiax.users.application.services.OperationExecutor;
 import com.paranoiax.users.domain.exceptions.ExpiredException;
@@ -16,12 +16,11 @@ import com.paranoiax.users.domain.models.device.Device;
 import com.paranoiax.users.domain.models.device.DeviceId;
 
 import java.time.Duration;
-import java.util.Base64;
 
 public class ChallengeAuthService implements ChallengeAuthUseCase {
     private final DevicePort devicePort;
     private final ChallengePort challengePort;
-    private final ChallengeVerifierPort verifierPort;
+    private final SignatureVerifierPort verifierPort;
     private final AuthTokenPort authTokenPort;
     private final OperationExecutor executor;
     private final Duration lockTtl;
@@ -30,7 +29,7 @@ public class ChallengeAuthService implements ChallengeAuthUseCase {
     public ChallengeAuthService(
             DevicePort devicePort,
             ChallengePort challengePort,
-            ChallengeVerifierPort verifierPort,
+            SignatureVerifierPort verifierPort,
             AuthTokenPort authTokenPort,
             OperationExecutor executor,
             Duration lockTtl,
@@ -61,10 +60,12 @@ public class ChallengeAuthService implements ChallengeAuthUseCase {
 
             Device device = devicePort.findById(new DeviceId(command.deviceId())).orElseThrow(() -> new NotFoundException("Device"));
 
+            device.checkRevoked();
+
             boolean verified = verifierPort.verify(
-                    Base64.getDecoder().decode(device.getIdentityKey().value()),
-                    Base64.getDecoder().decode(challenge.getChallenge().value()),
-                    Base64.getDecoder().decode(command.signature())
+                    device.getEncryptionKey().value(),
+                    challenge.getChallenge().value(),
+                    command.signature()
             );
 
             if (!verified) {

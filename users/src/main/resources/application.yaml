@@ -64,24 +64,39 @@ eureka:
       defaultZone: http://${EUREKA_HOST:localhost}:${EUREKA_PORT:8761}/eureka/
 
 application:
-  public-host: ${APP_PUBLIC_HOST:8080}
+  public-host: ${APP_PUBLIC_HOST:localhost:8080}
   spki-pin: ${APP_SPKI_PIN:sha256/AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA=}
-  invite:
-    lock-ttl: 5s
-    result-ttl: 15m
-  register:
-    invite-only: ${APP_REGISTER_INVITE_ONLY:true}
-    lock-ttl: 30s
-    result-ttl: 1d
-  challenge:
-    lock-ttl: 5s
-    result-ttl: 1m
-  challenge-auth:
-    lock-ttl: 5s
-    result-ttl: 1m
-  refresh:
-    lock-ttl: 5s
-    result-ttl: 1m
+  auth:
+    invite:
+      lock-ttl: 5s
+      result-ttl: 15m
+      token-size: 32
+    register:
+      invite-only: ${APP_REGISTER_INVITE_ONLY:true}
+      lock-ttl: 30s
+      result-ttl: 1d
+    challenge:
+      lock-ttl: 5s
+      result-ttl: 1m
+      token-size: 32
+    challenge-auth:
+      lock-ttl: 5s
+      result-ttl: 1m
+    refresh:
+      lock-ttl: 5s
+      result-ttl: 1m
+  devices:
+    migrations:
+      complete-upload:
+        lock-ttl: 5s
+        result-ttl: 1m
+        token-size: 32
+      generate-download-url:
+        lock-ttl: 5s
+        result-ttl: 1m
+    register:
+      lock-ttl: 30s
+      result-ttl: 1d
 
 jwt:
   keys:
@@ -100,7 +115,3 @@ s3:
   result-ttl: 15m
   migration:
     bucket: migrations
-    upload-url:
-      ttl: 15m
-    download-url:
-      ttl: 10m
