@@ -65,6 +65,25 @@ paths:
       responses:
         '204':
           description: Profile updated successfully (No Content)
+    get:
+      tags: [ Profile Management & Discovery ]
+      summary: Search for a user
+      description: Searches for users to initiate a chat and retrieve their UUID.
+      security:
+        - BearerAuth: [ ]
+      parameters:
+        - name: username
+          in: query
+          required: true
+          schema:
+            type: string
+      responses:
+        '200':
+          description: Search results
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/UserSearchItem'
 
   /v1/users/auth/challenge:
     post:
@@ -261,28 +280,26 @@ paths:
         '204':
           description: Session revoked successfully (No Content)
 
-  /v1/users/search:
+  /v1/users/{user_id}/keys:
     get:
       tags: [Profile Management & Discovery]
-      summary: Search for a user
-      description: Searches for users to initiate a chat and retrieve their UUID.
+      summary: Retrieve public ECC keys
+      description: Retrieval of public ECC keys for chat initialization
       security:
         - BearerAuth: []
       parameters:
-        - name: username
-          in: query
+        - name: user_id
+          in: path
           required: true
           schema:
             type: string
       responses:
         '200':
-          description: Search results
+          description: Array of user devices
           content:
             application/json:
               schema:
-                type: array
-                items:
-                  $ref: '#/components/schemas/UserSearchItem'
+                $ref: '#/components/schemas/UserKeysResponse'
 
   /v1/users/keys:
     get:

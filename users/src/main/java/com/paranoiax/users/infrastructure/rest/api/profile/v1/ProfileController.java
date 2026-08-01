@@ -1,7 +1,10 @@
 package com.paranoiax.users.infrastructure.rest.api.profile.v1;
 
+import com.paranoiax.users.application.ports.in.profile.search.SearchUserQuery;
+import com.paranoiax.users.application.ports.in.profile.search.SearchUserUseCase;
 import com.paranoiax.users.application.ports.in.profile.update.UpdateProfileCommand;
 import com.paranoiax.users.application.ports.in.profile.update.UpdateProfileUseCase;
+import com.paranoiax.users.domain.models.user.User;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
@@ -15,6 +18,7 @@ import java.util.UUID;
 @RequestMapping("/v1/users")
 public class ProfileController {
     private final UpdateProfileUseCase updateProfileUseCase;
+    private final SearchUserUseCase searchUserUseCase;
 
     @PatchMapping
     @ResponseStatus(HttpStatus.NO_CONTENT)
@@ -29,5 +33,13 @@ public class ProfileController {
                 request.lastName(),
                 request.bio()
         ));
+    }
+
+    @GetMapping
+    public SearchUserResponse search(
+            @RequestParam String username
+    ) {
+        User user = searchUserUseCase.execute(new SearchUserQuery(username));
+        return SearchUserResponse.from(user);
     }
 }
