@@ -1,11 +1,15 @@
 package com.paranoiax.users.infrastructure.config.application;
 
+import com.paranoiax.users.application.ports.in.profile.getKeys.GetUserKeysUseCase;
 import com.paranoiax.users.application.ports.in.profile.search.SearchUserUseCase;
 import com.paranoiax.users.application.ports.in.profile.update.UpdateProfileUseCase;
+import com.paranoiax.users.application.ports.out.DevicePort;
 import com.paranoiax.users.application.ports.out.TransactionPort;
 import com.paranoiax.users.application.ports.out.UserPort;
+import com.paranoiax.users.application.services.profile.GetUserKeysService;
 import com.paranoiax.users.application.services.profile.SearchUserService;
 import com.paranoiax.users.application.services.profile.UpdateProfileService;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 
@@ -20,5 +24,15 @@ public class ProfileConfig {
     @Bean
     public SearchUserUseCase searchUserUseCase(UserPort userPort) {
         return new SearchUserService(userPort);
+    }
+
+    @Bean
+    public GetUserKeysUseCase getUserKeysUseCase(
+            UserPort userPort,
+            DevicePort devicePort,
+            TransactionPort transactionPort,
+            @Value("${application.profile.get-user-ids.max-batch-size}") int maxUserIdsPerBatch
+    ) {
+        return new GetUserKeysService(userPort, devicePort, transactionPort, maxUserIdsPerBatch);
     }
 }

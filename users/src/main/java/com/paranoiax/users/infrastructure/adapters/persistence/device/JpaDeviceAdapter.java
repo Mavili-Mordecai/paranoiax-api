@@ -9,6 +9,7 @@ import com.paranoiax.users.infrastructure.persistence.repositories.JpaDeviceRepo
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Component;
 
+import java.util.Collection;
 import java.util.List;
 import java.util.Optional;
 
@@ -36,8 +37,13 @@ public class JpaDeviceAdapter implements DevicePort {
     }
 
     @Override
-    public List<Device> findDevicesByUserId(UserId userId) {
+    public List<Device> findByUserId(UserId userId) {
         return repository.findByUserId(userId.value()).stream().map(mapper::toDomain).toList();
+    }
+
+    @Override
+    public List<Device> findByUserIdIn(Collection<UserId> userIds) {
+        return repository.findByUserIdIn(userIds.stream().map(UserId::value).toList()).stream().map(mapper::toDomain).toList();
     }
 
     @Override
