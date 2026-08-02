@@ -1,6 +1,6 @@
 package com.paranoiax.users.infrastructure.persistence.entities;
 
-import com.paranoiax.users.domain.models.device.DeviceType;
+import com.paranoiax.core.domain.devices.DeviceType;
 import jakarta.persistence.*;
 import lombok.*;
 import org.hibernate.annotations.CreationTimestamp;

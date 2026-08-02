@@ -5,7 +5,7 @@ import com.paranoiax.users.application.ports.in.devices.migrations.getMigrationS
 import com.paranoiax.users.application.ports.in.devices.migrations.getMigrationStatus.GetDeviceMigrationStatusUseCase;
 import com.paranoiax.users.application.ports.out.DeviceMigrationPort;
 import com.paranoiax.users.application.ports.out.rateLimiter.RateLimiter;
-import com.paranoiax.users.domain.exceptions.NotFoundException;
+import com.paranoiax.core.domain.exceptions.NotFoundException;
 import com.paranoiax.users.domain.models.device.migration.DeviceMigration;
 import com.paranoiax.users.domain.models.device.migration.DeviceMigrationId;
 

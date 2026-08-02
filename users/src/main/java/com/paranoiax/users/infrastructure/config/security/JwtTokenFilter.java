@@ -1,6 +1,6 @@
 package com.paranoiax.users.infrastructure.config.security;
 
-import com.paranoiax.users.application.ports.in.auth.AccessToken;
+import com.paranoiax.core.application.AccessToken;
 import com.paranoiax.users.infrastructure.adapters.crypto.JwtAuthTokenAdapter;
 import io.jsonwebtoken.JwtException;
 import jakarta.servlet.FilterChain;

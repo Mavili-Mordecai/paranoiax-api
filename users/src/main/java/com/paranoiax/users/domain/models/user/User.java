@@ -1,7 +1,9 @@
 package com.paranoiax.users.domain.models.user;
 
-import com.paranoiax.users.domain.Require;
-import com.paranoiax.users.domain.exceptions.DomainErrorCode;
+import com.paranoiax.core.domain.Require;
+import com.paranoiax.core.domain.exceptions.DomainErrorCode;
+import com.paranoiax.core.domain.users.UserId;
+import com.paranoiax.core.domain.users.UserType;
 import com.paranoiax.users.domain.models.ActivityTrackable;
 import com.paranoiax.users.domain.models.IdentityKey;
 import com.paranoiax.users.domain.models.ImageUrl;

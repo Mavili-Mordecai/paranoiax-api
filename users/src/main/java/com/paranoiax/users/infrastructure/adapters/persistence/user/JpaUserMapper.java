@@ -1,5 +1,6 @@
 package com.paranoiax.users.infrastructure.adapters.persistence.user;
 
+import com.paranoiax.core.domain.users.UserId;
 import com.paranoiax.users.domain.models.IdentityKey;
 import com.paranoiax.users.domain.models.ImageUrl;
 import com.paranoiax.users.domain.models.user.*;

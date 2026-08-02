@@ -1,17 +1,17 @@
 package com.paranoiax.users.infrastructure.adapters.crypto;
 
-import com.paranoiax.users.application.ports.in.auth.AccessToken;
-import com.paranoiax.users.application.ports.in.auth.RefreshToken;
+import com.paranoiax.core.domain.devices.DeviceId;
+import com.paranoiax.core.domain.devices.DeviceType;
+import com.paranoiax.core.domain.users.UserId;
+import com.paranoiax.core.domain.users.UserType;
+import com.paranoiax.core.application.AccessToken;
+import com.paranoiax.core.application.RefreshToken;
 import com.paranoiax.users.application.ports.in.auth.TokenPair;
 import com.paranoiax.users.application.ports.out.AuthTokenPort;
-import com.paranoiax.users.domain.exceptions.ExpiredException;
-import com.paranoiax.users.domain.exceptions.InvalidFormatException;
-import com.paranoiax.users.domain.exceptions.InvalidSignatureException;
+import com.paranoiax.core.domain.exceptions.ExpiredException;
+import com.paranoiax.core.domain.exceptions.InvalidFormatException;
+import com.paranoiax.core.domain.exceptions.InvalidSignatureException;
 import com.paranoiax.users.domain.models.device.Device;
-import com.paranoiax.users.domain.models.device.DeviceId;
-import com.paranoiax.users.domain.models.device.DeviceType;
-import com.paranoiax.users.domain.models.user.UserId;
-import com.paranoiax.users.domain.models.user.UserType;
 import io.jsonwebtoken.*;
 import io.jsonwebtoken.security.SignatureException;
 import lombok.RequiredArgsConstructor;

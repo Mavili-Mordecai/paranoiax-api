@@ -1,9 +1,9 @@
 package com.paranoiax.users.application.ports.in.profile.getKeys;
 
+import com.paranoiax.core.domain.users.UserId;
 import com.paranoiax.users.domain.models.IdentityKey;
 import com.paranoiax.users.domain.models.device.Device;
 import com.paranoiax.users.domain.models.user.User;
-import com.paranoiax.users.domain.models.user.UserId;
 
 import java.util.List;
 

@@ -1,5 +1,7 @@
 package com.paranoiax.users.application.services.devices.migrations;
 
+import com.paranoiax.core.domain.devices.DeviceId;
+import com.paranoiax.core.domain.users.UserId;
 import com.paranoiax.users.application.ports.in.devices.migrations.createMigration.CreateDeviceMigrationCommand;
 import com.paranoiax.users.application.ports.in.devices.migrations.createMigration.CreateDeviceMigrationUseCase;
 import com.paranoiax.users.application.ports.out.DeviceMigrationPort;
@@ -7,16 +9,14 @@ import com.paranoiax.users.application.ports.out.EventPublisher;
 import com.paranoiax.users.application.ports.out.MediaStoragePort;
 import com.paranoiax.users.application.ports.out.UserPort;
 import com.paranoiax.users.application.services.OperationExecutor;
-import com.paranoiax.users.domain.exceptions.NotFoundException;
+import com.paranoiax.core.domain.exceptions.NotFoundException;
 import com.paranoiax.users.domain.models.EncryptionKey;
 import com.paranoiax.users.domain.models.IdentityKey;
-import com.paranoiax.users.domain.models.device.DeviceId;
 import com.paranoiax.users.domain.models.device.DeviceSignature;
 import com.paranoiax.users.domain.models.device.migration.DeviceMigration;
 import com.paranoiax.users.domain.models.device.migration.DeviceMigrationCreatedEvent;
 import com.paranoiax.users.domain.models.device.migration.DeviceMigrationId;
 import com.paranoiax.users.domain.models.user.User;
-import com.paranoiax.users.domain.models.user.UserId;
 
 import java.time.Duration;
 import java.util.UUID;

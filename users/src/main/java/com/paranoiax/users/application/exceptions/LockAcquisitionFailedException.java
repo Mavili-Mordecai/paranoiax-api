@@ -1,7 +1,7 @@
 package com.paranoiax.users.application.exceptions;
 
-import com.paranoiax.users.domain.exceptions.DomainErrorCode;
-import com.paranoiax.users.domain.exceptions.DomainException;
+import com.paranoiax.core.domain.exceptions.DomainErrorCode;
+import com.paranoiax.core.domain.exceptions.DomainException;
 
 import java.util.Map;
 

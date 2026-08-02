@@ -1,6 +1,6 @@
 package com.paranoiax.users.infrastructure.persistence.entities;
 
-import com.paranoiax.users.domain.models.user.UserType;
+import com.paranoiax.core.domain.users.UserType;
 import jakarta.persistence.*;
 import lombok.*;
 import org.hibernate.annotations.CreationTimestamp;

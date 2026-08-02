@@ -5,10 +5,10 @@ import com.paranoiax.users.application.ports.in.profile.getKeys.GetUserKeysUseCa
 import com.paranoiax.users.application.ports.in.profile.getKeys.GetUsersKeysQuery;
 import com.paranoiax.users.application.ports.in.profile.getKeys.UserKeysResult;
 import com.paranoiax.users.application.ports.in.profile.search.SearchUserQuery;
+import com.paranoiax.users.application.ports.in.profile.search.SearchUserResult;
 import com.paranoiax.users.application.ports.in.profile.search.SearchUserUseCase;
 import com.paranoiax.users.application.ports.in.profile.update.UpdateProfileCommand;
 import com.paranoiax.users.application.ports.in.profile.update.UpdateProfileUseCase;
-import com.paranoiax.users.domain.models.user.User;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
@@ -45,8 +45,8 @@ public class ProfileController {
 
     @GetMapping("/{username}")
     public ResponseEntity<SearchUserResponse> search(@PathVariable String username) {
-        User user = searchUserUseCase.execute(new SearchUserQuery(username));
-        return ResponseEntity.ok(SearchUserResponse.from(user));
+        SearchUserResult searchResult = searchUserUseCase.execute(new SearchUserQuery(username));
+        return ResponseEntity.ok(SearchUserResponse.from(searchResult));
     }
 
     @GetMapping("/{user_id}/keys")

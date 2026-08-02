@@ -1,6 +1,6 @@
 package com.paranoiax.users.application.services.auth;
 
-import com.paranoiax.users.application.ports.in.auth.RefreshToken;
+import com.paranoiax.core.application.RefreshToken;
 import com.paranoiax.users.application.ports.in.auth.TokenPair;
 import com.paranoiax.users.application.ports.in.auth.refreshTokens.RefreshTokensCommand;
 import com.paranoiax.users.application.ports.in.auth.refreshTokens.RefreshTokensUseCase;
@@ -8,8 +8,8 @@ import com.paranoiax.users.application.ports.out.AuthTokenBlacklistPort;
 import com.paranoiax.users.application.ports.out.AuthTokenPort;
 import com.paranoiax.users.application.ports.out.DevicePort;
 import com.paranoiax.users.application.services.OperationExecutor;
-import com.paranoiax.users.domain.exceptions.NotFoundException;
-import com.paranoiax.users.domain.exceptions.AlreadyRevokedException;
+import com.paranoiax.core.domain.exceptions.NotFoundException;
+import com.paranoiax.core.domain.exceptions.AlreadyRevokedException;
 import com.paranoiax.users.domain.models.device.Device;
 
 import java.time.Duration;

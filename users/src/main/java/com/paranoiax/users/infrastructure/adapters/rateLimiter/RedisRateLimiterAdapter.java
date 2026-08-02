@@ -2,7 +2,7 @@ package com.paranoiax.users.infrastructure.adapters.rateLimiter;
 
 import com.paranoiax.users.application.ports.out.rateLimiter.RateLimitResult;
 import com.paranoiax.users.application.ports.out.rateLimiter.RateLimiter;
-import com.paranoiax.users.domain.exceptions.RateLimitExceededException;
+import com.paranoiax.core.domain.exceptions.RateLimitExceededException;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.redis.core.StringRedisTemplate;
 import org.springframework.stereotype.Component;

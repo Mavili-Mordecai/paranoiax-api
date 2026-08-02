@@ -1,9 +1,9 @@
 package com.paranoiax.users.domain.models.challenge;
 
-import com.paranoiax.users.domain.Require;
-import com.paranoiax.users.domain.exceptions.DomainErrorCode;
+import com.paranoiax.core.domain.Require;
+import com.paranoiax.core.domain.devices.DeviceId;
+import com.paranoiax.core.domain.exceptions.DomainErrorCode;
 import com.paranoiax.users.domain.models.ChallengeValue;
-import com.paranoiax.users.domain.models.device.DeviceId;
 
 import java.time.Duration;
 import java.time.Instant;

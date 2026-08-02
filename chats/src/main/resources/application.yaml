@@ -1,0 +1,68 @@
+server:
+  port: 8082
+  forward-headers-strategy: framework
+
+management:
+  endpoint:
+    info:
+      enabled: true
+
+  endpoints:
+    web:
+      exposure:
+        include: health,info,prometheus,metrics
+
+  prometheus:
+    metrics:
+      export:
+        enabled: true
+
+  otlp:
+    metrics:
+      export:
+        enabled: false
+
+spring:
+  application:
+    name: chats
+
+  liquibase:
+    default-schema: chats
+
+  jpa:
+    open-in-view: false
+    hibernate:
+      ddl-auto: validate
+    properties:
+      hibernate:
+        default_schema: chats
+
+  kafka:
+    bootstrap-servers: ${KAFKA_HOST:localhost}:${KAFKA_PORT:9092}
+    consumer:
+      group-id: ${KAFKA_CONSUMER_GROUP_ID:users}
+      auto-offset-reset: earliest
+
+  datasource:
+    url: jdbc:postgresql://${DB_HOSTNAME:localhost}:${DB_PORT:5433}/${DB_DATABASE:paranoiax}
+    username: ${DB_USERNAME:postgres}
+    password: ${DB_PASSWORD:postgres}
+
+  data:
+    redis:
+      host: ${REDIS_HOSTNAME:localhost}
+      port: ${REDIS_PORT:6379}
+
+  jackson:
+    deserialization:
+      fail-on-unknown-properties: false
+    default-property-inclusion: non_null
+
+eureka:
+  client:
+    enabled: false
+    service-url:
+      defaultZone: http://${EUREKA_HOST:localhost}:${EUREKA_PORT:8761}/eureka/
+
+jwt:
+  public-key: ${JWT_PUBLIC_KEY}

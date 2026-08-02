@@ -1,8 +1,8 @@
 package com.paranoiax.users.infrastructure.adapters.persistence.challenge;
 
+import com.paranoiax.core.domain.devices.DeviceId;
 import com.paranoiax.users.domain.models.challenge.Challenge;
 import com.paranoiax.users.domain.models.ChallengeValue;
-import com.paranoiax.users.domain.models.device.DeviceId;
 import com.paranoiax.users.infrastructure.common.operationResultMapper.OperationResultsMapper;
 import org.springframework.stereotype.Component;
 

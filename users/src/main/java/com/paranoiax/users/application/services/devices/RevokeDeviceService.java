@@ -1,13 +1,13 @@
 package com.paranoiax.users.application.services.devices;
 
+import com.paranoiax.core.domain.devices.DeviceId;
 import com.paranoiax.users.application.ports.in.devices.revoke.RevokeDeviceCommand;
 import com.paranoiax.users.application.ports.in.devices.revoke.RevokeDeviceUseCase;
 import com.paranoiax.users.application.ports.out.DevicePort;
 import com.paranoiax.users.application.ports.out.TransactionPort;
-import com.paranoiax.users.domain.exceptions.AccessDeniedException;
-import com.paranoiax.users.domain.exceptions.NotFoundException;
+import com.paranoiax.core.domain.exceptions.AccessDeniedException;
+import com.paranoiax.core.domain.exceptions.NotFoundException;
 import com.paranoiax.users.domain.models.device.Device;
-import com.paranoiax.users.domain.models.device.DeviceId;
 
 public class RevokeDeviceService implements RevokeDeviceUseCase {
     private final DevicePort devicePort;
