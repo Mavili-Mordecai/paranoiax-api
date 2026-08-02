@@ -3,9 +3,9 @@ package com.paranoiax.users.application.services.devices.migrations;
 import com.paranoiax.users.application.ports.in.devices.migrations.createMigration.CreateDeviceMigrationCommand;
 import com.paranoiax.users.application.ports.in.devices.migrations.createMigration.CreateDeviceMigrationUseCase;
 import com.paranoiax.users.application.ports.out.DeviceMigrationPort;
+import com.paranoiax.users.application.ports.out.EventPublisher;
 import com.paranoiax.users.application.ports.out.MediaStoragePort;
 import com.paranoiax.users.application.ports.out.UserPort;
-import com.paranoiax.users.application.ports.out.crypto.TokenGenerator;
 import com.paranoiax.users.application.services.OperationExecutor;
 import com.paranoiax.users.domain.exceptions.NotFoundException;
 import com.paranoiax.users.domain.models.EncryptionKey;
@@ -13,6 +13,7 @@ import com.paranoiax.users.domain.models.IdentityKey;
 import com.paranoiax.users.domain.models.device.DeviceId;
 import com.paranoiax.users.domain.models.device.DeviceSignature;
 import com.paranoiax.users.domain.models.device.migration.DeviceMigration;
+import com.paranoiax.users.domain.models.device.migration.DeviceMigrationCreatedEvent;
 import com.paranoiax.users.domain.models.device.migration.DeviceMigrationId;
 import com.paranoiax.users.domain.models.user.User;
 import com.paranoiax.users.domain.models.user.UserId;
@@ -24,6 +25,7 @@ public class CreateDeviceMigrationService implements CreateDeviceMigrationUseCas
     private final MediaStoragePort mediaStoragePort;
     private final DeviceMigrationPort deviceMigrationPort;
     private final UserPort userPort;
+    private final EventPublisher eventPublisher;
     private final OperationExecutor executor;
     private final Duration lockTtl;
     private final Duration resultTtl;
@@ -32,6 +34,7 @@ public class CreateDeviceMigrationService implements CreateDeviceMigrationUseCas
             MediaStoragePort mediaStoragePort,
             DeviceMigrationPort deviceMigrationPort,
             UserPort userPort,
+            EventPublisher eventPublisher,
             OperationExecutor executor,
             Duration lockTtl,
             Duration resultTtl
@@ -39,6 +42,7 @@ public class CreateDeviceMigrationService implements CreateDeviceMigrationUseCas
         this.mediaStoragePort = mediaStoragePort;
         this.userPort = userPort;
         this.deviceMigrationPort = deviceMigrationPort;
+        this.eventPublisher = eventPublisher;
         this.executor = executor;
         this.lockTtl = lockTtl;
         this.resultTtl = resultTtl;
@@ -60,7 +64,11 @@ public class CreateDeviceMigrationService implements CreateDeviceMigrationUseCas
                     resultTtl
             ), resultTtl);
 
-            return mediaStoragePort.generateUploadUrl(migration.getBlobId(), resultTtl);
+            String uploadUrl = mediaStoragePort.generateUploadUrl(migration.getBlobId(), resultTtl);
+
+            eventPublisher.publish(DeviceMigrationCreatedEvent.from(migration));
+
+            return uploadUrl;
         });
     }
 }

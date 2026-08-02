@@ -5,7 +5,7 @@ import com.paranoiax.users.application.ports.in.auth.challengeAuth.ChallengeAuth
 import com.paranoiax.users.application.ports.in.auth.challengeAuth.ChallengeAuthUseCase;
 import com.paranoiax.users.application.ports.out.AuthTokenPort;
 import com.paranoiax.users.application.ports.out.ChallengePort;
-import com.paranoiax.users.application.ports.out.SignatureVerifierPort;
+import com.paranoiax.users.application.ports.out.crypto.SignatureVerifierPort;
 import com.paranoiax.users.application.ports.out.DevicePort;
 import com.paranoiax.users.application.services.OperationExecutor;
 import com.paranoiax.users.domain.exceptions.ExpiredException;

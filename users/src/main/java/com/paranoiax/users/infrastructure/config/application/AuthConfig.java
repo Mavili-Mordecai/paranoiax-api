@@ -6,6 +6,7 @@ import com.paranoiax.users.application.ports.in.auth.invite.InviteUserUseCase;
 import com.paranoiax.users.application.ports.in.auth.refreshTokens.RefreshTokensUseCase;
 import com.paranoiax.users.application.ports.in.auth.register.RegisterUserUseCase;
 import com.paranoiax.users.application.ports.out.*;
+import com.paranoiax.users.application.ports.out.crypto.SignatureVerifierPort;
 import com.paranoiax.users.application.ports.out.crypto.TokenGenerator;
 import com.paranoiax.users.application.services.OperationExecutor;
 import com.paranoiax.users.application.services.auth.*;

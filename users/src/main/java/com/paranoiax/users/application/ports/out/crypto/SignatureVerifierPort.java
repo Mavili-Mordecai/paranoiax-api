@@ -1,4 +1,4 @@
-package com.paranoiax.users.application.ports.out;
+package com.paranoiax.users.application.ports.out.crypto;
 
 public interface SignatureVerifierPort {
     boolean verify(String publicKey, String data, String signature);
