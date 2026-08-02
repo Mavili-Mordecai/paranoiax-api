@@ -17,6 +17,7 @@ import org.springframework.web.bind.MissingRequestHeaderException;
 import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.RestControllerAdvice;
 import org.springframework.web.method.annotation.MethodArgumentTypeMismatchException;
+import org.springframework.web.servlet.resource.NoResourceFoundException;
 
 import java.util.*;
 import java.util.stream.Collectors;
@@ -41,9 +42,24 @@ public class GlobalExceptionHandler {
         return getErrorResponse(HttpStatus.FORBIDDEN, request, e.getCode(), e.getMessage(), e.getArgs());
     }
 
+    @ExceptionHandler(RevokedException.class)
+    public ResponseEntity<ErrorResponse<DomainErrorResponse>> handleRevokedException(RevokedException e, HttpServletRequest request) {
+        return getErrorResponse(HttpStatus.FORBIDDEN, request, e.getCode(), e.getMessage(), e.getArgs());
+    }
+
     @ExceptionHandler(NotFoundException.class)
     public ResponseEntity<ErrorResponse<DomainErrorResponse>> handleNotFoundException(NotFoundException e, HttpServletRequest request) {
         return getErrorResponse(HttpStatus.NOT_FOUND, request, e.getCode(), e.getMessage(), e.getArgs());
+    }
+
+    @ExceptionHandler(AlreadyTakenException.class)
+    public ResponseEntity<ErrorResponse<DomainErrorResponse>> handleAlreadyTakenException(AlreadyTakenException e, HttpServletRequest request) {
+        return getErrorResponse(HttpStatus.CONFLICT, request, e.getCode(), e.getMessage(), e.getArgs());
+    }
+
+    @ExceptionHandler(AlreadyRevokedException.class)
+    public ResponseEntity<ErrorResponse<DomainErrorResponse>> handleAlreadyRevokedException(AlreadyRevokedException e, HttpServletRequest request) {
+        return getErrorResponse(HttpStatus.CONFLICT, request, e.getCode(), e.getMessage(), e.getArgs());
     }
 
     // Validation and parsing
@@ -132,6 +148,21 @@ public class GlobalExceptionHandler {
                                 ApiErrorCode.METHOD_ARGUMENT_TYPE_MISMATCH.name(),
                                 "Method argument type mismatch: " + ex.getName(),
                                 Map.of("argument", ex.getName())
+                        )
+                ));
+    }
+
+    @ExceptionHandler(NoResourceFoundException.class)
+    public ResponseEntity<ErrorResponse<DomainErrorResponse>> handleNoResourceFoundException(NoResourceFoundException e, HttpServletRequest request) {
+        return ResponseEntity.status(HttpStatus.NOT_FOUND)
+                .contentType(MediaType.APPLICATION_JSON)
+                .body(ErrorResponse.of(
+                        MDC.get("traceId"),
+                        request.getRequestURI(),
+                        new DomainErrorResponse(
+                                ApiErrorCode.NOT_FOUND.name(),
+                                "Resource path not found: " + e.getResourcePath(),
+                                Map.of("resource", e.getResourcePath(), "method", e.getHttpMethod().name())
                         )
                 ));
     }

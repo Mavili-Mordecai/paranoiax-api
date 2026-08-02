@@ -63,8 +63,6 @@ paths:
             schema:
               $ref: '#/components/schemas/UpdateProfileRequest'
       responses:
-        '200':
-          description: Profile updated successfully
         '204':
           description: Profile updated successfully (No Content)
 
@@ -263,16 +261,16 @@ paths:
         '204':
           description: Session revoked successfully (No Content)
 
-  /v1/users/search:
+  /v1/users/{username}:
     get:
-      tags: [Profile Management & Discovery]
+      tags: [ Profile Management & Discovery ]
       summary: Search for a user
       description: Searches for users to initiate a chat and retrieve their UUID.
       security:
-        - BearerAuth: []
+        - BearerAuth: [ ]
       parameters:
         - name: username
-          in: query
+          in: path
           required: true
           schema:
             type: string
@@ -282,24 +280,51 @@ paths:
           content:
             application/json:
               schema:
-                type: array
-                items:
-                  $ref: '#/components/schemas/UserSearchItem'
+                $ref: '#/components/schemas/UserSearchItem'
+
+  /v1/users/{user_id}/keys:
+    get:
+      tags: [Profile Management & Discovery]
+      summary: Retrieve public ECC keys
+      description: Retrieval of public ECC keys for chat initialization
+      security:
+        - BearerAuth: []
+      parameters:
+        - name: user_id
+          in: path
+          required: true
+          schema:
+            type: string
+      responses:
+        '200':
+          description: Array of user devices
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/UserKeysResponse'
 
   /v1/users/keys:
-    get:
+    post:
       tags: [Profile Management & Discovery]
       summary: Retrieve public ECC keys
       description: Batch retrieval of public ECC keys for chat initialization (ECIES digital envelope) or key rotation procedures.
       security:
         - BearerAuth: []
-      parameters:
-        - name: ids
-          in: query
-          required: true
-          description: Comma-separated array of user UUIDs
-          schema:
-            type: string
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              name: userIds
+              type: object
+              required:
+                - user_ids
+              properties:
+                user_ids:
+                  type: array
+                  items:
+                    type: string
+                    format: uuid
       responses:
         '200':
           description: Array of user keys and their devices
@@ -490,6 +515,12 @@ components:
       properties:
         username:
           type: string
+        first_name:
+          type: string
+        last_name:
+          type: string
+        bio:
+          type: string
 
     UserSearchItem:
       type: object
@@ -499,11 +530,21 @@ components:
           format: uuid
         username:
           type: string
-        is_online:
-          type: boolean
-        last_seen_at:
+        avatar:
+          $ref: '#/components/schemas/UserAvatar'
+
+    UserAvatar:
+      type: object
+      properties:
+        small:
           type: string
-          format: date-time
+          format: uri
+        medium:
+          type: string
+          format: uri
+        large:
+          type: string
+          format: uri
 
     UserKeysResponse:
       type: object
@@ -511,6 +552,8 @@ components:
         user_id:
           type: string
           format: uuid
+        identity_key:
+          type: string
         devices:
           type: array
           items:
@@ -526,3 +569,8 @@ components:
           type: string
         encryption_key:
           type: string
+        device_signature:
+          type: string
+        revoked_at:
+          type: string
+          format: date-time

@@ -8,7 +8,6 @@ import org.hibernate.annotations.UpdateTimestamp;
 import org.springframework.data.domain.Persistable;
 
 import java.time.Instant;
-import java.util.List;
 import java.util.UUID;
 
 @Getter
@@ -39,7 +38,7 @@ public class UserEntity implements Persistable<UUID> {
     @Column(length = 64)
     private String lastName;
 
-    @Column(length = 128)
+    @Column(length = 192)
     private String bio;
 
     @Column(name = "invited_by_id", nullable = false)

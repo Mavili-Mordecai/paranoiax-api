@@ -97,6 +97,9 @@ application:
     register:
       lock-ttl: 30s
       result-ttl: 1d
+  profile:
+    get-user-ids:
+      max-batch-size: 256
 
 jwt:
   keys:
