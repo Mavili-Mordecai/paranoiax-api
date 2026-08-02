@@ -1,9 +1,9 @@
 package com.paranoiax.users.domain.models.device.migration;
 
+import com.paranoiax.core.domain.devices.DeviceId;
+import com.paranoiax.core.domain.users.UserId;
 import com.paranoiax.users.domain.models.ChallengeValue;
 import com.paranoiax.users.domain.models.DomainEvent;
-import com.paranoiax.users.domain.models.device.DeviceId;
-import com.paranoiax.users.domain.models.user.UserId;
 
 import java.time.Instant;
 

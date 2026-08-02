@@ -1,17 +1,17 @@
 package com.paranoiax.users.application.services.devices;
 
+import com.paranoiax.core.domain.devices.DeviceType;
 import com.paranoiax.users.application.ports.in.devices.register.RegisterDeviceCommand;
 import com.paranoiax.users.application.ports.in.devices.register.RegisterDeviceUseCase;
 import com.paranoiax.users.application.ports.out.DeviceMigrationPort;
 import com.paranoiax.users.application.ports.out.DevicePort;
 import com.paranoiax.users.application.ports.out.crypto.SignatureVerifierPort;
 import com.paranoiax.users.application.services.OperationExecutor;
-import com.paranoiax.users.domain.exceptions.InvalidSignatureException;
-import com.paranoiax.users.domain.exceptions.InvalidValueException;
-import com.paranoiax.users.domain.exceptions.NotFoundException;
+import com.paranoiax.core.domain.exceptions.InvalidSignatureException;
+import com.paranoiax.core.domain.exceptions.InvalidValueException;
+import com.paranoiax.core.domain.exceptions.NotFoundException;
 import com.paranoiax.users.domain.models.device.Device;
 import com.paranoiax.users.domain.models.device.DeviceName;
-import com.paranoiax.users.domain.models.device.DeviceType;
 import com.paranoiax.users.domain.models.device.migration.DeviceMigration;
 import com.paranoiax.users.domain.models.device.migration.DeviceMigrationId;
 

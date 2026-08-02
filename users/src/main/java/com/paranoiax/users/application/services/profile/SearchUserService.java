@@ -1,10 +1,10 @@
 package com.paranoiax.users.application.services.profile;
 
 import com.paranoiax.users.application.ports.in.profile.search.SearchUserQuery;
+import com.paranoiax.users.application.ports.in.profile.search.SearchUserResult;
 import com.paranoiax.users.application.ports.in.profile.search.SearchUserUseCase;
 import com.paranoiax.users.application.ports.out.UserPort;
-import com.paranoiax.users.domain.exceptions.NotFoundException;
-import com.paranoiax.users.domain.models.user.User;
+import com.paranoiax.core.domain.exceptions.NotFoundException;
 import com.paranoiax.users.domain.models.user.Username;
 
 public class SearchUserService implements SearchUserUseCase {
@@ -15,7 +15,9 @@ public class SearchUserService implements SearchUserUseCase {
     }
 
     @Override
-    public User execute(SearchUserQuery query) {
-        return userPort.findByUsername(new Username(query.username())).orElseThrow(() -> new NotFoundException("User"));
+    public SearchUserResult execute(SearchUserQuery query) {
+        return userPort.findByUsername(new Username(query.username()))
+                .map(SearchUserResult::from)
+                .orElseThrow(() -> new NotFoundException("User"));
     }
 }

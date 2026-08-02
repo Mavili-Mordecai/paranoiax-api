@@ -1,8 +1,8 @@
 package com.paranoiax.users.domain.models;
 
-import com.paranoiax.users.domain.Require;
-import com.paranoiax.users.domain.exceptions.DomainErrorCode;
-import com.paranoiax.users.domain.exceptions.InvalidFormatException;
+import com.paranoiax.core.domain.Require;
+import com.paranoiax.core.domain.exceptions.DomainErrorCode;
+import com.paranoiax.core.domain.exceptions.InvalidFormatException;
 
 import java.net.URI;
 import java.net.URISyntaxException;

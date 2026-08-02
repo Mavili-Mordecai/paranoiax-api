@@ -1,6 +1,6 @@
 package com.paranoiax.users.infrastructure.rest.api.profile.v1;
 
-import com.paranoiax.users.domain.models.user.User;
+import com.paranoiax.users.application.ports.in.profile.search.SearchUserResult;
 import tools.jackson.databind.PropertyNamingStrategies;
 import tools.jackson.databind.annotation.JsonNaming;
 
@@ -12,19 +12,19 @@ public record SearchUserResponse(
         String username,
         AvatarInfo avatar
 ) {
-    public static SearchUserResponse from(User user) {
+    public static SearchUserResponse from(SearchUserResult searchResult) {
         AvatarInfo avatarInfo = null;
-        if (user.getAvatar() != null) {
+        if (searchResult.avatar() != null) {
             avatarInfo = new AvatarInfo(
-                    user.getAvatar().getSmall().value(),
-                    user.getAvatar().getMedium().value(),
-                    user.getAvatar().getLarge().value()
+                    searchResult.avatar().getSmall().value(),
+                    searchResult.avatar().getMedium().value(),
+                    searchResult.avatar().getLarge().value()
             );
         }
 
         return new SearchUserResponse(
-                user.getId().value(),
-                user.getUsername().value(),
+                searchResult.userId().value(),
+                searchResult.username().value(),
                 avatarInfo
         );
     }

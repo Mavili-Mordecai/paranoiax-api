@@ -1,5 +1,6 @@
 package com.paranoiax.users.application.services.auth;
 
+import com.paranoiax.core.domain.devices.DeviceId;
 import com.paranoiax.users.application.ports.in.auth.TokenPair;
 import com.paranoiax.users.application.ports.in.auth.challengeAuth.ChallengeAuthCommand;
 import com.paranoiax.users.application.ports.in.auth.challengeAuth.ChallengeAuthUseCase;
@@ -8,12 +9,11 @@ import com.paranoiax.users.application.ports.out.ChallengePort;
 import com.paranoiax.users.application.ports.out.crypto.SignatureVerifierPort;
 import com.paranoiax.users.application.ports.out.DevicePort;
 import com.paranoiax.users.application.services.OperationExecutor;
-import com.paranoiax.users.domain.exceptions.ExpiredException;
-import com.paranoiax.users.domain.exceptions.InvalidSignatureException;
-import com.paranoiax.users.domain.exceptions.NotFoundException;
+import com.paranoiax.core.domain.exceptions.ExpiredException;
+import com.paranoiax.core.domain.exceptions.InvalidSignatureException;
+import com.paranoiax.core.domain.exceptions.NotFoundException;
 import com.paranoiax.users.domain.models.challenge.Challenge;
 import com.paranoiax.users.domain.models.device.Device;
-import com.paranoiax.users.domain.models.device.DeviceId;
 
 import java.time.Duration;
 

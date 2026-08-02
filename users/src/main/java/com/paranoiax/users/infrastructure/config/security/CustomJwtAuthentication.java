@@ -1,7 +1,7 @@
 package com.paranoiax.users.infrastructure.config.security;
 
-import com.paranoiax.users.domain.models.device.DeviceType;
-import com.paranoiax.users.domain.models.user.UserType;
+import com.paranoiax.core.domain.devices.DeviceType;
+import com.paranoiax.core.domain.users.UserType;
 import lombok.Getter;
 import org.jspecify.annotations.Nullable;
 import org.springframework.security.authentication.AbstractAuthenticationToken;

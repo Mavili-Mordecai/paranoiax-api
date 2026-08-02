@@ -1,20 +1,22 @@
 package com.paranoiax.users.application.services.auth;
 
+import com.paranoiax.core.domain.devices.DeviceId;
+import com.paranoiax.core.domain.devices.DeviceType;
+import com.paranoiax.core.domain.users.UserId;
+import com.paranoiax.core.domain.users.UserType;
 import com.paranoiax.users.application.ports.in.auth.register.RegisterUserCommand;
 import com.paranoiax.users.application.ports.in.auth.register.RegisterUserUseCase;
 import com.paranoiax.users.application.ports.out.*;
 import com.paranoiax.users.application.services.OperationExecutor;
-import com.paranoiax.users.domain.exceptions.ExpiredException;
-import com.paranoiax.users.domain.exceptions.MissingRequiredFieldException;
-import com.paranoiax.users.domain.exceptions.NotFoundException;
-import com.paranoiax.users.domain.exceptions.AlreadyRevokedException;
+import com.paranoiax.core.domain.exceptions.ExpiredException;
+import com.paranoiax.core.domain.exceptions.MissingRequiredFieldException;
+import com.paranoiax.core.domain.exceptions.NotFoundException;
+import com.paranoiax.core.domain.exceptions.AlreadyRevokedException;
 import com.paranoiax.users.domain.models.EncryptionKey;
 import com.paranoiax.users.domain.models.IdentityKey;
 import com.paranoiax.users.domain.models.device.*;
 import com.paranoiax.users.domain.models.invite.Invite;
 import com.paranoiax.users.domain.models.user.User;
-import com.paranoiax.users.domain.models.user.UserId;
-import com.paranoiax.users.domain.models.user.UserType;
 import com.paranoiax.users.domain.models.user.Username;
 
 import java.time.Duration;

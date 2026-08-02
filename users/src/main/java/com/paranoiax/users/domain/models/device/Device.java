@@ -1,13 +1,15 @@
 package com.paranoiax.users.domain.models.device;
 
-import com.paranoiax.users.domain.Require;
-import com.paranoiax.users.domain.exceptions.AlreadyRevokedException;
-import com.paranoiax.users.domain.exceptions.DomainErrorCode;
-import com.paranoiax.users.domain.exceptions.RevokedException;
+import com.paranoiax.core.domain.Require;
+import com.paranoiax.core.domain.devices.DeviceId;
+import com.paranoiax.core.domain.devices.DeviceType;
+import com.paranoiax.core.domain.exceptions.AlreadyRevokedException;
+import com.paranoiax.core.domain.exceptions.DomainErrorCode;
+import com.paranoiax.core.domain.exceptions.RevokedException;
+import com.paranoiax.core.domain.users.UserId;
 import com.paranoiax.users.domain.models.ActivityTrackable;
 import com.paranoiax.users.domain.models.EncryptionKey;
 import com.paranoiax.users.domain.models.IdentityKey;
-import com.paranoiax.users.domain.models.user.UserId;
 
 import java.time.Instant;
 

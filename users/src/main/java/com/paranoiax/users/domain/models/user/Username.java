@@ -1,6 +1,6 @@
 package com.paranoiax.users.domain.models.user;
 
-import com.paranoiax.users.domain.Require;
+import com.paranoiax.core.domain.Require;
 
 public record Username(String value) {
     public static final int MIN_LENGTH = 5;

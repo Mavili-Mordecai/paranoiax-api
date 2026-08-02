@@ -1,8 +1,8 @@
 package com.paranoiax.users.infrastructure.adapters.persistence.user;
 
+import com.paranoiax.core.domain.users.UserId;
 import com.paranoiax.users.application.ports.out.UserPort;
 import com.paranoiax.users.domain.models.user.User;
-import com.paranoiax.users.domain.models.user.UserId;
 import com.paranoiax.users.domain.models.user.Username;
 import com.paranoiax.users.infrastructure.persistence.entities.UserEntity;
 import com.paranoiax.users.infrastructure.persistence.repositories.JpaUserRepository;

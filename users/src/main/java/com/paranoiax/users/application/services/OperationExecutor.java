@@ -6,7 +6,7 @@ import com.paranoiax.users.application.ports.out.operationResult.OperationRecord
 import com.paranoiax.users.application.ports.out.operationResult.OperationResultPort;
 import com.paranoiax.users.application.ports.out.TransactionPort;
 import com.paranoiax.users.application.ports.out.crypto.HashPort;
-import com.paranoiax.users.domain.exceptions.OperationParametersChangedException;
+import com.paranoiax.core.domain.exceptions.OperationParametersChangedException;
 
 import java.time.Duration;
 import java.util.Optional;

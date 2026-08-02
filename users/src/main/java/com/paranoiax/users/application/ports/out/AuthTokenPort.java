@@ -1,7 +1,7 @@
 package com.paranoiax.users.application.ports.out;
 
-import com.paranoiax.users.application.ports.in.auth.AccessToken;
-import com.paranoiax.users.application.ports.in.auth.RefreshToken;
+import com.paranoiax.core.application.AccessToken;
+import com.paranoiax.core.application.RefreshToken;
 import com.paranoiax.users.application.ports.in.auth.TokenPair;
 import com.paranoiax.users.domain.models.device.Device;
 

@@ -1,7 +1,7 @@
 package com.paranoiax.users.infrastructure.adapters.persistence.invites;
 
+import com.paranoiax.core.domain.users.UserId;
 import com.paranoiax.users.domain.models.invite.RegistrationToken;
-import com.paranoiax.users.domain.models.user.UserId;
 
 import java.time.Instant;
 

@@ -1,6 +1,6 @@
 package com.paranoiax.users.domain.models.user;
 
-import com.paranoiax.users.domain.Require;
+import com.paranoiax.core.domain.Require;
 
 public record Profile(String firstName, String lastName, String bio) {
     private static final int NAME_MAX_LENGTH = 64;

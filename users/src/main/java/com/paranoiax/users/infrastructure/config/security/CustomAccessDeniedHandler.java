@@ -1,8 +1,8 @@
 package com.paranoiax.users.infrastructure.config.security;
 
-import com.paranoiax.users.infrastructure.rest.exceptions.ApiErrorCode;
-import com.paranoiax.users.infrastructure.rest.exceptions.DomainErrorResponse;
-import com.paranoiax.users.infrastructure.rest.exceptions.ErrorResponse;
+import com.paranoiax.core_infra.rest.exceptions.ApiErrorCode;
+import com.paranoiax.core_infra.rest.exceptions.DomainErrorResponse;
+import com.paranoiax.core_infra.rest.exceptions.ErrorResponse;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 import lombok.RequiredArgsConstructor;

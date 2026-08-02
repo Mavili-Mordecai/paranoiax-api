@@ -1,7 +1,7 @@
 package com.paranoiax.users.domain.models.device.migration;
 
-import com.paranoiax.users.domain.Require;
-import com.paranoiax.users.domain.exceptions.DomainErrorCode;
+import com.paranoiax.core.domain.Require;
+import com.paranoiax.core.domain.exceptions.DomainErrorCode;
 
 import java.util.UUID;
 

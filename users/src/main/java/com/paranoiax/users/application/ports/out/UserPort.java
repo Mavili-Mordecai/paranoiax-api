@@ -1,7 +1,7 @@
 package com.paranoiax.users.application.ports.out;
 
+import com.paranoiax.core.domain.users.UserId;
 import com.paranoiax.users.domain.models.user.User;
-import com.paranoiax.users.domain.models.user.UserId;
 import com.paranoiax.users.domain.models.user.Username;
 
 import java.util.*;

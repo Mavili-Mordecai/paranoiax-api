@@ -1,14 +1,14 @@
 package com.paranoiax.users.application.services.profile;
 
+import com.paranoiax.core.domain.users.UserId;
 import com.paranoiax.users.application.ports.in.profile.update.UpdateProfileCommand;
 import com.paranoiax.users.application.ports.in.profile.update.UpdateProfileUseCase;
 import com.paranoiax.users.application.ports.out.TransactionPort;
 import com.paranoiax.users.application.ports.out.UserPort;
-import com.paranoiax.users.domain.exceptions.AlreadyTakenException;
-import com.paranoiax.users.domain.exceptions.NotFoundException;
+import com.paranoiax.core.domain.exceptions.AlreadyTakenException;
+import com.paranoiax.core.domain.exceptions.NotFoundException;
 import com.paranoiax.users.domain.models.user.ProfileChanges;
 import com.paranoiax.users.domain.models.user.User;
-import com.paranoiax.users.domain.models.user.UserId;
 import com.paranoiax.users.domain.models.user.Username;
 
 public class UpdateProfileService implements UpdateProfileUseCase {

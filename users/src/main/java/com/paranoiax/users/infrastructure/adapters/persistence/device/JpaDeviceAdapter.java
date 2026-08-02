@@ -1,9 +1,9 @@
 package com.paranoiax.users.infrastructure.adapters.persistence.device;
 
+import com.paranoiax.core.domain.devices.DeviceId;
+import com.paranoiax.core.domain.users.UserId;
 import com.paranoiax.users.application.ports.out.DevicePort;
 import com.paranoiax.users.domain.models.device.Device;
-import com.paranoiax.users.domain.models.device.DeviceId;
-import com.paranoiax.users.domain.models.user.UserId;
 import com.paranoiax.users.infrastructure.persistence.entities.DeviceEntity;
 import com.paranoiax.users.infrastructure.persistence.repositories.JpaDeviceRepository;
 import lombok.RequiredArgsConstructor;

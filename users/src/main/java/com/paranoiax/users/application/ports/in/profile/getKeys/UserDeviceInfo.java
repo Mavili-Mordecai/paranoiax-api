@@ -1,9 +1,9 @@
 package com.paranoiax.users.application.ports.in.profile.getKeys;
 
+import com.paranoiax.core.domain.devices.DeviceId;
 import com.paranoiax.users.domain.models.EncryptionKey;
 import com.paranoiax.users.domain.models.IdentityKey;
 import com.paranoiax.users.domain.models.device.Device;
-import com.paranoiax.users.domain.models.device.DeviceId;
 import com.paranoiax.users.domain.models.device.DeviceSignature;
 
 import java.time.Instant;

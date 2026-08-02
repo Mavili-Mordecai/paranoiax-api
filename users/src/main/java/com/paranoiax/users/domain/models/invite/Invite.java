@@ -1,8 +1,8 @@
 package com.paranoiax.users.domain.models.invite;
 
-import com.paranoiax.users.domain.Require;
-import com.paranoiax.users.domain.exceptions.DomainErrorCode;
-import com.paranoiax.users.domain.models.user.UserId;
+import com.paranoiax.core.domain.Require;
+import com.paranoiax.core.domain.exceptions.DomainErrorCode;
+import com.paranoiax.core.domain.users.UserId;
 
 import java.time.Duration;
 import java.time.Instant;
