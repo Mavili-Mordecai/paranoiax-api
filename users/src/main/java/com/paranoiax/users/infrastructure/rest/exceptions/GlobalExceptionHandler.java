@@ -62,6 +62,22 @@ public class GlobalExceptionHandler {
         return getErrorResponse(HttpStatus.CONFLICT, request, e.getCode(), e.getMessage(), e.getArgs());
     }
 
+    @ExceptionHandler(RateLimitExceededException.class)
+    public ResponseEntity<ErrorResponse<DomainErrorResponse>> handleRateLimitExceededException(RateLimitExceededException e, HttpServletRequest request) {
+        return ResponseEntity.status(HttpStatus.TOO_MANY_REQUESTS)
+                .contentType(MediaType.APPLICATION_JSON)
+                .header("Retry-After", String.valueOf(e.getRetryAfterMillis()))
+                .body(ErrorResponse.of(
+                        MDC.get("traceId"),
+                        request.getRequestURI(),
+                        new DomainErrorResponse(
+                                DomainErrorCode.RATE_LIMIT_EXCEEDED.name(),
+                                DomainErrorCode.RATE_LIMIT_EXCEEDED.getDefaultMessage(),
+                                null
+                        )
+                ));
+    }
+
     // Validation and parsing
     @ExceptionHandler(MethodArgumentNotValidException.class)
     public ResponseEntity<ErrorResponse<ApiErrorResponse>> handleValidationException(MethodArgumentNotValidException e, HttpServletRequest request) {

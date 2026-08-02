@@ -1,5 +1,6 @@
 server:
   port: 8081
+  forward-headers-strategy: framework
 
 management:
   endpoint:
@@ -41,6 +42,12 @@ spring:
     properties:
       hibernate:
         default_schema: users
+
+  kafka:
+    bootstrap-servers: ${KAFKA_HOST:localhost}:${KAFKA_PORT:9092}
+    consumer:
+      group-id: ${KAFKA_CONSUMER_GROUP_ID:users}
+      auto-offset-reset: earliest
 
   datasource:
     url: jdbc:postgresql://${DB_HOSTNAME:localhost}:${DB_PORT:5433}/${DB_DATABASE:paranoiax}

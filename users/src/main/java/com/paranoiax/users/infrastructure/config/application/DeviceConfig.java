@@ -6,7 +6,9 @@ import com.paranoiax.users.application.ports.in.devices.migrations.getMigrationS
 import com.paranoiax.users.application.ports.in.devices.register.RegisterDeviceUseCase;
 import com.paranoiax.users.application.ports.in.devices.revoke.RevokeDeviceUseCase;
 import com.paranoiax.users.application.ports.out.*;
+import com.paranoiax.users.application.ports.out.crypto.SignatureVerifierPort;
 import com.paranoiax.users.application.ports.out.crypto.TokenGenerator;
+import com.paranoiax.users.application.ports.out.rateLimiter.RateLimiter;
 import com.paranoiax.users.application.services.OperationExecutor;
 import com.paranoiax.users.application.services.devices.RegisterDeviceService;
 import com.paranoiax.users.application.services.devices.RevokeDeviceService;
@@ -28,6 +30,7 @@ public class DeviceConfig {
             MediaStoragePort mediaStoragePort,
             UserPort userPort,
             DeviceMigrationPort deviceMigrationPort,
+            EventPublisher eventPublisher,
             OperationExecutor executor,
             @Value("${s3.lock-ttl}") Duration lockTtl,
             @Value("${s3.result-ttl}") Duration resultTtl
@@ -36,6 +39,7 @@ public class DeviceConfig {
                 mediaStoragePort,
                 deviceMigrationPort,
                 userPort,
+                eventPublisher,
                 executor,
                 lockTtl,
                 resultTtl
@@ -43,14 +47,18 @@ public class DeviceConfig {
     }
 
     @Bean
-    public GetDeviceMigrationStatusUseCase getDeviceMigrationStatusUseCase(DeviceMigrationPort deviceMigrationPort) {
-        return new GetDeviceMigrationStatusService(deviceMigrationPort);
+    public GetDeviceMigrationStatusUseCase getDeviceMigrationStatusUseCase(
+            DeviceMigrationPort deviceMigrationPort,
+            RateLimiter rateLimiter
+    ) {
+        return new GetDeviceMigrationStatusService(deviceMigrationPort, rateLimiter);
     }
 
     @Bean
     public CompleteDeviceMigrationUploadService completeDeviceMigrationUploadService(
             DeviceMigrationPort deviceMigrationPort,
             TokenGenerator tokenGenerator,
+            EventPublisher eventPublisher,
             OperationExecutor executor,
             @Value("${application.devices.migrations.complete-upload.lock-ttl}") Duration lockTtl,
             @Value("${application.devices.migrations.complete-upload.result-ttl}") Duration resultTtl,
@@ -59,6 +67,7 @@ public class DeviceConfig {
         return new CompleteDeviceMigrationUploadService(
                 deviceMigrationPort,
                 tokenGenerator,
+                eventPublisher,
                 executor,
                 lockTtl,
                 resultTtl,

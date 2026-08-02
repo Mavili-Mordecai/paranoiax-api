@@ -3,6 +3,7 @@ package com.paranoiax.users.application.services.devices.migrations;
 import com.paranoiax.users.application.ports.in.devices.migrations.completeUpload.CompleteDeviceMigrationUploadCommand;
 import com.paranoiax.users.application.ports.in.devices.migrations.completeUpload.CompleteDeviceMigrationUploadUseCase;
 import com.paranoiax.users.application.ports.out.DeviceMigrationPort;
+import com.paranoiax.users.application.ports.out.EventPublisher;
 import com.paranoiax.users.application.ports.out.crypto.TokenGenerator;
 import com.paranoiax.users.application.services.OperationExecutor;
 import com.paranoiax.users.domain.exceptions.AccessDeniedException;
@@ -10,12 +11,15 @@ import com.paranoiax.users.domain.exceptions.NotFoundException;
 import com.paranoiax.users.domain.models.ChallengeValue;
 import com.paranoiax.users.domain.models.device.migration.DeviceMigration;
 import com.paranoiax.users.domain.models.device.migration.DeviceMigrationId;
+import com.paranoiax.users.domain.models.device.migration.DeviceMigrationUpdatedEvent;
 
 import java.time.Duration;
+import java.time.Instant;
 
 public class CompleteDeviceMigrationUploadService implements CompleteDeviceMigrationUploadUseCase {
     private final DeviceMigrationPort deviceMigrationPort;
     private final TokenGenerator tokenGenerator;
+    private final EventPublisher eventPublisher;
     private final OperationExecutor executor;
     private final Duration lockTtl;
     private final Duration resultTtl;
@@ -24,6 +28,7 @@ public class CompleteDeviceMigrationUploadService implements CompleteDeviceMigra
     public CompleteDeviceMigrationUploadService(
             DeviceMigrationPort deviceMigrationPort,
             TokenGenerator tokenGenerator,
+            EventPublisher eventPublisher,
             OperationExecutor executor,
             Duration lockTtl,
             Duration resultTtl,
@@ -31,6 +36,7 @@ public class CompleteDeviceMigrationUploadService implements CompleteDeviceMigra
     ) {
         this.deviceMigrationPort = deviceMigrationPort;
         this.tokenGenerator = tokenGenerator;
+        this.eventPublisher = eventPublisher;
         this.executor = executor;
         this.lockTtl = lockTtl;
         this.resultTtl = resultTtl;
@@ -49,7 +55,11 @@ public class CompleteDeviceMigrationUploadService implements CompleteDeviceMigra
 
             migration.confirmUpload(new ChallengeValue(tokenGenerator.generate(tokenSize)));
 
-            return deviceMigrationPort.update(migration, migration.getRemainingTtl());
+            migration = deviceMigrationPort.update(migration, migration.getRemainingTtl());
+
+            eventPublisher.publish(DeviceMigrationUpdatedEvent.from(migration, Instant.now()));
+
+            return migration;
         });
     }
 }
