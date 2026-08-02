@@ -16,7 +16,8 @@ public enum DomainErrorCode {
     ALREADY_REVOKED("%s already revoked"),
     OPERATION_PARAMETERS_CHANGED("Operation already processed with different parameters"),
     ACCESS_DENIED("Access denied"),
-    ALREADY_TAKEN("%s already taken");
+    ALREADY_TAKEN("%s already taken"),
+    RATE_LIMIT_EXCEEDED("Rate limit exceeded");
 
     private final String defaultMessage;
 

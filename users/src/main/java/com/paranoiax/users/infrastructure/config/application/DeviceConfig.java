@@ -8,6 +8,7 @@ import com.paranoiax.users.application.ports.in.devices.revoke.RevokeDeviceUseCa
 import com.paranoiax.users.application.ports.out.*;
 import com.paranoiax.users.application.ports.out.crypto.SignatureVerifierPort;
 import com.paranoiax.users.application.ports.out.crypto.TokenGenerator;
+import com.paranoiax.users.application.ports.out.rateLimiter.RateLimiter;
 import com.paranoiax.users.application.services.OperationExecutor;
 import com.paranoiax.users.application.services.devices.RegisterDeviceService;
 import com.paranoiax.users.application.services.devices.RevokeDeviceService;
@@ -46,8 +47,11 @@ public class DeviceConfig {
     }
 
     @Bean
-    public GetDeviceMigrationStatusUseCase getDeviceMigrationStatusUseCase(DeviceMigrationPort deviceMigrationPort) {
-        return new GetDeviceMigrationStatusService(deviceMigrationPort);
+    public GetDeviceMigrationStatusUseCase getDeviceMigrationStatusUseCase(
+            DeviceMigrationPort deviceMigrationPort,
+            RateLimiter rateLimiter
+    ) {
+        return new GetDeviceMigrationStatusService(deviceMigrationPort, rateLimiter);
     }
 
     @Bean

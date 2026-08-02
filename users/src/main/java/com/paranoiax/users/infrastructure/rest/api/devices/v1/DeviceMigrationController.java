@@ -8,10 +8,11 @@ import com.paranoiax.users.application.ports.in.devices.migrations.generateDownl
 import com.paranoiax.users.application.ports.in.devices.migrations.generateDownloadUrl.GenerateDeviceMigrationDownloadUrlCommand;
 import com.paranoiax.users.application.ports.in.devices.migrations.generateDownloadUrl.GenerateDeviceMigrationDownloadUrlUseCase;
 import com.paranoiax.users.application.ports.in.devices.migrations.getMigrationStatus.DeviceMigrationStatusResult;
+import com.paranoiax.users.application.ports.in.devices.migrations.getMigrationStatus.GetDeviceMigrationStatusCommand;
 import com.paranoiax.users.application.ports.in.devices.migrations.getMigrationStatus.GetDeviceMigrationStatusUseCase;
+import jakarta.servlet.http.HttpServletRequest;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
-import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
@@ -49,9 +50,14 @@ public class DeviceMigrationController {
 
     @GetMapping("/{migration_id}/status")
     public ResponseEntity<MigrationStatusResponse> getMigrationStatus(
-            @PathVariable("migration_id") UUID migrationId
+            @PathVariable("migration_id") UUID migrationId,
+            HttpServletRequest request
     ) {
-        DeviceMigrationStatusResult result = getDeviceMigrationStatusUseCase.execute(migrationId);
+        DeviceMigrationStatusResult result = getDeviceMigrationStatusUseCase.execute(new GetDeviceMigrationStatusCommand(
+                migrationId,
+                request.getRemoteAddr()
+        ));
+
         return ResponseEntity.ok(new MigrationStatusResponse(
                 result.status().name(),
                 result.challenge() != null ? result.challenge().value() : null
