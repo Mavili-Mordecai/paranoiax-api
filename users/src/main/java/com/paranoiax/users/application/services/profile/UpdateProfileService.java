@@ -7,7 +7,6 @@ import com.paranoiax.users.application.ports.out.TransactionPort;
 import com.paranoiax.users.application.ports.out.UserPort;
 import com.paranoiax.core.domain.exceptions.AlreadyTakenException;
 import com.paranoiax.core.domain.exceptions.NotFoundException;
-import com.paranoiax.users.domain.models.user.ProfileChanges;
 import com.paranoiax.users.domain.models.user.User;
 import com.paranoiax.users.domain.models.user.Username;
 
@@ -37,11 +36,9 @@ public class UpdateProfileService implements UpdateProfileUseCase {
                 }
             }
 
-            user.changeProfile(new ProfileChanges(
-                    command.firstName(),
-                    command.lastName(),
-                    command.bio()
-            ));
+            if (command.profile() != null) {
+                user.changeProfile(command.profile().isBlank() ? null : command.profile());
+            }
 
             return userPort.update(user);
         });
