@@ -37,9 +37,7 @@ public class ProfileController {
         updateProfileUseCase.execute(new UpdateProfileCommand(
                 userId,
                 request.username(),
-                request.firstName(),
-                request.lastName(),
-                request.bio()
+                request.profile()
         ));
     }
 

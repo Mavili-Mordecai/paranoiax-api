@@ -1,5 +1,6 @@
 package com.paranoiax.users.infrastructure.rest.api.profile.v1;
 
+import com.fasterxml.jackson.annotation.JsonInclude;
 import com.paranoiax.users.application.ports.in.profile.getKeys.UserDeviceInfo;
 import tools.jackson.databind.PropertyNamingStrategies;
 import tools.jackson.databind.annotation.JsonNaming;
@@ -7,6 +8,7 @@ import tools.jackson.databind.annotation.JsonNaming;
 import java.time.Instant;
 
 @JsonNaming(PropertyNamingStrategies.SnakeCaseStrategy.class)
+@JsonInclude(JsonInclude.Include.NON_NULL)
 public record UserDeviceInfoResponse(
         String deviceId,
         String identityKey,

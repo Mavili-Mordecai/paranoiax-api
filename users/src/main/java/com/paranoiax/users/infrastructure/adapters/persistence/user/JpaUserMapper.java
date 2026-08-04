@@ -2,10 +2,8 @@ package com.paranoiax.users.infrastructure.adapters.persistence.user;
 
 import com.paranoiax.core.domain.users.UserId;
 import com.paranoiax.users.domain.models.IdentityKey;
-import com.paranoiax.users.domain.models.ImageUrl;
 import com.paranoiax.users.domain.models.user.*;
 import com.paranoiax.users.infrastructure.common.operationResultMapper.OperationResultsMapper;
-import com.paranoiax.users.infrastructure.persistence.entities.AvatarEntity;
 import com.paranoiax.users.infrastructure.persistence.entities.UserEntity;
 import org.springframework.stereotype.Component;
 
@@ -31,11 +29,9 @@ public class JpaUserMapper implements OperationResultsMapper<User, UserEntity> {
                 .identityKey(user.getIdentityKey().value())
                 .username(user.getUsername().value())
                 .type(user.getType())
-                .firstName(profile != null ? profile.firstName() : null)
-                .lastName(profile != null ? profile.lastName() : null)
-                .bio(profile != null ? profile.bio() : null)
+                .profile(profile != null ? profile.data() : null)
+                .profileVersion(profile != null ? profile.version() : null)
                 .invitedById(user.getInvitedBy() != null ? user.getInvitedBy().value() : null)
-                .avatar(toEntityAvatar(user.getAvatar()))
                 .lastSeenAt(user.getLastSeenAt())
                 .updatedAt(user.getUpdatedAt())
                 .createdAt(user.getCreatedAt())
@@ -49,47 +45,14 @@ public class JpaUserMapper implements OperationResultsMapper<User, UserEntity> {
                 new IdentityKey(entity.getIdentityKey()),
                 new Username(entity.getUsername()),
                 entity.getType(),
-                toDomainProfile(entity),
+                isNullOrBlank(entity.getProfile()) && entity.getProfileVersion() == 0
+                        ? null
+                        : new Profile(entity.getProfile(), entity.getProfileVersion()),
                 entity.getInvitedById() != null ? new UserId(entity.getInvitedById()) : null,
-                toDomainAvatar(entity.getAvatar()),
                 entity.getLastSeenAt(),
                 entity.getUpdatedAt(),
                 entity.getCreatedAt()
         );
-    }
-
-    private Avatar toDomainAvatar(AvatarEntity entity) {
-        if (entity == null) {
-            return null;
-        }
-
-        return new Avatar(
-                new ImageUrl(entity.getSmall()),
-                new ImageUrl(entity.getMedium()),
-                new ImageUrl(entity.getLarge()),
-                entity.getCreatedAt()
-        );
-    }
-
-    private AvatarEntity toEntityAvatar(Avatar avatar) {
-        if (avatar == null) {
-            return null;
-        }
-
-        return AvatarEntity.builder()
-                .small(avatar.getSmall().value())
-                .medium(avatar.getMedium().value())
-                .large(avatar.getLarge().value())
-                .createdAt(avatar.getCreatedAt())
-                .build();
-    }
-
-    private Profile toDomainProfile(UserEntity entity) {
-        if (isNullOrBlank(entity.getFirstName()) && isNullOrBlank(entity.getLastName()) && isNullOrBlank(entity.getBio())) {
-            return null;
-        }
-
-        return new Profile(entity.getFirstName(), entity.getLastName(), entity.getBio());
     }
 
     private boolean isNullOrBlank(String str) {

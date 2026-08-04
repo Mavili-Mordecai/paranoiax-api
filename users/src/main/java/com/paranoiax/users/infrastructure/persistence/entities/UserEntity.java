@@ -1,6 +1,7 @@
 package com.paranoiax.users.infrastructure.persistence.entities;
 
 import com.paranoiax.core.domain.users.UserType;
+import com.paranoiax.users.domain.models.user.Profile;
 import jakarta.persistence.*;
 import lombok.*;
 import org.hibernate.annotations.CreationTimestamp;
@@ -32,14 +33,11 @@ public class UserEntity implements Persistable<UUID> {
     @Enumerated(EnumType.STRING)
     private UserType type;
 
-    @Column(length = 64)
-    private String firstName;
+    @Column(columnDefinition = "TEXT", length = Profile.MAX_SIZE)
+    private String profile;
 
-    @Column(length = 64)
-    private String lastName;
-
-    @Column(length = 192)
-    private String bio;
+    @Column(nullable = false)
+    private Integer profileVersion;
 
     @Column(name = "invited_by_id", nullable = false)
     private UUID invitedById;
@@ -54,10 +52,6 @@ public class UserEntity implements Persistable<UUID> {
     @CreationTimestamp
     @Column(nullable = false, updatable = false)
     private Instant createdAt;
-
-    @OneToOne(cascade = CascadeType.ALL, fetch = FetchType.LAZY)
-    @PrimaryKeyJoinColumn
-    private AvatarEntity avatar;
 
     @Transient
     @Builder.Default

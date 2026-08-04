@@ -4,9 +4,8 @@ import tools.jackson.databind.PropertyNamingStrategies;
 import tools.jackson.databind.annotation.JsonNaming;
 
 @JsonNaming(PropertyNamingStrategies.SnakeCaseStrategy.class)
-public record AvatarInfo(
-        String small,
-        String medium,
-        String large
+public record ProfileInfo(
+        String data,
+        Integer version
 ) {
 }

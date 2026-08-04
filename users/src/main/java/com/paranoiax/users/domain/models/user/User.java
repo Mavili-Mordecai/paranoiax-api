@@ -6,7 +6,6 @@ import com.paranoiax.core.domain.users.UserId;
 import com.paranoiax.core.domain.users.UserType;
 import com.paranoiax.users.domain.models.ActivityTrackable;
 import com.paranoiax.users.domain.models.IdentityKey;
-import com.paranoiax.users.domain.models.ImageUrl;
 
 import java.time.Instant;
 
@@ -17,7 +16,6 @@ public class User implements ActivityTrackable {
     private final UserType type;
     private Profile profile;
     private final UserId invitedBy;
-    private Avatar avatar;
     private Instant lastSeenAt;
     private Instant updatedAt;
     private final Instant createdAt;
@@ -25,20 +23,19 @@ public class User implements ActivityTrackable {
     private User(
             UserId id, IdentityKey identityKey,
             Username username, UserType type,
-            Profile profile, UserId invitedBy, Avatar avatar,
+            Profile profile, UserId invitedBy,
             Instant lastSeenAt, Instant updatedAt, Instant createdAt
     ) {
         this.id = Require.notNull(id, DomainErrorCode.MISSING_REQUIRED_FIELD, "Id");
         this.identityKey = Require.notNull(identityKey, DomainErrorCode.MISSING_REQUIRED_FIELD, "Identity key");
         this.username = Require.notNull(username, DomainErrorCode.MISSING_REQUIRED_FIELD, "Username");
         this.type = Require.notNull(type, DomainErrorCode.MISSING_REQUIRED_FIELD, "User type");
-        this.createdAt = Require.notNull(createdAt, DomainErrorCode.MISSING_REQUIRED_FIELD, "Created at");
-        this.updatedAt = Require.notNull(updatedAt, DomainErrorCode.MISSING_REQUIRED_FIELD, "Updated at");
         this.lastSeenAt = Require.notNull(lastSeenAt, DomainErrorCode.MISSING_REQUIRED_FIELD, "Last seen at");
+        this.updatedAt = Require.notNull(updatedAt, DomainErrorCode.MISSING_REQUIRED_FIELD, "Updated at");
+        this.createdAt = Require.notNull(createdAt, DomainErrorCode.MISSING_REQUIRED_FIELD, "Created at");
 
-        this.invitedBy = invitedBy;
         this.profile = profile;
-        this.avatar = avatar;
+        this.invitedBy = invitedBy;
     }
 
     public static User create(Username username, UserType type, UserId invitedBy, IdentityKey identityKey) {
@@ -50,7 +47,6 @@ public class User implements ActivityTrackable {
                 type,
                 null,
                 invitedBy,
-                null,
                 now,
                 now,
                 now
@@ -60,10 +56,10 @@ public class User implements ActivityTrackable {
     public static User of(
             UserId id, IdentityKey identityKey,
             Username username, UserType type,
-            Profile profile, UserId invitedBy, Avatar avatar,
+            Profile profile, UserId invitedBy,
             Instant lastSeenAt, Instant updatedAt, Instant createdAt
     ) {
-        return new User(id, identityKey, username, type, profile, invitedBy, avatar, lastSeenAt, updatedAt, createdAt);
+        return new User(id, identityKey, username, type, profile, invitedBy, lastSeenAt, updatedAt, createdAt);
     }
 
     public void changeUsername(Username username) {
@@ -71,25 +67,19 @@ public class User implements ActivityTrackable {
         this.updatedAt = Instant.now();
     }
 
-    public void changeProfile(ProfileChanges changes) {
-        if (this.profile == null) {
-            this.profile = Profile.from(changes);
-        } else {
-            this.profile = this.profile.mergeWith(changes);
-        }
+    public void changeProfile(String data) {
         this.updatedAt = Instant.now();
-    }
 
-    public void changeAvatar(ImageUrl small, ImageUrl medium, ImageUrl large) {
-        Instant now = Instant.now();
-
-        if (this.avatar == null) {
-            this.avatar = new Avatar(small, medium, large, now);
-        } else {
-            this.avatar.changeImage(small, medium, large);
+        if (this.profile != null) {
+            this.profile = this.profile.update(data);
+            return;
         }
 
-        this.updatedAt = now;
+        if (data == null || data.isBlank()) {
+            return;
+        }
+
+        this.profile = Profile.create(data);
     }
 
     @Override
@@ -114,10 +104,6 @@ public class User implements ActivityTrackable {
 
     public Instant getUpdatedAt() {
         return updatedAt;
-    }
-
-    public Avatar getAvatar() {
-        return avatar;
     }
 
     public UserId getInvitedBy() {

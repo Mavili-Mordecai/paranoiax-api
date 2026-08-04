@@ -1,30 +1,26 @@
 package com.paranoiax.users.domain.models.user;
 
 import com.paranoiax.core.domain.Require;
+import com.paranoiax.core.domain.exceptions.DomainErrorCode;
+import com.paranoiax.core.domain.exceptions.InvalidValueException;
 
-public record Profile(String firstName, String lastName, String bio) {
-    private static final int NAME_MAX_LENGTH = 64;
-    private static final int BIO_MAX_LENGTH = 192;
+public record Profile(String data, Integer version) {
+    public static final int MAX_SIZE = 15_000;
 
     public Profile {
-        Require.hasLengthIfPresent(firstName, "First name", 1, NAME_MAX_LENGTH);
-        Require.hasLengthIfPresent(lastName, "Last name", 1, NAME_MAX_LENGTH);
-        Require.hasLengthIfPresent(bio, "Bio", 1, BIO_MAX_LENGTH);
+        Require.hasLengthIfPresent(data, "Profile", 1, MAX_SIZE);
+        Require.notNull(version, DomainErrorCode.MISSING_REQUIRED_FIELD, "Profile version");
+
+        if (version < 0) {
+            throw new InvalidValueException("Profile version");
+        }
     }
 
-    public static Profile from(ProfileChanges changes) {
-        return new Profile(
-                changes.firstName() != null && !changes.firstName().isBlank() ? changes.firstName() : null,
-                changes.lastName() != null && !changes.lastName().isBlank() ? changes.lastName() : null,
-                changes.bio() != null && !changes.bio().isBlank() ? changes.bio() : null
-        );
+    public static Profile create(String data) {
+        return new Profile(data, 1);
     }
 
-    public Profile mergeWith(ProfileChanges changes) {
-        return new Profile(
-                changes.firstName() != null ? (changes.firstName().isBlank() ? null : changes.firstName()) : this.firstName,
-                changes.lastName() != null ? (changes.lastName().isBlank() ? null : changes.lastName()) : this.lastName,
-                changes.bio() != null ? (changes.bio().isBlank() ? null : changes.bio()) : this.bio
-        );
+    public Profile update(String data) {
+        return new Profile(data, version + 1);
     }
 }
