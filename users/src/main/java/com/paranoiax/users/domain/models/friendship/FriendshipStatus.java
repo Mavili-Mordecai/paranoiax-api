@@ -4,5 +4,6 @@ public enum FriendshipStatus {
     INCOME,
     OUTCOME,
     ACCEPTED,
-    BLOCKED
+    BLOCKED,
+    DELETED
 }

@@ -15,6 +15,8 @@ tags:
     description: Device session management and state migration (Transfer Blob)
   - name: Profile Management & Discovery
     description: User search and public ECC key exchange
+  - name: Friendships
+    description: User contacts, friend requests, and E2EE key synchronization
 
 paths:
   /v1/users/invite:
@@ -335,6 +337,199 @@ paths:
                 items:
                   $ref: '#/components/schemas/UserKeysResponse'
 
+  /v1/friendships:
+    get:
+      tags: [Friendships]
+      summary: Sync and retrieve friendships
+      description: Fetch a paginated list of friendships, including state updates.
+      security:
+        - BearerAuth: []
+      parameters:
+        - name: updated_after
+          in: query
+          required: false
+          schema:
+            type: integer
+            format: int64
+            default: 0
+        - name: limit
+          in: query
+          required: false
+          schema:
+            type: integer
+            default: 500
+            minimum: 250
+            maximum: 1000
+        - name: offset
+          in: query
+          required: false
+          schema:
+            type: integer
+            default: 0
+      responses:
+        '200':
+          description: Paginated list of friendships
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/PageableFriendshipResponse'
+    post:
+      tags: [Friendships]
+      summary: Add a new friend
+      description: Initiates a friendship request with another user.
+      security:
+        - BearerAuth: []
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/AddFriendshipRequest'
+      responses:
+        '204':
+          description: Friendship request created (No Content)
+
+  /v1/friendships/{id}:
+    patch:
+      tags: [Friendships]
+      summary: Update friendship attributes
+      description: Modify the encrypted attributes blob for a specific friendship.
+      security:
+        - BearerAuth: []
+      parameters:
+        - name: id
+          in: path
+          required: true
+          schema:
+            type: string
+            format: uuid
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/UpdateFriendshipRequest'
+      responses:
+        '200':
+          description: Friendship updated successfully
+    delete:
+      tags: [Friendships]
+      summary: Delete a friendship
+      description: Removes a connection / converts it to a deleted state.
+      security:
+        - BearerAuth: []
+      parameters:
+        - name: id
+          in: path
+          required: true
+          schema:
+            type: string
+            format: uuid
+      responses:
+        '204':
+          description: Friendship deleted (No Content)
+
+  /v1/friendships/{id}/accept:
+    post:
+      tags: [Friendships]
+      summary: Accept friendship request
+      description: Accepts an incoming friendship request.
+      security:
+        - BearerAuth: []
+      parameters:
+        - name: id
+          in: path
+          required: true
+          schema:
+            type: string
+            format: uuid
+      responses:
+        '204':
+          description: Friendship accepted (No Content)
+
+  /v1/friendships/{id}/block:
+    post:
+      tags: [Friendships]
+      summary: Block a user
+      description: Blocks a specific friendship connection.
+      security:
+        - BearerAuth: []
+      parameters:
+        - name: id
+          in: path
+          required: true
+          schema:
+            type: string
+            format: uuid
+      responses:
+        '204':
+          description: User blocked (No Content)
+
+  /v1/friendships/{id}/unblock:
+    post:
+      tags: [Friendships]
+      summary: Unblock a user
+      description: Restores a previously blocked user connection.
+      security:
+        - BearerAuth: []
+      parameters:
+        - name: id
+          in: path
+          required: true
+          schema:
+            type: string
+            format: uuid
+      responses:
+        '204':
+          description: User unblocked (No Content)
+
+  /v1/friendships/keys:
+    get:
+      tags: [Friendships]
+      summary: Retrieve pending keys for friends
+      description: Returns pending keys for friends with ACCEPTED status for a specific device.
+      security:
+        - BearerAuth: []
+      parameters:
+        - name: limit
+          in: query
+          required: true
+          schema:
+            type: integer
+            minimum: 250
+            maximum: 1000
+        - name: offset
+          in: query
+          required: true
+          schema:
+            type: integer
+      responses:
+        '200':
+          description: List of pending friendship keys
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/FriendshipKeyResponse'
+
+  /v1/friendships/keys/delete:
+    post:
+      tags: [Friendships]
+      summary: Delete friendship keys
+      description: Removes friendship keys by a provided list of IDs.
+      security:
+        - BearerAuth: []
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/DeleteFriendshipKeysRequest'
+      responses:
+        '204':
+          description: Keys deleted successfully (No Content)
+
 components:
   securitySchemes:
     BearerAuth:
@@ -562,3 +757,77 @@ components:
         revoked_at:
           type: string
           format: date-time
+
+    AddFriendshipRequest:
+      type: object
+      required:
+        - friend_id
+      properties:
+        friend_id:
+          type: string
+          format: uuid
+        attributes:
+          type: string
+
+    UpdateFriendshipRequest:
+      type: object
+      properties:
+        attributes:
+          type: string
+
+    FriendshipResponse:
+      type: object
+      properties:
+        id:
+          type: string
+          format: uuid
+        friend_id:
+          type: string
+          format: uuid
+        status:
+          type: string
+        attributes:
+          type: string
+        created_at:
+          type: string
+          format: date-time
+
+    PageableFriendshipResponse:
+      type: object
+      properties:
+        data:
+          type: array
+          items:
+            $ref: '#/components/schemas/FriendshipResponse'
+        meta:
+          type: object
+          properties:
+            has_more:
+              type: boolean
+            server_time:
+              type: integer
+              format: int64
+
+    FriendshipKeyResponse:
+      type: object
+      properties:
+        id:
+          type: string
+          format: uuid
+        friendship_id:
+          type: string
+          format: uuid
+        shared_key:
+          type: string
+
+    DeleteFriendshipKeysRequest:
+      type: object
+      required:
+        - ids
+      properties:
+        ids:
+          type: array
+          maxItems: 1000
+          items:
+            type: string
+            format: uuid

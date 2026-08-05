@@ -6,6 +6,8 @@ public enum DomainErrorCode {
     INVALID_LENGTH("\"%s\" must be between %d and %d"),
     INVALID_VALUE("Invalid value for \"%s\""),
     INVALID_FORMAT("Invalid format for \"%s\""),
+    INVALID_STATE("It is impossible to %s from the %s status"),
+    INVALID_STATE_TRANSITION("It is not possible to switch from the %s status to the %s status"),
     TIMESTAMP_MUST_BE_AFTER("Field \"%s\" must be after \"%s\""),
     TIMESTAMP_MUST_BE_BEFORE("Field \"%s\" must be before \"%s\""),
     LOCK_ACQUISITION_FAILED("Failed to acquire lock for operation. Operation ID: %s"),
