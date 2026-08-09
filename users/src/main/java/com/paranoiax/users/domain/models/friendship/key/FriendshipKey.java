@@ -9,7 +9,7 @@ public class FriendshipKey {
     private final FriendshipKeyId id;
     private final FriendshipId friendshipId;
     private final DeviceId friendDeviceId;
-    private final FriendshipSharedKey sharedKey;
+    private FriendshipSharedKey sharedKey;
     private final Instant createdAt;
 
     public FriendshipKey(
@@ -24,9 +24,9 @@ public class FriendshipKey {
     }
 
     public static FriendshipKey create(
-            FriendshipKeyId id, FriendshipId friendshipId, DeviceId friendDeviceId, FriendshipSharedKey sharedKey
+            FriendshipId friendshipId, DeviceId friendDeviceId, FriendshipSharedKey sharedKey
     ) {
-        return new FriendshipKey(id, friendshipId, friendDeviceId, sharedKey, Instant.now());
+        return new FriendshipKey(FriendshipKeyId.create(), friendshipId, friendDeviceId, sharedKey, Instant.now());
     }
 
     public static FriendshipKey of(
@@ -34,6 +34,14 @@ public class FriendshipKey {
             Instant createdAt
     ) {
         return new FriendshipKey(id, friendshipId, friendDeviceId, sharedKey, createdAt);
+    }
+
+    public void changeSharedKey(FriendshipSharedKey sharedKey) {
+        this.sharedKey = sharedKey;
+    }
+
+    public boolean hasSameKey(FriendshipSharedKey key) {
+        return this.sharedKey.equals(key);
     }
 
     public Instant getCreatedAt() {

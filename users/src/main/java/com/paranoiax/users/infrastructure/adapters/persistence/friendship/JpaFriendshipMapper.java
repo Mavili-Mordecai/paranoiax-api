@@ -28,7 +28,7 @@ public class JpaFriendshipMapper implements OperationResultsMapper<Friendship, F
                 .userId(domain.getUserId().value())
                 .friendId(domain.getFriendId().value())
                 .status(domain.getStatus())
-                .attributes(domain.getAttributes().data())
+                .attributes(domain.getAttributes() != null ? domain.getAttributes().data() : null)
                 .updatedAt(domain.getUpdatedAt())
                 .createdAt(domain.getCreatedAt())
                 .build();
@@ -41,7 +41,7 @@ public class JpaFriendshipMapper implements OperationResultsMapper<Friendship, F
                 new UserId(entity.getUserId()),
                 new UserId(entity.getFriendId()),
                 entity.getStatus(),
-                new FriendshipAttributes(entity.getAttributes()),
+                entity.getAttributes() != null ? new FriendshipAttributes(entity.getAttributes()) : null,
                 entity.getUpdatedAt(),
                 entity.getCreatedAt()
         );

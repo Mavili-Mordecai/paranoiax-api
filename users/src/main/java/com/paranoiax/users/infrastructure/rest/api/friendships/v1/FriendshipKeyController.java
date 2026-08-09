@@ -16,8 +16,8 @@ public class FriendshipKeyController {
     /** Возвращает pending ключи для друзей (статус ACCEPTED) для конкретного девайса */
     @GetMapping
     public ResponseEntity<List<FriendshipKeyResponse>> getFriendshipKeys(
-            @Size(min = 250, max = 1000) @RequestParam("limit") Integer limit,
-            @Size() @RequestParam("offset") Integer offset,
+            @Size(min = 250, max = 1000, message = "INVALID_LENGTH") @RequestParam("limit") Integer limit,
+            @Size(message = "INVALID_LENGTH") @RequestParam("offset") Integer offset,
             JwtAuthentication authentication
     ) {
         throw new UnsupportedOperationException("Not supported yet.");

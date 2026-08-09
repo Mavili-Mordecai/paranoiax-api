@@ -7,6 +7,6 @@ import java.util.List;
 import java.util.UUID;
 
 public record DeleteFriendshipKeysRequest(
-        @NotNull @Size(max = 1000) List<UUID> ids
+        @NotNull(message = "FIELD_REQUIRED") @Size(max = 1000, message = "INVALID_LENGTH") List<UUID> ids
 ) {
 }

@@ -29,16 +29,16 @@ public class Friendship {
         this.createdAt = createdAt;
     }
 
-    public static Friendship income(FriendshipId id, UserId userId, UserId friendId, FriendshipAttributes attributes) {
-        return create(id, userId, friendId, FriendshipStatus.INCOME, attributes);
+    public static Friendship income(UserId userId, UserId friendId) {
+        return create(userId, friendId, FriendshipStatus.INCOME, null);
     }
 
-    public static Friendship outcome(FriendshipId id, UserId userId, UserId friendId, FriendshipAttributes attributes) {
-        return create(id, userId, friendId, FriendshipStatus.OUTCOME, attributes);
+    public static Friendship outcome(UserId userId, UserId friendId, FriendshipAttributes attributes) {
+        return create(userId, friendId, FriendshipStatus.OUTCOME, attributes);
     }
 
-    public static Friendship block(FriendshipId id, UserId userId, UserId friendId, FriendshipAttributes attributes) {
-        return create(id, userId, friendId, FriendshipStatus.BLOCKED, attributes);
+    public static Friendship block(UserId userId, UserId friendId, FriendshipAttributes attributes) {
+        return create(userId, friendId, FriendshipStatus.BLOCKED, attributes);
     }
 
     public static Friendship of(
@@ -50,11 +50,24 @@ public class Friendship {
     }
 
     private static Friendship create(
-            FriendshipId id, UserId userId, UserId friendId,
+            UserId userId, UserId friendId,
             FriendshipStatus status, FriendshipAttributes attributes
     ) {
         Instant now = Instant.now();
-        return new Friendship(id, userId, friendId, status, attributes, now, now);
+        return new Friendship(FriendshipId.create(), userId, friendId, status, attributes, now, now);
+    }
+
+    public void outcome() {
+        if (this.status == FriendshipStatus.OUTCOME) {
+            return;
+        }
+
+        if (this.status == FriendshipStatus.INCOME || this.status == FriendshipStatus.ACCEPTED) {
+            throw new InvalidStateTransitionException(this.status.name(), FriendshipStatus.OUTCOME.name());
+        }
+
+        this.status = FriendshipStatus.OUTCOME;
+        this.updatedAt = Instant.now();
     }
 
     public void accept() {
@@ -70,7 +83,7 @@ public class Friendship {
         this.updatedAt = Instant.now();
     }
 
-    public void block(){
+    public void block() {
         if (this.status == FriendshipStatus.BLOCKED) {
             return;
         }
@@ -88,7 +101,7 @@ public class Friendship {
         this.updatedAt = Instant.now();
     }
 
-    public void delete(){
+    public void delete() {
         if (this.status == FriendshipStatus.DELETED) {
             return;
         }
