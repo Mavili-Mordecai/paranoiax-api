@@ -32,6 +32,11 @@ public class JpaFriendshipAdapter implements FriendshipPort {
     }
 
     @Override
+    public Optional<Friendship> findById(FriendshipId id) {
+        return repository.findById(id.value()).map(mapper::toDomain);
+    }
+
+    @Override
     public List<Friendship> findAllByUserId(UserId userId) {
         return repository.findAllByUserId(userId.value()).stream().map(mapper::toDomain).toList();
     }

@@ -137,6 +137,7 @@ public class Friendship {
         }
 
         this.attributes = new FriendshipAttributes(data);
+        this.updatedAt = Instant.now();
     }
 
     public Instant getCreatedAt() {

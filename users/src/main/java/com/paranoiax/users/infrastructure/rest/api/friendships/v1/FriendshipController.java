@@ -4,6 +4,8 @@ import com.paranoiax.core_infra.rest.exceptions.PageableResponse;
 import com.paranoiax.users.application.ports.in.friendship.add.AddFriendshipCommand;
 import com.paranoiax.users.application.ports.in.friendship.add.AddFriendshipUseCase;
 import com.paranoiax.users.application.ports.in.friendship.add.FriendshipKeyInfo;
+import com.paranoiax.users.application.ports.in.friendship.update.UpdateFriendshipCommand;
+import com.paranoiax.users.application.ports.in.friendship.update.UpdateFriendshipUseCase;
 import jakarta.validation.Valid;
 import jakarta.validation.constraints.Size;
 import lombok.RequiredArgsConstructor;
@@ -20,6 +22,7 @@ import java.util.stream.Collectors;
 @RequiredArgsConstructor
 public class FriendshipController {
     private final AddFriendshipUseCase addFriendshipUseCase;
+    private final UpdateFriendshipUseCase updateFriendshipUseCase;
 
     @GetMapping
     public ResponseEntity<PageableResponse<FriendshipResponse>> getFriendships(
@@ -63,7 +66,12 @@ public class FriendshipController {
             @AuthenticationPrincipal UUID userId,
             @Valid @RequestBody UpdateFriendshipRequest request
     ) {
-        throw new UnsupportedOperationException("Not supported yet.");
+        updateFriendshipUseCase.execute(new UpdateFriendshipCommand(
+           id,
+           userId,
+           request.attributes(),
+           idempotencyKey
+        ));
     }
 
     @PostMapping("/{id}/accept")

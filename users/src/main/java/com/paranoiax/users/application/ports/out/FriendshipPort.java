@@ -11,6 +11,7 @@ import java.util.Optional;
 public interface FriendshipPort {
     Friendship insert(Friendship friendship);
     Friendship update(Friendship friendship);
+    Optional<Friendship> findById(FriendshipId id);
     List<Friendship> findAllByUserId(UserId userId);
     List<Friendship> findAllByUserIdAndStatus(UserId userId, FriendshipStatus status);
     List<Friendship> findBetween(UserId userId, UserId friendId);
