@@ -187,6 +187,17 @@ public class GlobalExceptionHandler {
                 ));
     }
 
+    @ExceptionHandler(UnsupportedOperationException.class)
+    public ResponseEntity<ErrorResponse<DomainErrorResponse>> handleUnsupportedOperationException(UnsupportedOperationException ex, HttpServletRequest request) {
+        return ResponseEntity.status(HttpStatus.NOT_FOUND)
+                .contentType(MediaType.APPLICATION_JSON)
+                .body(ErrorResponse.of(
+                        MDC.get("traceId"),
+                        request.getRequestURI(),
+                        new DomainErrorResponse(ApiErrorCode.NOT_SUPPORTED_YET.name(), ex.getMessage(), Map.of())
+                ));
+    }
+
     // Other exceptions
     @ExceptionHandler(Exception.class)
     public ResponseEntity<ErrorResponse<ApiErrorCode>> handleAllExceptions(Exception e, HttpServletRequest request) {

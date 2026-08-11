@@ -110,10 +110,13 @@ application:
   friendship:
     add:
       lock-ttl: 5s
-      resul-ttl: 1m
+      result-ttl: 1m
     update:
       lock-ttl: 5s
-      resul-ttl: 1m
+      result-ttl: 1m
+    accept:
+      lock-ttl: 5s
+      result-ttl: 1m
 
 jwt:
   keys:

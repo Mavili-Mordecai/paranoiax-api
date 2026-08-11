@@ -30,7 +30,7 @@ public class UpdateFriendshipService implements UpdateFriendshipUseCase {
 
     @Override
     public void execute(UpdateFriendshipCommand command) {
-        executor.execute(command, String.class, lockTtl, resultTtl, () -> {
+        executor.execute(command, Friendship.class, lockTtl, resultTtl, () -> {
             Friendship friendship = friendshipPort.findById(new FriendshipId(command.id()))
                     .orElseThrow(() -> new NotFoundException("Friendship"));
 
@@ -42,7 +42,7 @@ public class UpdateFriendshipService implements UpdateFriendshipUseCase {
 
             friendshipPort.update(friendship);
 
-            return friendship.getId().value().toString();
+            return friendship;
         });
     }
 }

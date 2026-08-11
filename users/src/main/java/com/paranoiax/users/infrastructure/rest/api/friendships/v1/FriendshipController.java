@@ -1,6 +1,8 @@
 package com.paranoiax.users.infrastructure.rest.api.friendships.v1;
 
 import com.paranoiax.core_infra.rest.exceptions.PageableResponse;
+import com.paranoiax.users.application.ports.in.friendship.accept.AcceptFriendshipCommand;
+import com.paranoiax.users.application.ports.in.friendship.accept.AcceptFriendshipUseCase;
 import com.paranoiax.users.application.ports.in.friendship.add.AddFriendshipCommand;
 import com.paranoiax.users.application.ports.in.friendship.add.AddFriendshipUseCase;
 import com.paranoiax.users.application.ports.in.friendship.add.FriendshipKeyInfo;
@@ -23,6 +25,7 @@ import java.util.stream.Collectors;
 public class FriendshipController {
     private final AddFriendshipUseCase addFriendshipUseCase;
     private final UpdateFriendshipUseCase updateFriendshipUseCase;
+    private final AcceptFriendshipUseCase acceptFriendshipUseCase;
 
     @GetMapping
     public ResponseEntity<PageableResponse<FriendshipResponse>> getFriendships(
@@ -81,7 +84,11 @@ public class FriendshipController {
             @PathVariable("id") UUID id,
             @AuthenticationPrincipal UUID userId
     ) {
-        throw new UnsupportedOperationException("Not supported yet.");
+        acceptFriendshipUseCase.execute(new AcceptFriendshipCommand(
+                id,
+                userId,
+                idempotencyKey
+        ));
     }
 
     @PostMapping("/{id}/block")

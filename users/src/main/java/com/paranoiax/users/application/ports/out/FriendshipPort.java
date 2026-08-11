@@ -15,6 +15,6 @@ public interface FriendshipPort {
     List<Friendship> findAllByUserId(UserId userId);
     List<Friendship> findAllByUserIdAndStatus(UserId userId, FriendshipStatus status);
     List<Friendship> findBetween(UserId userId, UserId friendId);
-    Optional<Friendship> findByUserIdAndFriendId(UserId userId, UserId friendId);
+    Optional<Friendship> findByUserAndFriend(UserId userId, UserId friendId);
     void delete(FriendshipId id);
 }
