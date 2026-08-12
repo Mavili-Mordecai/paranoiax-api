@@ -8,6 +8,8 @@ import com.paranoiax.users.application.ports.in.friendship.add.AddFriendshipUseC
 import com.paranoiax.users.application.ports.in.friendship.add.FriendshipKeyInfo;
 import com.paranoiax.users.application.ports.in.friendship.block.BlockFriendshipCommand;
 import com.paranoiax.users.application.ports.in.friendship.block.BlockFriendshipUseCase;
+import com.paranoiax.users.application.ports.in.friendship.delete.DeleteFriendshipCommand;
+import com.paranoiax.users.application.ports.in.friendship.delete.DeleteFriendshipUseCase;
 import com.paranoiax.users.application.ports.in.friendship.update.UpdateFriendshipCommand;
 import com.paranoiax.users.application.ports.in.friendship.update.UpdateFriendshipUseCase;
 import jakarta.validation.Valid;
@@ -29,6 +31,7 @@ public class FriendshipController {
     private final UpdateFriendshipUseCase updateFriendshipUseCase;
     private final AcceptFriendshipUseCase acceptFriendshipUseCase;
     private final BlockFriendshipUseCase blockFriendshipUseCase;
+    private final DeleteFriendshipUseCase deleteFriendshipUseCase;
 
     @GetMapping
     public ResponseEntity<PageableResponse<FriendshipResponse>> getFriendships(
@@ -73,10 +76,10 @@ public class FriendshipController {
             @Valid @RequestBody UpdateFriendshipRequest request
     ) {
         updateFriendshipUseCase.execute(new UpdateFriendshipCommand(
-           id,
-           userId,
-           request.attributes(),
-           idempotencyKey
+                id,
+                userId,
+                request.attributes(),
+                idempotencyKey
         ));
     }
 
@@ -124,6 +127,6 @@ public class FriendshipController {
             @PathVariable("id") UUID id,
             @AuthenticationPrincipal UUID userId
     ) {
-        throw new UnsupportedOperationException("Not supported yet.");
+        deleteFriendshipUseCase.execute(new DeleteFriendshipCommand(id, userId));
     }
 }

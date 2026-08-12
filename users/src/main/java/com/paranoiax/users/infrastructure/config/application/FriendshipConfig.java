@@ -3,16 +3,11 @@ package com.paranoiax.users.infrastructure.config.application;
 import com.paranoiax.users.application.ports.in.friendship.accept.AcceptFriendshipUseCase;
 import com.paranoiax.users.application.ports.in.friendship.add.AddFriendshipUseCase;
 import com.paranoiax.users.application.ports.in.friendship.block.BlockFriendshipUseCase;
+import com.paranoiax.users.application.ports.in.friendship.delete.DeleteFriendshipUseCase;
 import com.paranoiax.users.application.ports.in.friendship.update.UpdateFriendshipUseCase;
-import com.paranoiax.users.application.ports.out.DevicePort;
-import com.paranoiax.users.application.ports.out.FriendshipKeyPort;
-import com.paranoiax.users.application.ports.out.FriendshipPort;
-import com.paranoiax.users.application.ports.out.UserPort;
+import com.paranoiax.users.application.ports.out.*;
 import com.paranoiax.users.application.services.OperationExecutor;
-import com.paranoiax.users.application.services.friendship.AcceptFriendshipService;
-import com.paranoiax.users.application.services.friendship.AddFriendshipService;
-import com.paranoiax.users.application.services.friendship.BlockFriendshipService;
-import com.paranoiax.users.application.services.friendship.UpdateFriendshipService;
+import com.paranoiax.users.application.services.friendship.*;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
@@ -71,5 +66,13 @@ public class FriendshipConfig {
             @Value("${application.friendship.result-ttl}") Duration resultTtl
     ) {
         return new BlockFriendshipService(friendshipPort, executor, lockTtl, resultTtl);
+    }
+
+    @Bean
+    public DeleteFriendshipUseCase deleteFriendshipUseCase(
+            FriendshipPort friendshipPort,
+            TransactionPort transactionPort
+    ) {
+        return new DeleteFriendshipService(friendshipPort, transactionPort);
     }
 }
