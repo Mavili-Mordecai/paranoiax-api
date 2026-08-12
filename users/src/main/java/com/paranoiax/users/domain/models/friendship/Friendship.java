@@ -37,8 +37,8 @@ public class Friendship {
         return create(userId, friendId, FriendshipStatus.OUTCOME, attributes);
     }
 
-    public static Friendship block(UserId userId, UserId friendId, FriendshipAttributes attributes) {
-        return create(userId, friendId, FriendshipStatus.BLOCKED, attributes);
+    public static Friendship block(UserId userId, UserId friendId) {
+        return create(userId, friendId, FriendshipStatus.BLOCKED, null);
     }
 
     public static Friendship of(

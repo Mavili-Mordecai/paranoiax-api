@@ -1,4 +1,4 @@
-package com.paranoiax.users.application.services.friendship.update;
+package com.paranoiax.users.application.services.friendship;
 
 import com.paranoiax.core.domain.exceptions.NotFoundException;
 import com.paranoiax.users.application.ports.in.friendship.update.UpdateFriendshipCommand;

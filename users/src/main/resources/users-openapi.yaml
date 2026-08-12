@@ -447,7 +447,7 @@ paths:
         '204':
           description: Friendship accepted (No Content)
 
-  /v1/friendships/{id}/block:
+  /v1/friendships/block:
     post:
       tags: [Friendships]
       summary: Block a user
@@ -455,8 +455,8 @@ paths:
       security:
         - BearerAuth: []
       parameters:
-        - name: id
-          in: path
+        - name: friendId
+          in: query
           required: true
           schema:
             type: string

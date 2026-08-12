@@ -1,4 +1,4 @@
-package com.paranoiax.users.application.services.friendship.accept;
+package com.paranoiax.users.application.services.friendship;
 
 import com.paranoiax.core.domain.exceptions.InvalidStateTransitionException;
 import com.paranoiax.core.domain.exceptions.NotFoundException;

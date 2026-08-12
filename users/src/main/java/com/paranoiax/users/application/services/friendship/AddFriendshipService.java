@@ -1,6 +1,7 @@
-package com.paranoiax.users.application.services.friendship.add;
+package com.paranoiax.users.application.services.friendship;
 
 import com.paranoiax.core.domain.devices.DeviceId;
+import com.paranoiax.core.domain.exceptions.InvalidFriendOperationException;
 import com.paranoiax.core.domain.exceptions.InvalidStateTransitionException;
 import com.paranoiax.core.domain.exceptions.NotFoundException;
 import com.paranoiax.core.domain.users.UserId;
@@ -54,6 +55,10 @@ public class AddFriendshipService implements AddFriendshipUseCase {
     @Override
     public void execute(AddFriendshipCommand command) {
         executor.execute(command, String.class, lockTtl, resultTtl, () -> {
+            if (command.friendId().equals(command.userId())) {
+                throw new InvalidFriendOperationException();
+            }
+
             UserId userId = new UserId(command.userId());
             UserId friendId = userPort.findById(new UserId(command.friendId()))
                     .orElseThrow(() -> new NotFoundException("User"))

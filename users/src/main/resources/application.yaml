@@ -108,15 +108,8 @@ application:
     get-user-ids:
       max-batch-size: 256
   friendship:
-    add:
-      lock-ttl: 5s
-      result-ttl: 1m
-    update:
-      lock-ttl: 5s
-      result-ttl: 1m
-    accept:
-      lock-ttl: 5s
-      result-ttl: 1m
+    lock-ttl: 5s
+    result-ttl: 1m
 
 jwt:
   keys:

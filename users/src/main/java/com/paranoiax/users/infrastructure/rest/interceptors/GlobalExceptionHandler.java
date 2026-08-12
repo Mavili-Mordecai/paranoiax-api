@@ -18,6 +18,7 @@ import org.springframework.web.HttpMediaTypeNotSupportedException;
 import org.springframework.web.HttpRequestMethodNotSupportedException;
 import org.springframework.web.bind.MethodArgumentNotValidException;
 import org.springframework.web.bind.MissingRequestHeaderException;
+import org.springframework.web.bind.MissingServletRequestParameterException;
 import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.RestControllerAdvice;
 import org.springframework.web.method.annotation.MethodArgumentTypeMismatchException;
@@ -120,6 +121,21 @@ public class GlobalExceptionHandler {
                                 ApiErrorCode.MISSING_REQUEST_HEADER.name(),
                                 "Missing request header: " + ex.getHeaderName(),
                                 Map.of("resource", ex.getHeaderName())
+                        )
+                ));
+    }
+
+    @ExceptionHandler(MissingServletRequestParameterException.class)
+    public ResponseEntity<ErrorResponse<DomainErrorResponse>> handleMissingServletRequestParameterException(MissingServletRequestParameterException ex, HttpServletRequest request) {
+        return ResponseEntity.status(HttpStatus.BAD_REQUEST)
+                .contentType(MediaType.APPLICATION_JSON)
+                .body(ErrorResponse.of(
+                        MDC.get("traceId"),
+                        request.getRequestURI(),
+                        new DomainErrorResponse(
+                                ApiErrorCode.MISSING_REQUEST_PARAM.name(),
+                                "Missing request param: " + ex.getParameterName(),
+                                Map.of("resource", ex.getParameterName())
                         )
                 ));
     }

@@ -6,6 +6,8 @@ import com.paranoiax.users.application.ports.in.friendship.accept.AcceptFriendsh
 import com.paranoiax.users.application.ports.in.friendship.add.AddFriendshipCommand;
 import com.paranoiax.users.application.ports.in.friendship.add.AddFriendshipUseCase;
 import com.paranoiax.users.application.ports.in.friendship.add.FriendshipKeyInfo;
+import com.paranoiax.users.application.ports.in.friendship.block.BlockFriendshipCommand;
+import com.paranoiax.users.application.ports.in.friendship.block.BlockFriendshipUseCase;
 import com.paranoiax.users.application.ports.in.friendship.update.UpdateFriendshipCommand;
 import com.paranoiax.users.application.ports.in.friendship.update.UpdateFriendshipUseCase;
 import jakarta.validation.Valid;
@@ -26,6 +28,7 @@ public class FriendshipController {
     private final AddFriendshipUseCase addFriendshipUseCase;
     private final UpdateFriendshipUseCase updateFriendshipUseCase;
     private final AcceptFriendshipUseCase acceptFriendshipUseCase;
+    private final BlockFriendshipUseCase blockFriendshipUseCase;
 
     @GetMapping
     public ResponseEntity<PageableResponse<FriendshipResponse>> getFriendships(
@@ -91,14 +94,18 @@ public class FriendshipController {
         ));
     }
 
-    @PostMapping("/{id}/block")
+    @PostMapping("/block")
     @ResponseStatus(HttpStatus.NO_CONTENT)
     public void block(
             @RequestHeader("Idempotency-Key") String idempotencyKey,
-            @PathVariable("id") UUID id,
+            @RequestParam("friendId") UUID friendId,
             @AuthenticationPrincipal UUID userId
     ) {
-        throw new UnsupportedOperationException("Not supported yet.");
+        blockFriendshipUseCase.execute(new BlockFriendshipCommand(
+                userId,
+                friendId,
+                idempotencyKey
+        ));
     }
 
     @PostMapping("/{id}/unblock")
