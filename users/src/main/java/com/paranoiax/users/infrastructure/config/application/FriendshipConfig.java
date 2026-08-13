@@ -4,6 +4,7 @@ import com.paranoiax.users.application.ports.in.friendship.accept.AcceptFriendsh
 import com.paranoiax.users.application.ports.in.friendship.add.AddFriendshipUseCase;
 import com.paranoiax.users.application.ports.in.friendship.block.BlockFriendshipUseCase;
 import com.paranoiax.users.application.ports.in.friendship.delete.DeleteFriendshipUseCase;
+import com.paranoiax.users.application.ports.in.friendship.unblock.UnblockFriendshipUseCase;
 import com.paranoiax.users.application.ports.in.friendship.update.UpdateFriendshipUseCase;
 import com.paranoiax.users.application.ports.out.*;
 import com.paranoiax.users.application.services.OperationExecutor;
@@ -66,6 +67,16 @@ public class FriendshipConfig {
             @Value("${application.friendship.result-ttl}") Duration resultTtl
     ) {
         return new BlockFriendshipService(friendshipPort, executor, lockTtl, resultTtl);
+    }
+
+    @Bean
+    public UnblockFriendshipUseCase unblockFriendshipUseCase(
+            FriendshipPort friendshipPort,
+            OperationExecutor executor,
+            @Value("${application.friendship.lock-ttl}") Duration lockTtl,
+            @Value("${application.friendship.result-ttl}") Duration resultTtl
+    ) {
+        return new UnblockFriendshipService(friendshipPort, executor, lockTtl, resultTtl);
     }
 
     @Bean

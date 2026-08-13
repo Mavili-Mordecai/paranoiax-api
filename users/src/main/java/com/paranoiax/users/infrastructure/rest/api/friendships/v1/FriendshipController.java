@@ -10,6 +10,8 @@ import com.paranoiax.users.application.ports.in.friendship.block.BlockFriendship
 import com.paranoiax.users.application.ports.in.friendship.block.BlockFriendshipUseCase;
 import com.paranoiax.users.application.ports.in.friendship.delete.DeleteFriendshipCommand;
 import com.paranoiax.users.application.ports.in.friendship.delete.DeleteFriendshipUseCase;
+import com.paranoiax.users.application.ports.in.friendship.unblock.UnblockFriendshipCommand;
+import com.paranoiax.users.application.ports.in.friendship.unblock.UnblockFriendshipUseCase;
 import com.paranoiax.users.application.ports.in.friendship.update.UpdateFriendshipCommand;
 import com.paranoiax.users.application.ports.in.friendship.update.UpdateFriendshipUseCase;
 import jakarta.validation.Valid;
@@ -31,6 +33,7 @@ public class FriendshipController {
     private final UpdateFriendshipUseCase updateFriendshipUseCase;
     private final AcceptFriendshipUseCase acceptFriendshipUseCase;
     private final BlockFriendshipUseCase blockFriendshipUseCase;
+    private final UnblockFriendshipUseCase unblockFriendshipUseCase;
     private final DeleteFriendshipUseCase deleteFriendshipUseCase;
 
     @GetMapping
@@ -118,7 +121,11 @@ public class FriendshipController {
             @PathVariable("id") UUID id,
             @AuthenticationPrincipal UUID userId
     ) {
-        throw new UnsupportedOperationException("Not supported yet.");
+        unblockFriendshipUseCase.execute(new UnblockFriendshipCommand(
+                id,
+                userId,
+                idempotencyKey
+        ));
     }
 
     @DeleteMapping("/{id}")

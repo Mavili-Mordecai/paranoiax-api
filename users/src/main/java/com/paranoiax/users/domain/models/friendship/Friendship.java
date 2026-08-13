@@ -92,12 +92,25 @@ public class Friendship {
         this.updatedAt = Instant.now();
     }
 
-    public void unblock(FriendshipStatus previousStatus) {
-        if (this.status != FriendshipStatus.BLOCKED || previousStatus == FriendshipStatus.BLOCKED) {
+    public void unblock(FriendshipStatus mirrorStatus) {
+        if (this.status != FriendshipStatus.BLOCKED) {
             return;
         }
 
-        this.status = previousStatus;
+        FriendshipStatus nextStatus;
+
+        if (mirrorStatus == null) {
+            nextStatus = FriendshipStatus.DELETED;
+        } else {
+            nextStatus = switch (mirrorStatus) {
+                case INCOME -> FriendshipStatus.OUTCOME;
+                case OUTCOME -> FriendshipStatus.INCOME;
+                case ACCEPTED -> FriendshipStatus.ACCEPTED;
+                case BLOCKED, DELETED -> FriendshipStatus.DELETED;
+            };
+        }
+
+        this.status = nextStatus;
         this.updatedAt = Instant.now();
     }
 
