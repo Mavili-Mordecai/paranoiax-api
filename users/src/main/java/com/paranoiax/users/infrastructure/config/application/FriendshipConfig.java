@@ -4,6 +4,7 @@ import com.paranoiax.users.application.ports.in.friendship.accept.AcceptFriendsh
 import com.paranoiax.users.application.ports.in.friendship.add.AddFriendshipUseCase;
 import com.paranoiax.users.application.ports.in.friendship.block.BlockFriendshipUseCase;
 import com.paranoiax.users.application.ports.in.friendship.delete.DeleteFriendshipUseCase;
+import com.paranoiax.users.application.ports.in.friendship.get.GetFriendshipsUseCase;
 import com.paranoiax.users.application.ports.in.friendship.unblock.UnblockFriendshipUseCase;
 import com.paranoiax.users.application.ports.in.friendship.update.UpdateFriendshipUseCase;
 import com.paranoiax.users.application.ports.out.*;
@@ -17,6 +18,11 @@ import java.time.Duration;
 
 @Configuration
 public class FriendshipConfig {
+
+    @Bean
+    public GetFriendshipsUseCase getFriendshipsUseCase(FriendshipPort friendshipPort) {
+        return new GetFriendshipsService(friendshipPort);
+    }
 
     @Bean
     public AddFriendshipUseCase addFriendshipUseCase(

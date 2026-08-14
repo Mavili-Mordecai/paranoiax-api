@@ -4,12 +4,12 @@ import com.paranoiax.core.domain.users.UserId;
 import com.paranoiax.users.application.ports.out.FriendshipPort;
 import com.paranoiax.users.domain.models.friendship.Friendship;
 import com.paranoiax.users.domain.models.friendship.FriendshipId;
-import com.paranoiax.users.domain.models.friendship.FriendshipStatus;
 import com.paranoiax.users.infrastructure.persistence.entities.FriendshipEntity;
 import com.paranoiax.users.infrastructure.persistence.repositories.JpaFriendshipRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Component;
 
+import java.time.Instant;
 import java.util.List;
 import java.util.Optional;
 
@@ -32,18 +32,17 @@ public class JpaFriendshipAdapter implements FriendshipPort {
     }
 
     @Override
-    public Optional<Friendship> findById(FriendshipId id) {
+    public Optional<Friendship> find(FriendshipId id) {
         return repository.findById(id.value()).map(mapper::toDomain);
     }
 
     @Override
-    public List<Friendship> findAllByUserId(UserId userId) {
-        return repository.findAllByUserId(userId.value()).stream().map(mapper::toDomain).toList();
-    }
-
-    @Override
-    public List<Friendship> findAllByUserIdAndStatus(UserId userId, FriendshipStatus status) {
-        return repository.findAllByFriendIdAndStatus(userId.value(), status).stream().map(mapper::toDomain).toList();
+    public List<Friendship> findByUser(UserId userId, Long updatedAfter, Integer limit) {
+        return repository.findByUser(
+                userId.value(),
+                Instant.ofEpochMilli(updatedAfter),
+                limit
+        ).stream().map(mapper::toDomain).toList();
     }
 
     @Override

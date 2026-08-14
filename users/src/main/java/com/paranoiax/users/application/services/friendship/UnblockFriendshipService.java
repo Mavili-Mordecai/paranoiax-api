@@ -32,7 +32,7 @@ public class UnblockFriendshipService implements UnblockFriendshipUseCase {
     @Override
     public void execute(UnblockFriendshipCommand command) {
         executor.execute(command, Friendship.class, lockTtl, resultTtl, () -> {
-            Friendship target = friendshipPort.findById(new FriendshipId(command.id()))
+            Friendship target = friendshipPort.find(new FriendshipId(command.id()))
                     .orElseThrow(() -> new NotFoundException("Friendship"));
 
             if (!target.getUserId().value().equals(command.userId())) {

@@ -3,7 +3,6 @@ package com.paranoiax.users.application.ports.out;
 import com.paranoiax.core.domain.users.UserId;
 import com.paranoiax.users.domain.models.friendship.Friendship;
 import com.paranoiax.users.domain.models.friendship.FriendshipId;
-import com.paranoiax.users.domain.models.friendship.FriendshipStatus;
 
 import java.util.List;
 import java.util.Optional;
@@ -11,9 +10,8 @@ import java.util.Optional;
 public interface FriendshipPort {
     Friendship insert(Friendship friendship);
     Friendship update(Friendship friendship);
-    Optional<Friendship> findById(FriendshipId id);
-    List<Friendship> findAllByUserId(UserId userId);
-    List<Friendship> findAllByUserIdAndStatus(UserId userId, FriendshipStatus status);
+    Optional<Friendship> find(FriendshipId id);
+    List<Friendship> findByUser(UserId userId, Long updatedAfter, Integer limit);
     List<Friendship> findBetween(UserId userId, UserId friendId);
     Optional<Friendship> findByUserAndFriend(UserId userId, UserId friendId);
     void delete(FriendshipId id);

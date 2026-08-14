@@ -26,7 +26,7 @@ public class DeleteFriendshipService implements DeleteFriendshipUseCase {
     @Override
     public void execute(DeleteFriendshipCommand command) {
         transactionPort.execute(() -> {
-            Friendship target = friendshipPort.findById(new FriendshipId(command.id()))
+            Friendship target = friendshipPort.find(new FriendshipId(command.id()))
                     .orElseThrow(() -> new NotFoundException("Friendship"));
 
             if (!target.getUserId().value().equals(command.userId())) {

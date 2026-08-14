@@ -10,6 +10,9 @@ import com.paranoiax.users.application.ports.in.friendship.block.BlockFriendship
 import com.paranoiax.users.application.ports.in.friendship.block.BlockFriendshipUseCase;
 import com.paranoiax.users.application.ports.in.friendship.delete.DeleteFriendshipCommand;
 import com.paranoiax.users.application.ports.in.friendship.delete.DeleteFriendshipUseCase;
+import com.paranoiax.users.application.ports.in.friendship.get.FriendshipResult;
+import com.paranoiax.users.application.ports.in.friendship.get.GetFriendshipsQuery;
+import com.paranoiax.users.application.ports.in.friendship.get.GetFriendshipsUseCase;
 import com.paranoiax.users.application.ports.in.friendship.unblock.UnblockFriendshipCommand;
 import com.paranoiax.users.application.ports.in.friendship.unblock.UnblockFriendshipUseCase;
 import com.paranoiax.users.application.ports.in.friendship.update.UpdateFriendshipCommand;
@@ -29,6 +32,7 @@ import java.util.stream.Collectors;
 @RequestMapping("/v1/friendships")
 @RequiredArgsConstructor
 public class FriendshipController {
+    private final GetFriendshipsUseCase getFriendshipsUseCase;
     private final AddFriendshipUseCase addFriendshipUseCase;
     private final UpdateFriendshipUseCase updateFriendshipUseCase;
     private final AcceptFriendshipUseCase acceptFriendshipUseCase;
@@ -47,7 +51,12 @@ public class FriendshipController {
             Integer limit,
             @RequestParam(value = "offset", defaultValue = "0") @Size(message = "INVALID_LENGTH") Integer offset
     ) {
-        throw new UnsupportedOperationException("Not supported yet.");
+        FriendshipResult result = getFriendshipsUseCase.execute(new GetFriendshipsQuery(userId, updatedAfter, limit));
+        return ResponseEntity.ok(new PageableResponse<>(
+                result.data().stream().map(FriendshipResponse::from).toList(),
+                result.hasMore(),
+                result.serverTimeInMillis()
+        ));
     }
 
     @PostMapping

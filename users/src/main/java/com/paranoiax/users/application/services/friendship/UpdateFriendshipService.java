@@ -31,7 +31,7 @@ public class UpdateFriendshipService implements UpdateFriendshipUseCase {
     @Override
     public void execute(UpdateFriendshipCommand command) {
         executor.execute(command, Friendship.class, lockTtl, resultTtl, () -> {
-            Friendship friendship = friendshipPort.findById(new FriendshipId(command.id()))
+            Friendship friendship = friendshipPort.find(new FriendshipId(command.id()))
                     .orElseThrow(() -> new NotFoundException("Friendship"));
 
             if (!friendship.getUserId().value().equals(command.userId())) {

@@ -33,7 +33,7 @@ public class AcceptFriendshipService implements AcceptFriendshipUseCase {
     @Override
     public void execute(AcceptFriendshipCommand command) {
         executor.execute(command, Friendship.class, lockTtl, resultTtl, () -> {
-            Friendship income = friendshipPort.findById(new FriendshipId(command.id()))
+            Friendship income = friendshipPort.find(new FriendshipId(command.id()))
                     .orElseThrow(() -> new NotFoundException("Friendship"));
 
             if (income.getStatus() == FriendshipStatus.DELETED || !income.getUserId().value().equals(command.userId())) {
