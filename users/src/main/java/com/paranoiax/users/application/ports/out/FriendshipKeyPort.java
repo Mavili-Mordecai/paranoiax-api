@@ -13,5 +13,5 @@ public interface FriendshipKeyPort {
     List<FriendshipKey> saveAll(Collection<FriendshipKey> keys);
     List<FriendshipKey> findAllByDevice(DeviceId deviceId, Integer limit, Integer offset);
     List<FriendshipKey> findExistingKeys(FriendshipId friendshipId, Collection<DeviceId> devices);
-    void deleteAllById(Collection<FriendshipKeyId> ids);
+    int deleteAllBy(DeviceId deviceId, Collection<FriendshipKeyId> ids);
 }

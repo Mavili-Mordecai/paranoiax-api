@@ -1,6 +1,8 @@
 package com.paranoiax.users.infrastructure.rest.api.friendships.v1;
 
 import com.paranoiax.core_infra.rest.exceptions.PageableResponse;
+import com.paranoiax.users.application.ports.in.friendship.deleteKeys.DeleteFriendshipKeysCommand;
+import com.paranoiax.users.application.ports.in.friendship.deleteKeys.DeleteFriendshipKeysUseCase;
 import com.paranoiax.users.application.ports.in.friendship.getKeys.FriendshipKeyResult;
 import com.paranoiax.users.application.ports.in.friendship.getKeys.GetFriendshipKeysQuery;
 import com.paranoiax.users.application.ports.in.friendship.getKeys.GetFriendshipKeysUseCase;
@@ -18,6 +20,7 @@ import org.springframework.web.bind.annotation.*;
 @RequiredArgsConstructor
 public class FriendshipKeyController {
     private final GetFriendshipKeysUseCase getFriendshipKeysUseCase;
+    private final DeleteFriendshipKeysUseCase deleteFriendshipKeysUseCase;
 
     /** Returns pending keys for friends (ACCEPTED status) for a specific device */
     @GetMapping
@@ -44,6 +47,9 @@ public class FriendshipKeyController {
             @RequestBody @Valid DeleteFriendshipKeysRequest request,
             JwtAuthentication authentication
     ) {
-        throw new UnsupportedOperationException("Not supported yet.");
+        deleteFriendshipKeysUseCase.execute(new DeleteFriendshipKeysCommand(
+                authentication.getDeviceId(),
+                request.ids()
+        ));
     }
 }

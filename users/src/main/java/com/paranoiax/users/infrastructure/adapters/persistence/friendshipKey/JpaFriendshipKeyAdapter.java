@@ -10,6 +10,7 @@ import com.paranoiax.users.infrastructure.persistence.repositories.JpaFriendship
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.stereotype.Component;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.util.Collection;
 import java.util.List;
@@ -43,7 +44,8 @@ public class JpaFriendshipKeyAdapter implements FriendshipKeyPort {
     }
 
     @Override
-    public void deleteAllById(Collection<FriendshipKeyId> ids) {
-        repository.deleteAllById(ids.stream().map(FriendshipKeyId::value).toList());
+    @Transactional
+    public int deleteAllBy(DeviceId deviceId, Collection<FriendshipKeyId> ids) {
+        return repository.deleteAllBy(deviceId.value(), ids.stream().map(FriendshipKeyId::value).toList());
     }
 }
