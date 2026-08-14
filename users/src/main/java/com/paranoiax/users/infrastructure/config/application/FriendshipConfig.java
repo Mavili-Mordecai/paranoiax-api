@@ -5,6 +5,7 @@ import com.paranoiax.users.application.ports.in.friendship.add.AddFriendshipUseC
 import com.paranoiax.users.application.ports.in.friendship.block.BlockFriendshipUseCase;
 import com.paranoiax.users.application.ports.in.friendship.delete.DeleteFriendshipUseCase;
 import com.paranoiax.users.application.ports.in.friendship.get.GetFriendshipsUseCase;
+import com.paranoiax.users.application.ports.in.friendship.getKeys.GetFriendshipKeysUseCase;
 import com.paranoiax.users.application.ports.in.friendship.unblock.UnblockFriendshipUseCase;
 import com.paranoiax.users.application.ports.in.friendship.update.UpdateFriendshipUseCase;
 import com.paranoiax.users.application.ports.out.*;
@@ -91,5 +92,12 @@ public class FriendshipConfig {
             TransactionPort transactionPort
     ) {
         return new DeleteFriendshipService(friendshipPort, transactionPort);
+    }
+
+    @Bean
+    public GetFriendshipKeysUseCase getFriendshipKeysUseCase(
+            FriendshipKeyPort friendshipKeyPort
+    ) {
+        return new GetFriendshipKeysService(friendshipKeyPort);
     }
 }

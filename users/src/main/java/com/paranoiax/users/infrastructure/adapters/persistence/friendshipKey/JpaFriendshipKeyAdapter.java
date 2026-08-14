@@ -1,7 +1,6 @@
 package com.paranoiax.users.infrastructure.adapters.persistence.friendshipKey;
 
 import com.paranoiax.core.domain.devices.DeviceId;
-import com.paranoiax.core.domain.users.UserId;
 import com.paranoiax.users.application.ports.out.FriendshipKeyPort;
 import com.paranoiax.users.domain.models.friendship.FriendshipId;
 import com.paranoiax.users.domain.models.friendship.key.FriendshipKey;
@@ -9,6 +8,7 @@ import com.paranoiax.users.domain.models.friendship.key.FriendshipKeyId;
 import com.paranoiax.users.infrastructure.persistence.entities.FriendshipKeyEntity;
 import com.paranoiax.users.infrastructure.persistence.repositories.JpaFriendshipKeyRepository;
 import lombok.RequiredArgsConstructor;
+import org.springframework.data.domain.PageRequest;
 import org.springframework.stereotype.Component;
 
 import java.util.Collection;
@@ -33,8 +33,8 @@ public class JpaFriendshipKeyAdapter implements FriendshipKeyPort {
     }
 
     @Override
-    public List<FriendshipKey> findAllByDeviceId(DeviceId deviceId) {
-        return mapper.toDomainList(repository.findAllByFriendDeviceId(deviceId.value()));
+    public List<FriendshipKey> findAllByDevice(DeviceId deviceId, Integer limit, Integer offset) {
+        return mapper.toDomainList(repository.findAllByFriendDeviceId(deviceId.value(), PageRequest.of(offset, limit)));
     }
 
     @Override

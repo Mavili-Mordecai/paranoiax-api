@@ -37,11 +37,12 @@ public class JpaFriendshipAdapter implements FriendshipPort {
     }
 
     @Override
-    public List<Friendship> findByUser(UserId userId, Long updatedAfter, Integer limit) {
+    public List<Friendship> findByUser(UserId userId, Long updatedAfter, Integer limit, Integer offset) {
         return repository.findByUser(
                 userId.value(),
                 Instant.ofEpochMilli(updatedAfter),
-                limit
+                limit,
+                offset
         ).stream().map(mapper::toDomain).toList();
     }
 

@@ -23,12 +23,13 @@ public class GetFriendshipsService implements GetFriendshipsUseCase {
         List<Friendship> friendships = friendshipPort.findByUser(
                 new UserId(query.userId()),
                 query.updatedAfter(),
-                query.limit()
+                query.limit(),
+                query.offset()
         );
 
         return new FriendshipResult(
                 friendships.stream().map(FriendshipDetails::from).toList(),
-                friendships.size() < query.limit(),
+                friendships.size() == query.limit(),
                 Instant.now().toEpochMilli()
         );
     }

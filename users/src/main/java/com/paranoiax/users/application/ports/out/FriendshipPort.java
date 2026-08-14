@@ -11,7 +11,7 @@ public interface FriendshipPort {
     Friendship insert(Friendship friendship);
     Friendship update(Friendship friendship);
     Optional<Friendship> find(FriendshipId id);
-    List<Friendship> findByUser(UserId userId, Long updatedAfter, Integer limit);
+    List<Friendship> findByUser(UserId userId, Long updatedAfter, Integer limit, Integer offset);
     List<Friendship> findBetween(UserId userId, UserId friendId);
     Optional<Friendship> findByUserAndFriend(UserId userId, UserId friendId);
     void delete(FriendshipId id);

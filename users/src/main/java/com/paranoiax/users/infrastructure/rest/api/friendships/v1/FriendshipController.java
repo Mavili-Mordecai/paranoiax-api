@@ -18,7 +18,8 @@ import com.paranoiax.users.application.ports.in.friendship.unblock.UnblockFriend
 import com.paranoiax.users.application.ports.in.friendship.update.UpdateFriendshipCommand;
 import com.paranoiax.users.application.ports.in.friendship.update.UpdateFriendshipUseCase;
 import jakarta.validation.Valid;
-import jakarta.validation.constraints.Size;
+import jakarta.validation.constraints.Max;
+import jakarta.validation.constraints.Min;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -44,14 +45,16 @@ public class FriendshipController {
     public ResponseEntity<PageableResponse<FriendshipResponse>> getFriendships(
             @AuthenticationPrincipal UUID userId,
             @RequestParam(value = "updated_after", defaultValue = "0")
-            @Size(message = "INVALID_LENGTH")
+            @Min(value = 0, message = "INVALID_LENGTH")
             Long updatedAfter,
             @RequestParam(value = "limit", defaultValue = "500")
-            @Size(min = 250, max = 1000, message = "INVALID_LENGTH")
+            @Min(value = 250, message = "INVALID_LENGTH") @Max(value = 1000, message = "INVALID_LENGTH")
             Integer limit,
-            @RequestParam(value = "offset", defaultValue = "0") @Size(message = "INVALID_LENGTH") Integer offset
+            @RequestParam(value = "offset", defaultValue = "0")
+            @Min(value = 0, message = "INVALID_LENGTH") @Max(value = 1000, message = "INVALID_LENGTH")
+            Integer offset
     ) {
-        FriendshipResult result = getFriendshipsUseCase.execute(new GetFriendshipsQuery(userId, updatedAfter, limit));
+        FriendshipResult result = getFriendshipsUseCase.execute(new GetFriendshipsQuery(userId, updatedAfter, limit, offset));
         return ResponseEntity.ok(new PageableResponse<>(
                 result.data().stream().map(FriendshipResponse::from).toList(),
                 result.hasMore(),

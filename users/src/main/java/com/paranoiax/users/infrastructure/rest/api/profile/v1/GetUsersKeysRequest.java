@@ -10,6 +10,8 @@ import java.util.UUID;
 
 @JsonNaming(PropertyNamingStrategies.SnakeCaseStrategy.class)
 public record GetUsersKeysRequest(
-        @NotNull(message = "FIELD_REQUIRED") @Size(min = 1, message = "INVALID_LENGTH") Set<UUID> userIds
+        @NotNull(message = "FIELD_REQUIRED")
+        @Size(min = 1, message = "INVALID_LENGTH")
+        Set<UUID> userIds
 ) {
 }

@@ -18,10 +18,15 @@ public interface JpaFriendshipRepository extends JpaRepository<FriendshipEntity,
                 SELECT fe FROM FriendshipEntity fe
                 WHERE fe.updatedAt > :updatedAfter AND fe.status != 'DELETED'
                 ORDER BY fe.createdAt DESC
-                LIMIT :limit
+                LIMIT :limit OFFSET :offset
             """
     )
-    List<FriendshipEntity> findByUser(@Param("userId") UUID userId, @Param("updatedAfter") Instant updatedAfter, @Param("limit") Integer limit);
+    List<FriendshipEntity> findByUser(
+            @Param("userId") UUID userId,
+            @Param("updatedAfter") Instant updatedAfter,
+            @Param("limit") Integer limit,
+            @Param("offset") Integer offset
+    );
 
     @Query("""
             SELECT fe FROM FriendshipEntity fe
