@@ -18,8 +18,10 @@ import org.springframework.web.HttpMediaTypeNotSupportedException;
 import org.springframework.web.HttpRequestMethodNotSupportedException;
 import org.springframework.web.bind.MethodArgumentNotValidException;
 import org.springframework.web.bind.MissingRequestHeaderException;
+import org.springframework.web.bind.MissingServletRequestParameterException;
 import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.RestControllerAdvice;
+import org.springframework.web.method.annotation.HandlerMethodValidationException;
 import org.springframework.web.method.annotation.MethodArgumentTypeMismatchException;
 import org.springframework.web.servlet.resource.NoResourceFoundException;
 
@@ -97,6 +99,26 @@ public class GlobalExceptionHandler {
                 ));
     }
 
+    @ExceptionHandler(HandlerMethodValidationException.class)
+    public ResponseEntity<ErrorResponse<ApiErrorResponse>> handleMethodValidationException(
+            HandlerMethodValidationException e,
+            HttpServletRequest request
+    ) {
+        Map<String, String> errors = e.getParameterValidationResults().stream()
+                .collect(Collectors.toMap(
+                        result -> result.getMethodParameter().getParameterName(),
+                        result -> result.getResolvableErrors().get(0).getDefaultMessage(),
+                        (existing, replacement) -> existing
+                ));
+        return ResponseEntity.status(HttpStatus.BAD_REQUEST)
+                .contentType(MediaType.APPLICATION_JSON)
+                .body(ErrorResponse.of(
+                        MDC.get("traceId"),
+                        request.getRequestURI(),
+                        new ApiErrorResponse(errors)
+                ));
+    }
+
     @ExceptionHandler(HttpMessageNotReadableException.class)
     public ResponseEntity<ErrorResponse<ApiErrorCode>> handleMessageNotReadable(HttpMessageNotReadableException e, HttpServletRequest request) {
         return ResponseEntity.status(HttpStatus.BAD_REQUEST)
@@ -120,6 +142,21 @@ public class GlobalExceptionHandler {
                                 ApiErrorCode.MISSING_REQUEST_HEADER.name(),
                                 "Missing request header: " + ex.getHeaderName(),
                                 Map.of("resource", ex.getHeaderName())
+                        )
+                ));
+    }
+
+    @ExceptionHandler(MissingServletRequestParameterException.class)
+    public ResponseEntity<ErrorResponse<DomainErrorResponse>> handleMissingServletRequestParameterException(MissingServletRequestParameterException ex, HttpServletRequest request) {
+        return ResponseEntity.status(HttpStatus.BAD_REQUEST)
+                .contentType(MediaType.APPLICATION_JSON)
+                .body(ErrorResponse.of(
+                        MDC.get("traceId"),
+                        request.getRequestURI(),
+                        new DomainErrorResponse(
+                                ApiErrorCode.MISSING_REQUEST_PARAM.name(),
+                                "Missing request param: " + ex.getParameterName(),
+                                Map.of("resource", ex.getParameterName())
                         )
                 ));
     }
@@ -184,6 +221,17 @@ public class GlobalExceptionHandler {
                                 "Resource path not found: " + e.getResourcePath(),
                                 Map.of("resource", e.getResourcePath(), "method", e.getHttpMethod().name())
                         )
+                ));
+    }
+
+    @ExceptionHandler(UnsupportedOperationException.class)
+    public ResponseEntity<ErrorResponse<DomainErrorResponse>> handleUnsupportedOperationException(UnsupportedOperationException ex, HttpServletRequest request) {
+        return ResponseEntity.status(HttpStatus.NOT_FOUND)
+                .contentType(MediaType.APPLICATION_JSON)
+                .body(ErrorResponse.of(
+                        MDC.get("traceId"),
+                        request.getRequestURI(),
+                        new DomainErrorResponse(ApiErrorCode.NOT_SUPPORTED_YET.name(), ex.getMessage(), Map.of())
                 ));
     }
 

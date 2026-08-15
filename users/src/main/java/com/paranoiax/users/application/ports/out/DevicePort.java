@@ -14,5 +14,6 @@ public interface DevicePort {
     Optional<Device> findById(DeviceId deviceId);
     List<Device> findByUserId(UserId userId);
     List<Device> findByUserIdIn(Collection<UserId> userIds);
+    List<Device> findAll(Collection<DeviceId> deviceIds);
     void deleteById(DeviceId deviceId);
 }

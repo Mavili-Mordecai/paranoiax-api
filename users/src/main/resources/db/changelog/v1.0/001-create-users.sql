@@ -16,4 +16,4 @@ CREATE TABLE IF NOT EXISTS users.users
     created_at      TIMESTAMPTZ NOT NULL DEFAULT CURRENT_TIMESTAMP,
     CONSTRAINT users_type_check CHECK (type IN ('USER', 'BOT'))
 );
---rollback DROP TABLE users;
+--rollback DROP TABLE IF EXISTS users.users;

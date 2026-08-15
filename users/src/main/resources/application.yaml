@@ -107,6 +107,9 @@ application:
   profile:
     get-user-ids:
       max-batch-size: 256
+  friendship:
+    lock-ttl: 5s
+    result-ttl: 1m
 
 jwt:
   keys:

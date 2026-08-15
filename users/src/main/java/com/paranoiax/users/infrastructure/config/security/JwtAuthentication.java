@@ -11,12 +11,12 @@ import java.util.List;
 import java.util.UUID;
 
 @Getter
-public class CustomJwtAuthentication extends AbstractAuthenticationToken {
+public class JwtAuthentication extends AbstractAuthenticationToken {
     private final UUID userId;
     private final UUID deviceId;
     private final DeviceType deviceType;
 
-    public CustomJwtAuthentication(UUID userId, UserType userType, UUID deviceId, DeviceType deviceType) {
+    public JwtAuthentication(UUID userId, UserType userType, UUID deviceId, DeviceType deviceType) {
         super(List.of(new SimpleGrantedAuthority("ROLE_" + userType.name())));
         this.userId = userId;
         this.deviceId = deviceId;

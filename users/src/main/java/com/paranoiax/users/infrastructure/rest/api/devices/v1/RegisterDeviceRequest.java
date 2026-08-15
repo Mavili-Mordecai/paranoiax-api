@@ -15,7 +15,7 @@ public record RegisterDeviceRequest(
         @NotBlank(message = "FIELD_REQUIRED") String identityKey,
         @NotBlank(message = "FIELD_REQUIRED") String encryptionKey,
         @NotBlank(message = "FIELD_REQUIRED") String deviceName,
-        @NotNull
+        @NotNull(message = "FIELD_REQUIRED")
         @Pattern(regexp = "^MOBILE|DESKTOP$", message = "INVALID_DEVICE_TYPE") String deviceType,
         @NotBlank(message = "FIELD_REQUIRED") String deviceSignature
 ) {
