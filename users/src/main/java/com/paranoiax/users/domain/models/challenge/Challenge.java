@@ -10,21 +10,24 @@ import java.time.Instant;
 
 public class Challenge {
     private final DeviceId deviceId;
+    private final ChallengeType type;
     private final ChallengeValue challenge;
     private final Instant createdAt;
     private final Instant expiresAt;
 
-    public Challenge(DeviceId deviceId, ChallengeValue challenge, Instant createdAt, Instant expiresAt) {
+    public Challenge(DeviceId deviceId, ChallengeType type, ChallengeValue challenge, Instant createdAt, Instant expiresAt) {
         this.deviceId = Require.notNull(deviceId, DomainErrorCode.MISSING_REQUIRED_FIELD, "deviceId");
+        this.type = Require.notNull(type, DomainErrorCode.MISSING_REQUIRED_FIELD, "type");
         this.challenge = Require.notNull(challenge, DomainErrorCode.MISSING_REQUIRED_FIELD, "challenge");
         this.createdAt = Require.notNull(createdAt, DomainErrorCode.MISSING_REQUIRED_FIELD, "createdAt");
         this.expiresAt = Require.notNull(expiresAt, DomainErrorCode.MISSING_REQUIRED_FIELD, "expiresAt");
     }
 
-    public static Challenge create(DeviceId deviceId, ChallengeValue value, Duration ttl) {
+    public static Challenge create(DeviceId deviceId, ChallengeType type, ChallengeValue value, Duration ttl) {
         Instant now = Instant.now();
         return new Challenge(
                 deviceId,
+                type,
                 value,
                 now,
                 now.plus(ttl)
@@ -49,5 +52,9 @@ public class Challenge {
 
     public DeviceId getDeviceId() {
         return deviceId;
+    }
+
+    public ChallengeType getType() {
+        return type;
     }
 }

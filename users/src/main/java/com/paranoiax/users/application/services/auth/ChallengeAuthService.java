@@ -13,6 +13,7 @@ import com.paranoiax.core.domain.exceptions.ExpiredException;
 import com.paranoiax.core.domain.exceptions.InvalidSignatureException;
 import com.paranoiax.core.domain.exceptions.NotFoundException;
 import com.paranoiax.users.domain.models.challenge.Challenge;
+import com.paranoiax.users.domain.models.challenge.ChallengeType;
 import com.paranoiax.users.domain.models.device.Device;
 
 import java.time.Duration;
@@ -47,7 +48,13 @@ public class ChallengeAuthService implements ChallengeAuthUseCase {
     @Override
     public TokenPair execute(ChallengeAuthCommand command) {
         return executor.execute(command, TokenPair.class, lockTtl, resultTtl, () -> {
-            Challenge challenge = challengePort.find(command.challenge()).orElseThrow(() -> new NotFoundException("Challenge"));
+            Challenge challenge = challengePort.find(command.challenge())
+                    .orElseThrow(() -> new NotFoundException("Challenge"));
+
+            if (challenge.getType() != ChallengeType.AUTH) {
+                throw new NotFoundException("Challenge");
+            }
+
             challengePort.delete(challenge);
 
             if (challenge.isExpired()) {
@@ -58,7 +65,8 @@ public class ChallengeAuthService implements ChallengeAuthUseCase {
                 throw new NotFoundException("Challenge");
             }
 
-            Device device = devicePort.findById(new DeviceId(command.deviceId())).orElseThrow(() -> new NotFoundException("Device"));
+            Device device = devicePort.findById(new DeviceId(command.deviceId()))
+                    .orElseThrow(() -> new NotFoundException("Device"));
 
             device.checkRevoked();
 

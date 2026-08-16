@@ -51,9 +51,11 @@ public class CreateChallengeService implements CreateChallengeUseCase {
 
             Challenge challenge = Challenge.create(
                     device.getId(),
+                    command.challengeType(),
                     new ChallengeValue(tokenGenerator.generate(tokenSize)),
                     resultTll
             );
+
             return challengePort.save(challenge, resultTll);
         });
     }

@@ -22,6 +22,7 @@ public class RedisChallengeMapper implements OperationResultsMapper<Challenge, R
     public RedisChallengeDto toEntity(Challenge domain) {
         return new RedisChallengeDto(
                 domain.getDeviceId().value(),
+                domain.getType(),
                 domain.getChallenge().value(),
                 domain.getCreatedAt(),
                 domain.getExpiresAt()
@@ -32,6 +33,7 @@ public class RedisChallengeMapper implements OperationResultsMapper<Challenge, R
     public Challenge toDomain(RedisChallengeDto entity) {
         return new Challenge(
                 new DeviceId(entity.getDeviceId()),
+                entity.getType(),
                 new ChallengeValue(entity.getChallenge()),
                 entity.getCreatedAt(),
                 entity.getExpiresAt()
