@@ -4,8 +4,8 @@ import com.paranoiax.core.domain.Require;
 import com.paranoiax.core.domain.exceptions.DomainErrorCode;
 
 public record EncryptionKey(String value) {
-    private static final int MIN_SIZE = 44;
-    private static final int MAX_SIZE = 64;
+    public static final int MIN_SIZE = 44;
+    public static final int MAX_SIZE = 64;
 
     public EncryptionKey {
         Require.notNull(value, DomainErrorCode.MISSING_REQUIRED_FIELD, "Encryption key");
