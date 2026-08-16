@@ -1,6 +1,5 @@
-package com.paranoiax.users.infrastructure.persistence.entities;
+package com.paranoiax.users.infrastructure.entities;
 
-import com.paranoiax.core.domain.devices.DeviceType;
 import jakarta.persistence.*;
 import lombok.*;
 import org.hibernate.annotations.CreationTimestamp;
@@ -15,8 +14,8 @@ import java.util.UUID;
 @NoArgsConstructor
 @AllArgsConstructor
 @Entity
-@Table(name = "users_devices", schema = "users")
-public class DeviceEntity implements Persistable<UUID> {
+@Table(name = "users_recovery_points", schema = "users")
+public class RecoveryPointEntity implements Persistable<UUID> {
 
     @Id
     private UUID id;
@@ -24,27 +23,11 @@ public class DeviceEntity implements Persistable<UUID> {
     @Column(name = "user_id", nullable = false)
     private UUID userId;
 
-    @Column(nullable = false, length = 64)
-    private String name;
-
-    @Column(nullable = false)
-    @Enumerated(EnumType.STRING)
-    private DeviceType type;
-
     @Column(nullable = false, columnDefinition = "TEXT", unique = true)
     private String identityKey;
 
-    @Column(nullable = false, columnDefinition = "TEXT", unique = true)
-    private String encryptionKey;
-
-    @Column(nullable = false, columnDefinition = "TEXT", unique = true)
-    private String deviceSignature;
-
-    @Column
-    private Instant revokedAt;
-
-    @Column(nullable = false)
-    private Instant lastSeenAt;
+    @Column(nullable = false, columnDefinition = "TEXT")
+    private String encryptedData;
 
     @CreationTimestamp
     @Column(nullable = false, updatable = false)

@@ -4,7 +4,11 @@ import com.paranoiax.core.domain.Require;
 import com.paranoiax.core.domain.exceptions.DomainErrorCode;
 
 public record IdentityKey(String value) {
+    private static final int MIN_SIZE = 44;
+    private static final int MAX_SIZE = 64;
+
     public IdentityKey {
         Require.notNull(value, DomainErrorCode.MISSING_REQUIRED_FIELD, "Identity key");
+        Require.hasLength(value, "Identity key", MIN_SIZE, MAX_SIZE);
     }
 }

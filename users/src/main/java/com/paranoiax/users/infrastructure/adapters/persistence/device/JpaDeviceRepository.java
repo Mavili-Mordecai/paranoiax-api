@@ -1,6 +1,6 @@
-package com.paranoiax.users.infrastructure.persistence.repositories;
+package com.paranoiax.users.infrastructure.adapters.persistence.device;
 
-import com.paranoiax.users.infrastructure.persistence.entities.DeviceEntity;
+import com.paranoiax.users.infrastructure.entities.DeviceEntity;
 import org.springframework.data.jpa.repository.JpaRepository;
 
 import java.util.Collection;

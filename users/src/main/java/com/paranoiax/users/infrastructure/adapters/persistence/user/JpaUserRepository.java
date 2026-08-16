@@ -1,6 +1,6 @@
-package com.paranoiax.users.infrastructure.persistence.repositories;
+package com.paranoiax.users.infrastructure.adapters.persistence.user;
 
-import com.paranoiax.users.infrastructure.persistence.entities.UserEntity;
+import com.paranoiax.users.infrastructure.entities.UserEntity;
 import org.springframework.data.jpa.repository.JpaRepository;
 
 import java.util.Optional;

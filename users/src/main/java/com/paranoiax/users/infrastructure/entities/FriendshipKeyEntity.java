@@ -1,4 +1,4 @@
-package com.paranoiax.users.infrastructure.persistence.entities;
+package com.paranoiax.users.infrastructure.entities;
 
 import jakarta.persistence.*;
 import lombok.*;

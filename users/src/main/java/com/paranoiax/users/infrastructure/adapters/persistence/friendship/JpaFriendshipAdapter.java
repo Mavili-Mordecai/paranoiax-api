@@ -4,8 +4,7 @@ import com.paranoiax.core.domain.users.UserId;
 import com.paranoiax.users.application.ports.out.FriendshipPort;
 import com.paranoiax.users.domain.models.friendship.Friendship;
 import com.paranoiax.users.domain.models.friendship.FriendshipId;
-import com.paranoiax.users.infrastructure.persistence.entities.FriendshipEntity;
-import com.paranoiax.users.infrastructure.persistence.repositories.JpaFriendshipRepository;
+import com.paranoiax.users.infrastructure.entities.FriendshipEntity;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Component;
 

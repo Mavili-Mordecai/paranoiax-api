@@ -4,8 +4,9 @@
 CREATE TABLE IF NOT EXISTS users.users_recovery_points
 (
     id             UUID PRIMARY KEY,
-    user_id        UUID NOT NULL REFERENCES users.users (id),
-    identity_key   TEXT NOT NULL UNIQUE,
-    encrypted_data TEXT NOT NULL
+    user_id        UUID        NOT NULL REFERENCES users.users (id),
+    identity_key   TEXT        NOT NULL UNIQUE,
+    encrypted_data TEXT        NOT NULL,
+    created_at     TIMESTAMPTZ NOT NULL DEFAULT CURRENT_TIMESTAMP
 );
 --rollback DROP TABLE IF EXISTS users.users_recovery_points;

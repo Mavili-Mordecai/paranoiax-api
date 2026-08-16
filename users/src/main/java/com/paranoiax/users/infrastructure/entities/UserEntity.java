@@ -1,4 +1,4 @@
-package com.paranoiax.users.infrastructure.persistence.entities;
+package com.paranoiax.users.infrastructure.entities;
 
 import com.paranoiax.core.domain.users.UserType;
 import com.paranoiax.users.domain.models.user.Profile;

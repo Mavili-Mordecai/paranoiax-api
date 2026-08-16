@@ -4,8 +4,7 @@ import com.paranoiax.core.domain.devices.DeviceId;
 import com.paranoiax.core.domain.users.UserId;
 import com.paranoiax.users.application.ports.out.DevicePort;
 import com.paranoiax.users.domain.models.device.Device;
-import com.paranoiax.users.infrastructure.persistence.entities.DeviceEntity;
-import com.paranoiax.users.infrastructure.persistence.repositories.JpaDeviceRepository;
+import com.paranoiax.users.infrastructure.entities.DeviceEntity;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Component;
 

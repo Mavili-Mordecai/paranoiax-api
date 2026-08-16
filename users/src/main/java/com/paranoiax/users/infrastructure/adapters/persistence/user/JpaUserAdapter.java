@@ -4,8 +4,7 @@ import com.paranoiax.core.domain.users.UserId;
 import com.paranoiax.users.application.ports.out.UserPort;
 import com.paranoiax.users.domain.models.user.User;
 import com.paranoiax.users.domain.models.user.Username;
-import com.paranoiax.users.infrastructure.persistence.entities.UserEntity;
-import com.paranoiax.users.infrastructure.persistence.repositories.JpaUserRepository;
+import com.paranoiax.users.infrastructure.entities.UserEntity;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Component;
 
