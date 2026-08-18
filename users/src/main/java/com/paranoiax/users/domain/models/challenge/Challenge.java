@@ -3,19 +3,22 @@ package com.paranoiax.users.domain.models.challenge;
 import com.paranoiax.core.domain.Require;
 import com.paranoiax.core.domain.devices.DeviceId;
 import com.paranoiax.core.domain.exceptions.DomainErrorCode;
+import com.paranoiax.core.domain.users.UserId;
 import com.paranoiax.users.domain.models.ChallengeValue;
 
 import java.time.Duration;
 import java.time.Instant;
 
 public class Challenge {
+    private final UserId userId;
     private final DeviceId deviceId;
     private final ChallengeType type;
     private final ChallengeValue challenge;
     private final Instant createdAt;
     private final Instant expiresAt;
 
-    public Challenge(DeviceId deviceId, ChallengeType type, ChallengeValue challenge, Instant createdAt, Instant expiresAt) {
+    public Challenge(UserId userId, DeviceId deviceId, ChallengeType type, ChallengeValue challenge, Instant createdAt, Instant expiresAt) {
+        this.userId = Require.notNull(userId, DomainErrorCode.MISSING_REQUIRED_FIELD, "userId");
         this.deviceId = Require.notNull(deviceId, DomainErrorCode.MISSING_REQUIRED_FIELD, "deviceId");
         this.type = Require.notNull(type, DomainErrorCode.MISSING_REQUIRED_FIELD, "type");
         this.challenge = Require.notNull(challenge, DomainErrorCode.MISSING_REQUIRED_FIELD, "challenge");
@@ -23,9 +26,10 @@ public class Challenge {
         this.expiresAt = Require.notNull(expiresAt, DomainErrorCode.MISSING_REQUIRED_FIELD, "expiresAt");
     }
 
-    public static Challenge create(DeviceId deviceId, ChallengeType type, ChallengeValue value, Duration ttl) {
+    public static Challenge create(UserId userId, DeviceId deviceId, ChallengeType type, ChallengeValue value, Duration ttl) {
         Instant now = Instant.now();
         return new Challenge(
+                userId,
                 deviceId,
                 type,
                 value,
@@ -52,6 +56,10 @@ public class Challenge {
 
     public DeviceId getDeviceId() {
         return deviceId;
+    }
+
+    public UserId getUserId() {
+        return userId;
     }
 
     public ChallengeType getType() {

@@ -67,12 +67,10 @@ public class AuthController {
     @PostMapping("/auth/challenge")
     public ResponseEntity<ChallengeResponse> challenge(
             @RequestHeader("Idempotency-Key") String idempotencyKey,
-            @RequestHeader("Device-Id") UUID deviceId,
-            @RequestParam(value = "type", defaultValue = "AUTH") ChallengeType type
+            @RequestHeader("Device-Id") UUID deviceId
     ) {
         Challenge challenge = createChallengeUseCase.execute(new CreateChallengeCommand(
                 deviceId,
-                type,
                 idempotencyKey
         ));
         return ResponseEntity.ok(ChallengeResponse.from(challenge));

@@ -5,8 +5,8 @@ import tools.jackson.databind.PropertyNamingStrategies;
 import tools.jackson.databind.annotation.JsonNaming;
 
 @JsonNaming(PropertyNamingStrategies.SnakeCaseStrategy.class)
-public record GetRecoveryPointRequest(
-        @NotBlank(message = "FIELD_REQUIRED")
-        String signature
+public record AccessRecoveryPointRequest(
+        @NotBlank(message = "FIELD_REQUIRED") String challenge,
+        @NotBlank(message = "FIELD_REQUIRED") String signature
 ) {
 }

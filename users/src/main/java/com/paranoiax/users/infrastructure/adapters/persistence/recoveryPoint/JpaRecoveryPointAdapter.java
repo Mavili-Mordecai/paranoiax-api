@@ -31,8 +31,8 @@ public class JpaRecoveryPointAdapter implements RecoveryPointPort {
     }
 
     @Override
-    public void deleteAll(Collection<RecoveryPointId> ids) {
-        repository.deleteAllById(ids
+    public void deleteAll(UserId userId, Collection<RecoveryPointId> ids) {
+        repository.deleteAllByUserIdAndIdIn(userId.value(), ids
                 .stream()
                 .map(RecoveryPointId::value)
                 .collect(Collectors.toList())

@@ -10,6 +10,7 @@ import com.paranoiax.users.application.services.OperationExecutor;
 import com.paranoiax.core.domain.exceptions.NotFoundException;
 import com.paranoiax.users.domain.models.challenge.Challenge;
 import com.paranoiax.users.domain.models.ChallengeValue;
+import com.paranoiax.users.domain.models.challenge.ChallengeType;
 import com.paranoiax.users.domain.models.device.Device;
 
 import java.time.Duration;
@@ -50,8 +51,9 @@ public class CreateChallengeService implements CreateChallengeUseCase {
             device.checkRevoked();
 
             Challenge challenge = Challenge.create(
+                    device.getUserId(),
                     device.getId(),
-                    command.challengeType(),
+                    ChallengeType.AUTH,
                     new ChallengeValue(tokenGenerator.generate(tokenSize)),
                     resultTll
             );

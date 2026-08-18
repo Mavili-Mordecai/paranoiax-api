@@ -11,6 +11,7 @@ import java.util.UUID;
 @Getter
 @Setter
 public class RedisChallengeDto {
+    private UUID userId;
     private UUID deviceId;
     private ChallengeType type;
     private String challenge;

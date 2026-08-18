@@ -10,5 +10,5 @@ import java.util.List;
 public interface RecoveryPointPort {
     RecoveryPoint save(RecoveryPoint recoveryPoint);
     List<RecoveryPoint> findAll(UserId userId);
-    void deleteAll(Collection<RecoveryPointId> ids);
+    void deleteAll(UserId userId, Collection<RecoveryPointId> ids);
 }

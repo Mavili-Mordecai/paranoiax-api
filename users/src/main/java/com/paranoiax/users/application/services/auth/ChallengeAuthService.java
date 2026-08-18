@@ -1,6 +1,7 @@
 package com.paranoiax.users.application.services.auth;
 
 import com.paranoiax.core.domain.devices.DeviceId;
+import com.paranoiax.core.domain.exceptions.InvalidChallengeTypeException;
 import com.paranoiax.users.application.ports.in.auth.TokenPair;
 import com.paranoiax.users.application.ports.in.auth.challengeAuth.ChallengeAuthCommand;
 import com.paranoiax.users.application.ports.in.auth.challengeAuth.ChallengeAuthUseCase;
@@ -51,18 +52,18 @@ public class ChallengeAuthService implements ChallengeAuthUseCase {
             Challenge challenge = challengePort.find(command.challenge())
                     .orElseThrow(() -> new NotFoundException("Challenge"));
 
-            if (challenge.getType() != ChallengeType.AUTH) {
-                throw new NotFoundException("Challenge");
-            }
-
             challengePort.delete(challenge);
 
-            if (challenge.isExpired()) {
-                throw new ExpiredException("Challenge");
+            if (challenge.getType() != ChallengeType.AUTH) {
+                throw new InvalidChallengeTypeException("Challenge");
             }
 
             if (!challenge.getDeviceId().value().equals(command.deviceId())) {
                 throw new NotFoundException("Challenge");
+            }
+
+            if (challenge.isExpired()) {
+                throw new ExpiredException("Challenge");
             }
 
             Device device = devicePort.findById(new DeviceId(command.deviceId()))
