@@ -1,5 +1,6 @@
 package com.paranoiax.users.infrastructure.rest.api.devices.v1;
 
+import com.paranoiax.users.application.ports.in.devices.recover.RegisterRecoveredDeviceUseCase;
 import com.paranoiax.users.application.ports.in.devices.register.RegisterDeviceCommand;
 import com.paranoiax.users.application.ports.in.devices.register.RegisterDeviceUseCase;
 import com.paranoiax.users.application.ports.in.devices.revoke.RevokeDeviceCommand;
@@ -17,6 +18,7 @@ import java.util.UUID;
 @RequestMapping("/v1/users/devices")
 public class DeviceController {
     private final RegisterDeviceUseCase registerDeviceUseCase;
+    private final RegisterRecoveredDeviceUseCase registerRecoveredDeviceUseCase;
     private final RevokeDeviceUseCase revokeDeviceUseCase;
 
     @PutMapping("/{device_id}")
@@ -37,6 +39,16 @@ public class DeviceController {
                 request.deviceSignature(),
                 idempotencyKey
         ));
+    }
+
+    @PostMapping("/{device_id}/recovery")
+    @ResponseStatus(HttpStatus.NO_CONTENT)
+    public void recovery(
+            @RequestHeader("Idempotency-Key") String idempotencyKey,
+            @PathVariable("device_id") UUID deviceId,
+            @Valid @RequestBody RegisterRecoveredDeviceRequest request
+    ) {
+        registerRecoveredDeviceUseCase.execute(request.toCommand(deviceId, idempotencyKey));
     }
 
     @DeleteMapping("/{device_id}")

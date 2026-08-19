@@ -6,24 +6,23 @@ import com.paranoiax.users.application.ports.in.recoveryPoint.get.AccessRecovery
 import com.paranoiax.users.application.ports.in.recoveryPoint.get.RecoveryPointDetails;
 import com.paranoiax.users.application.ports.out.ChallengePort;
 import com.paranoiax.users.application.ports.out.RecoveryPointPort;
-import com.paranoiax.users.application.ports.out.crypto.SignatureVerifierPort;
+import com.paranoiax.users.application.services.RecoveryChallengeValidator;
 import com.paranoiax.users.domain.models.challenge.Challenge;
-import com.paranoiax.users.domain.models.challenge.ChallengeType;
 import com.paranoiax.users.domain.models.recoveryPoint.RecoveryPoint;
 
 public class AccessRecoveryPointService implements AccessRecoveryPointUseCase {
     private final RecoveryPointPort recoveryPointPort;
     private final ChallengePort challengePort;
-    private final SignatureVerifierPort verifierPort;
+    private final RecoveryChallengeValidator validator;
 
     public AccessRecoveryPointService(
             RecoveryPointPort recoveryPointPort,
             ChallengePort challengePort,
-            SignatureVerifierPort verifierPort
+            RecoveryChallengeValidator validator
     ) {
         this.recoveryPointPort = recoveryPointPort;
         this.challengePort = challengePort;
-        this.verifierPort = verifierPort;
+        this.validator = validator;
     }
 
     @Override
@@ -31,43 +30,15 @@ public class AccessRecoveryPointService implements AccessRecoveryPointUseCase {
         Challenge challenge = challengePort.find(command.challenge())
                 .orElseThrow(() -> new NotFoundException("Challenge"));
 
-        challengePort.delete(challenge);
-
-        validateCommand(command, challenge);
+        validator.validateChallenge(command.deviceId(), challenge);
 
         RecoveryPoint recoveryPoint = recoveryPointPort.findAll(challenge.getUserId())
                 .stream()
                 .findFirst()
                 .orElseThrow(() -> new NotFoundException("RecoveryPoint"));
 
-        checkRecoveryPoint(command, recoveryPoint, challenge);
+        validator.validateRecoveryPoint(command.signature(), recoveryPoint, challenge);
 
         return RecoveryPointDetails.from(recoveryPoint);
-    }
-
-    private void checkRecoveryPoint(AccessRecoveryPointCommand command, RecoveryPoint recoveryPoint, Challenge challenge) {
-        boolean verified = verifierPort.verify(
-                recoveryPoint.getIdentityKey().value(),
-                challenge.getChallenge().value(),
-                command.signature()
-        );
-
-        if (!verified) {
-            throw new InvalidSignatureException("Challenge");
-        }
-    }
-
-    private static void validateCommand(AccessRecoveryPointCommand command, Challenge challenge) {
-        if (challenge.getType() != ChallengeType.ACCOUNT_RECOVERY) {
-            throw new InvalidChallengeTypeException(challenge.getType().name());
-        }
-
-        if (!command.deviceId().equals(challenge.getDeviceId().value())) {
-            throw new AccessDeniedException();
-        }
-
-        if (challenge.isExpired()) {
-            throw new ExpiredException("Challenge");
-        }
     }
 }

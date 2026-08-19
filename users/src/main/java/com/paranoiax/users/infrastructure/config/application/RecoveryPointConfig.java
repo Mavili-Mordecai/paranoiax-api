@@ -4,13 +4,11 @@ import com.paranoiax.users.application.ports.in.recoveryPoint.challenge.CreateRe
 import com.paranoiax.users.application.ports.in.recoveryPoint.create.CreateRecoveryPointUseCase;
 import com.paranoiax.users.application.ports.in.recoveryPoint.delete.DeleteRecoveryPointUseCase;
 import com.paranoiax.users.application.ports.in.recoveryPoint.get.AccessRecoveryPointUseCase;
-import com.paranoiax.users.application.ports.out.ChallengePort;
-import com.paranoiax.users.application.ports.out.RecoveryPointPort;
-import com.paranoiax.users.application.ports.out.TransactionPort;
-import com.paranoiax.users.application.ports.out.UserPort;
+import com.paranoiax.users.application.ports.out.*;
 import com.paranoiax.users.application.ports.out.crypto.SignatureVerifierPort;
 import com.paranoiax.users.application.ports.out.crypto.TokenGenerator;
 import com.paranoiax.users.application.services.OperationExecutor;
+import com.paranoiax.users.application.services.RecoveryChallengeValidator;
 import com.paranoiax.users.application.services.recoveryPoint.CreateRecoveryPointChallengeService;
 import com.paranoiax.users.application.services.recoveryPoint.CreateRecoveryPointService;
 import com.paranoiax.users.application.services.recoveryPoint.DeleteRecoveryPointService;
@@ -23,6 +21,14 @@ import java.time.Duration;
 
 @Configuration
 public class RecoveryPointConfig {
+
+    @Bean
+    public RecoveryChallengeValidator recoveryChallengeValidator(
+            CanonicalizerPort canonicalizerPort,
+            SignatureVerifierPort verifierPort
+    ) {
+        return new RecoveryChallengeValidator(canonicalizerPort, verifierPort);
+    }
 
     @Bean
     public CreateRecoveryPointUseCase createRecoveryPointUseCase(
@@ -64,9 +70,9 @@ public class RecoveryPointConfig {
     public AccessRecoveryPointUseCase accessRecoveryPointUseCase(
             RecoveryPointPort recoveryPointPort,
             ChallengePort challengePort,
-            SignatureVerifierPort verifierPort
+            RecoveryChallengeValidator validator
     ) {
-        return new AccessRecoveryPointService(recoveryPointPort, challengePort, verifierPort);
+        return new AccessRecoveryPointService(recoveryPointPort, challengePort, validator);
     }
 
     @Bean
