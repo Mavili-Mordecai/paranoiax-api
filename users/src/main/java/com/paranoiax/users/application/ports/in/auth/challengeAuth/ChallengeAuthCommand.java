@@ -10,13 +10,4 @@ public record ChallengeAuthCommand(
         String challenge,
         String operationId
 ) implements OperationCommand {
-    @Override
-    public String getPayloadSignature() {
-        return String.join(":",
-                deviceId.toString(),
-                signature,
-                challenge,
-                operationId
-        );
-    }
 }

@@ -110,6 +110,11 @@ application:
   friendship:
     lock-ttl: 5s
     result-ttl: 1m
+  recovery-point:
+    challenge:
+      lock-ttl: 5s
+      result-ttl: 1m
+      token-size: 32
 
 jwt:
   keys:

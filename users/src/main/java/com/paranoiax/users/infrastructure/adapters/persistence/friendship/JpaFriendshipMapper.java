@@ -4,7 +4,7 @@ import com.paranoiax.core.domain.users.UserId;
 import com.paranoiax.users.domain.models.friendship.Friendship;
 import com.paranoiax.users.domain.models.friendship.FriendshipAttributes;
 import com.paranoiax.users.domain.models.friendship.FriendshipId;
-import com.paranoiax.users.infrastructure.persistence.entities.FriendshipEntity;
+import com.paranoiax.users.infrastructure.entities.FriendshipEntity;
 import org.springframework.stereotype.Component;
 
 @Component

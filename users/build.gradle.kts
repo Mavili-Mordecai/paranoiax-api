@@ -38,6 +38,7 @@ dependencies {
     implementation("io.jsonwebtoken:jjwt-api:0.13.0")
     implementation(platform("software.amazon.awssdk:bom:2.47.6"))
     implementation("software.amazon.awssdk:s3")
+    implementation("io.github.erdtman:java-json-canonicalization:1.1")
     compileOnly("org.projectlombok:lombok")
     runtimeOnly("io.micrometer:micrometer-registry-prometheus")
     runtimeOnly("org.postgresql:postgresql")

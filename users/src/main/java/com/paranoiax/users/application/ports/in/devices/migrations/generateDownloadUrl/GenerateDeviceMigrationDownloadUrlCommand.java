@@ -9,8 +9,4 @@ public record GenerateDeviceMigrationDownloadUrlCommand(
         String signature,
         String operationId
 ) implements OperationCommand {
-    @Override
-    public String getPayloadSignature() {
-        return String.join(":", migrationId.toString(), signature, operationId);
-    }
 }

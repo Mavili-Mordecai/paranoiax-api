@@ -1,6 +1,6 @@
-package com.paranoiax.users.infrastructure.persistence.repositories;
+package com.paranoiax.users.infrastructure.adapters.persistence.friendship;
 
-import com.paranoiax.users.infrastructure.persistence.entities.FriendshipEntity;
+import com.paranoiax.users.infrastructure.entities.FriendshipEntity;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.query.Param;

@@ -10,8 +10,4 @@ public record UpdateFriendshipCommand(
         String attributes,
         String operationId
 ) implements OperationCommand {
-    @Override
-    public String getPayloadSignature() {
-        return String.join(":", attributes, operationId);
-    }
 }

@@ -1,6 +1,7 @@
 package com.paranoiax.users.infrastructure.adapters.persistence.challenge;
 
 import com.paranoiax.core.domain.devices.DeviceId;
+import com.paranoiax.core.domain.users.UserId;
 import com.paranoiax.users.domain.models.challenge.Challenge;
 import com.paranoiax.users.domain.models.ChallengeValue;
 import com.paranoiax.users.infrastructure.common.operationResultMapper.OperationResultsMapper;
@@ -21,7 +22,9 @@ public class RedisChallengeMapper implements OperationResultsMapper<Challenge, R
     @Override
     public RedisChallengeDto toEntity(Challenge domain) {
         return new RedisChallengeDto(
+                domain.getUserId().value(),
                 domain.getDeviceId().value(),
+                domain.getType(),
                 domain.getChallenge().value(),
                 domain.getCreatedAt(),
                 domain.getExpiresAt()
@@ -31,7 +34,9 @@ public class RedisChallengeMapper implements OperationResultsMapper<Challenge, R
     @Override
     public Challenge toDomain(RedisChallengeDto entity) {
         return new Challenge(
+                new UserId(entity.getUserId()),
                 new DeviceId(entity.getDeviceId()),
+                entity.getType(),
                 new ChallengeValue(entity.getChallenge()),
                 entity.getCreatedAt(),
                 entity.getExpiresAt()

@@ -1,6 +1,7 @@
 package com.paranoiax.users.application.services.auth;
 
 import com.paranoiax.core.domain.devices.DeviceId;
+import com.paranoiax.core.domain.exceptions.InvalidChallengeTypeException;
 import com.paranoiax.users.application.ports.in.auth.TokenPair;
 import com.paranoiax.users.application.ports.in.auth.challengeAuth.ChallengeAuthCommand;
 import com.paranoiax.users.application.ports.in.auth.challengeAuth.ChallengeAuthUseCase;
@@ -13,6 +14,7 @@ import com.paranoiax.core.domain.exceptions.ExpiredException;
 import com.paranoiax.core.domain.exceptions.InvalidSignatureException;
 import com.paranoiax.core.domain.exceptions.NotFoundException;
 import com.paranoiax.users.domain.models.challenge.Challenge;
+import com.paranoiax.users.domain.models.challenge.ChallengeType;
 import com.paranoiax.users.domain.models.device.Device;
 
 import java.time.Duration;
@@ -47,18 +49,25 @@ public class ChallengeAuthService implements ChallengeAuthUseCase {
     @Override
     public TokenPair execute(ChallengeAuthCommand command) {
         return executor.execute(command, TokenPair.class, lockTtl, resultTtl, () -> {
-            Challenge challenge = challengePort.find(command.challenge()).orElseThrow(() -> new NotFoundException("Challenge"));
-            challengePort.delete(challenge);
+            Challenge challenge = challengePort.find(command.challenge())
+                    .orElseThrow(() -> new NotFoundException("Challenge"));
 
-            if (challenge.isExpired()) {
-                throw new ExpiredException("Challenge");
+            if (challenge.getType() != ChallengeType.AUTH) {
+                throw new InvalidChallengeTypeException("Challenge");
             }
+
+            challengePort.delete(challenge);
 
             if (!challenge.getDeviceId().value().equals(command.deviceId())) {
                 throw new NotFoundException("Challenge");
             }
 
-            Device device = devicePort.findById(new DeviceId(command.deviceId())).orElseThrow(() -> new NotFoundException("Device"));
+            if (challenge.isExpired()) {
+                throw new ExpiredException("Challenge");
+            }
+
+            Device device = devicePort.findById(new DeviceId(command.deviceId()))
+                    .orElseThrow(() -> new NotFoundException("Device"));
 
             device.checkRevoked();
 

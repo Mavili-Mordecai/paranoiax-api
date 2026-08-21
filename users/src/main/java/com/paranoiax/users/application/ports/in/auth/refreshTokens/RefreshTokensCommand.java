@@ -6,8 +6,4 @@ public record RefreshTokensCommand(
         String refreshToken,
         String operationId
 ) implements OperationCommand {
-    @Override
-    public String getPayloadSignature() {
-        return String.join(":", refreshToken, operationId);
-    }
 }

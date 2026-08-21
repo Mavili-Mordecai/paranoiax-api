@@ -1,6 +1,7 @@
 package com.paranoiax.users.application.services;
 
 import com.paranoiax.users.application.exceptions.LockAcquisitionFailedException;
+import com.paranoiax.users.application.ports.out.CanonicalizerPort;
 import com.paranoiax.users.application.ports.out.operationResult.OperationCommand;
 import com.paranoiax.users.application.ports.out.operationResult.OperationRecord;
 import com.paranoiax.users.application.ports.out.operationResult.OperationResultPort;
@@ -14,11 +15,18 @@ import java.util.function.Supplier;
 
 public class OperationExecutor {
     private final OperationResultPort operationResultPort;
+    private final CanonicalizerPort canonicalizerPort;
     private final TransactionPort transactionPort;
     private final HashPort hashPort;
 
-    public OperationExecutor(OperationResultPort operationResultPort, TransactionPort transactionPort, HashPort hashPort) {
+    public OperationExecutor(
+            OperationResultPort operationResultPort,
+            CanonicalizerPort canonicalizerPort,
+            TransactionPort transactionPort,
+            HashPort hashPort
+    ) {
         this.operationResultPort = operationResultPort;
+        this.canonicalizerPort = canonicalizerPort;
         this.transactionPort = transactionPort;
         this.hashPort = hashPort;
     }
@@ -30,7 +38,7 @@ public class OperationExecutor {
             Duration resultTtl,
             Supplier<T> operation
     ) {
-        String payloadSignature = hashPort.sha256Hex(command.getPayloadSignature());
+        String payloadSignature = getPayload(command);
 
         Optional<OperationRecord<T>> savedResult = operationResultPort.findResult(command.operationId(), resultType);
 
@@ -56,5 +64,9 @@ public class OperationExecutor {
         } finally {
             operationResultPort.unlock(command.operationId());
         }
+    }
+
+    private String getPayload(OperationCommand command) {
+        return hashPort.sha256Hex(canonicalizerPort.canonicalize(command));
     }
 }

@@ -4,7 +4,7 @@ import com.paranoiax.core.domain.users.UserId;
 import com.paranoiax.users.domain.models.IdentityKey;
 import com.paranoiax.users.domain.models.user.*;
 import com.paranoiax.users.infrastructure.common.operationResultMapper.OperationResultsMapper;
-import com.paranoiax.users.infrastructure.persistence.entities.UserEntity;
+import com.paranoiax.users.infrastructure.entities.UserEntity;
 import org.springframework.stereotype.Component;
 
 @Component

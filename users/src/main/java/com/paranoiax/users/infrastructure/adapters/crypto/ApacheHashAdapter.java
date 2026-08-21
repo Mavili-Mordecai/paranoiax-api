@@ -7,6 +7,11 @@ import org.springframework.stereotype.Component;
 @Component
 public class ApacheHashAdapter implements HashPort {
     @Override
+    public String sha256Hex(byte[] payload) {
+        return DigestUtils.sha256Hex(payload);
+    }
+
+    @Override
     public String sha256Hex(String payload) {
         return DigestUtils.sha256Hex(payload);
     }

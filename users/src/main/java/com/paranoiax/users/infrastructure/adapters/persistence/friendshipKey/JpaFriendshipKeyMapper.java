@@ -6,7 +6,7 @@ import com.paranoiax.users.domain.models.friendship.key.FriendshipKey;
 import com.paranoiax.users.domain.models.friendship.key.FriendshipKeyId;
 import com.paranoiax.users.domain.models.friendship.key.FriendshipSharedKey;
 import com.paranoiax.users.infrastructure.common.operationResultMapper.OperationResultsMapper;
-import com.paranoiax.users.infrastructure.persistence.entities.FriendshipKeyEntity;
+import com.paranoiax.users.infrastructure.entities.FriendshipKeyEntity;
 import org.springframework.stereotype.Component;
 
 import java.util.Collection;

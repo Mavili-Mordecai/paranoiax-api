@@ -8,7 +8,7 @@ import com.paranoiax.users.domain.models.device.Device;
 import com.paranoiax.users.domain.models.device.DeviceName;
 import com.paranoiax.users.domain.models.device.DeviceSignature;
 import com.paranoiax.users.infrastructure.common.operationResultMapper.OperationResultsMapper;
-import com.paranoiax.users.infrastructure.persistence.entities.DeviceEntity;
+import com.paranoiax.users.infrastructure.entities.DeviceEntity;
 import org.springframework.stereotype.Component;
 
 @Component

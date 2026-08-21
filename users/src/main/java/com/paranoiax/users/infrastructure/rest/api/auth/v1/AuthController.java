@@ -11,7 +11,7 @@ import com.paranoiax.users.application.ports.in.auth.refreshTokens.RefreshTokens
 import com.paranoiax.users.application.ports.in.auth.refreshTokens.RefreshTokensUseCase;
 import com.paranoiax.users.application.ports.in.auth.register.RegisterUserUseCase;
 import com.paranoiax.users.domain.models.challenge.Challenge;
-import com.paranoiax.users.domain.models.device.*;
+import com.paranoiax.users.domain.models.challenge.ChallengeType;
 import com.paranoiax.users.domain.models.invite.Invite;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
@@ -69,7 +69,10 @@ public class AuthController {
             @RequestHeader("Idempotency-Key") String idempotencyKey,
             @RequestHeader("Device-Id") UUID deviceId
     ) {
-        Challenge challenge = createChallengeUseCase.execute(new CreateChallengeCommand(deviceId, idempotencyKey));
+        Challenge challenge = createChallengeUseCase.execute(new CreateChallengeCommand(
+                deviceId,
+                idempotencyKey
+        ));
         return ResponseEntity.ok(ChallengeResponse.from(challenge));
     }
 

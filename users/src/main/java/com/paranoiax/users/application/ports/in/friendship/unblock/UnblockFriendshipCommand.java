@@ -9,12 +9,4 @@ public record UnblockFriendshipCommand(
         UUID userId,
         String operationId
 ) implements OperationCommand {
-    @Override
-    public String getPayloadSignature() {
-        return String.join(":",
-                id.toString(),
-                userId.toString(),
-                operationId
-        );
-    }
 }

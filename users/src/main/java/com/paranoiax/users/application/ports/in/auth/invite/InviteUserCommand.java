@@ -11,9 +11,4 @@ public record InviteUserCommand(
     public static InviteUserCommand of(UUID userId, String operationId) {
         return new InviteUserCommand(userId, operationId);
     }
-
-    @Override
-    public String getPayloadSignature() {
-        return String.join(":", userId.toString(), operationId);
-    }
 }

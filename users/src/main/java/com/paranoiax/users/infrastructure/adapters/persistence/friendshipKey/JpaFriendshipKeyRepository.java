@@ -1,6 +1,6 @@
-package com.paranoiax.users.infrastructure.persistence.repositories;
+package com.paranoiax.users.infrastructure.adapters.persistence.friendshipKey;
 
-import com.paranoiax.users.infrastructure.persistence.entities.FriendshipKeyEntity;
+import com.paranoiax.users.infrastructure.entities.FriendshipKeyEntity;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Modifying;
