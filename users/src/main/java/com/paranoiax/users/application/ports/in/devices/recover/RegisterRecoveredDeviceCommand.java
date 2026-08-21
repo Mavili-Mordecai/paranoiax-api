@@ -16,19 +16,4 @@ public record RegisterRecoveredDeviceCommand(
         String deviceSignature,
         String operationId
 ) implements OperationCommand {
-    @Override
-    public String getPayloadSignature() {
-        return String.join(":",
-                deviceId.toString(),
-                challenge,
-                signature,
-                username,
-                deviceName,
-                deviceType,
-                identityKey,
-                encryptionKey,
-                deviceSignature,
-                operationId
-        );
-    }
 }

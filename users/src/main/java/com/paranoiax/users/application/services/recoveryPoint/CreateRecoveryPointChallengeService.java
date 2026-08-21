@@ -1,7 +1,7 @@
 package com.paranoiax.users.application.services.recoveryPoint;
 
 import com.paranoiax.core.domain.devices.DeviceId;
-import com.paranoiax.core.domain.exceptions.NotFoundException;
+import com.paranoiax.core.domain.exceptions.AccessDeniedException;
 import com.paranoiax.users.application.ports.in.recoveryPoint.challenge.CreateRecoveryPointChallengeCommand;
 import com.paranoiax.users.application.ports.in.recoveryPoint.challenge.CreateRecoveryPointChallengeUseCase;
 import com.paranoiax.users.application.ports.out.ChallengePort;
@@ -47,7 +47,7 @@ public class CreateRecoveryPointChallengeService implements CreateRecoveryPointC
     public Challenge execute(CreateRecoveryPointChallengeCommand command) {
         return executor.execute(command, Challenge.class, lockTtl, resultTll, () -> {
             User user = userPort.findByUsername(new Username(command.username()))
-                    .orElseThrow(() -> new NotFoundException("User"));
+                    .orElseThrow(AccessDeniedException::new);
 
             return challengePort.save(Challenge.create(
                     user.getId(),

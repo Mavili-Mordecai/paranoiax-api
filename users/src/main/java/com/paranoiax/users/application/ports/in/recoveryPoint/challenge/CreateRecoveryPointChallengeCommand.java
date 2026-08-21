@@ -9,12 +9,4 @@ public record CreateRecoveryPointChallengeCommand(
         String username,
         String operationId
 ) implements OperationCommand {
-    @Override
-    public String getPayloadSignature() {
-        return String.join(":",
-                deviceId.toString(),
-                username,
-                operationId
-        );
-    }
 }

@@ -4,7 +4,6 @@ import com.paranoiax.users.application.ports.out.operationResult.OperationComman
 
 import java.util.List;
 import java.util.UUID;
-import java.util.stream.Collectors;
 
 public record AddFriendshipCommand(
         UUID userId,
@@ -13,14 +12,4 @@ public record AddFriendshipCommand(
         List<FriendshipKeyInfo> keys,
         String operationId
 ) implements OperationCommand {
-    @Override
-    public String getPayloadSignature() {
-        return String.join(":",
-                userId.toString(),
-                friendId.toString(),
-                attributes,
-                keys.stream().map(FriendshipKeyInfo::sharedKey).collect(Collectors.joining(",")),
-                operationId
-        );
-    }
 }

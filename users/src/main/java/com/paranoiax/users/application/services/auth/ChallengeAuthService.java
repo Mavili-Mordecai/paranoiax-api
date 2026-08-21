@@ -52,11 +52,11 @@ public class ChallengeAuthService implements ChallengeAuthUseCase {
             Challenge challenge = challengePort.find(command.challenge())
                     .orElseThrow(() -> new NotFoundException("Challenge"));
 
-            challengePort.delete(challenge);
-
             if (challenge.getType() != ChallengeType.AUTH) {
                 throw new InvalidChallengeTypeException("Challenge");
             }
+
+            challengePort.delete(challenge);
 
             if (!challenge.getDeviceId().value().equals(command.deviceId())) {
                 throw new NotFoundException("Challenge");

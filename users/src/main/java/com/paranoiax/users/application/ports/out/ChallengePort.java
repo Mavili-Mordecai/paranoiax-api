@@ -7,6 +7,7 @@ import java.util.Optional;
 
 public interface ChallengePort {
     Optional<Challenge> find(String challenge);
+    Optional<Challenge> consume(String challenge);
     Challenge save(Challenge challenge, Duration ttl);
 
     /**

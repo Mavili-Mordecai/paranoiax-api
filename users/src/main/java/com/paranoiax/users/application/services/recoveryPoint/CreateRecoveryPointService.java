@@ -11,7 +11,6 @@ import com.paranoiax.users.domain.models.recoveryPoint.RecoveryPoint;
 import com.paranoiax.users.domain.models.recoveryPoint.RecoveryPointData;
 
 import java.time.Duration;
-import java.util.List;
 
 public class CreateRecoveryPointService implements CreateRecoveryPointUseCase {
     private final RecoveryPointPort port;
@@ -34,13 +33,13 @@ public class CreateRecoveryPointService implements CreateRecoveryPointUseCase {
     @Override
     public void execute(CreateRecoveryPointCommand command) {
         executor.execute(command, RecoveryPoint.class, lockTtl, resultTtl, () -> {
-            List<RecoveryPoint> recoveryPoints = port.findAll(new UserId(command.userId()));
-            if (!recoveryPoints.isEmpty()) {
+            UserId userId = new UserId(command.userId());
+            if (port.find(userId).isPresent()) {
                 throw new AlreadyExistsException("Recovery point");
             }
 
             return port.save(RecoveryPoint.create(
-                    new UserId(command.userId()),
+                    userId,
                     new IdentityKey(command.identityKey()),
                     new RecoveryPointData(command.encryptedData())
             ));

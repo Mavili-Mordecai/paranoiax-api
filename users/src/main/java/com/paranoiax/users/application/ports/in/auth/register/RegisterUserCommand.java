@@ -9,8 +9,4 @@ public record RegisterUserCommand(
         DeviceInfo device,
         String operationId
 ) implements OperationCommand {
-    @Override
-    public String getPayloadSignature() {
-        return String.join(":", username, inviteToken, identityKey, device.getOperationSignature(), operationId);
-    }
 }

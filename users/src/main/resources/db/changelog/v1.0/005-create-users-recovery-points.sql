@@ -10,3 +10,6 @@ CREATE TABLE IF NOT EXISTS users.users_recovery_points
     created_at     TIMESTAMPTZ NOT NULL DEFAULT CURRENT_TIMESTAMP
 );
 --rollback DROP TABLE IF EXISTS users.users_recovery_points;
+
+ALTER TABLE users.users_recovery_points ADD CONSTRAINT unique_user_id UNIQUE (user_id);
+--rollback ALTER TABLE users.users_recovery_points DROP CONSTRAINT unique_user_id;

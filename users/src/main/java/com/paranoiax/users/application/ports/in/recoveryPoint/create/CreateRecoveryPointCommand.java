@@ -10,13 +10,4 @@ public record CreateRecoveryPointCommand(
         String encryptedData,
         String operationId
 ) implements OperationCommand {
-    @Override
-    public String getPayloadSignature() {
-        return String.join(":",
-                userId.toString(),
-                identityKey,
-                encryptedData,
-                operationId
-        );
-    }
 }

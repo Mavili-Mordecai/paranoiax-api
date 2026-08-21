@@ -15,18 +15,4 @@ public record RegisterDeviceCommand(
         String deviceSignature,
         String operationId
 ) implements OperationCommand {
-    @Override
-    public String getPayloadSignature() {
-        return String.join(":",
-                migrationId.toString(),
-                deviceId.toString(),
-                deviceName,
-                deviceType,
-                signature,
-                identityKey,
-                encryptionKey,
-                deviceSignature,
-                operationId
-        );
-    }
 }

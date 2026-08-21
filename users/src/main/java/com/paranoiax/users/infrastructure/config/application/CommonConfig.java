@@ -1,5 +1,6 @@
 package com.paranoiax.users.infrastructure.config.application;
 
+import com.paranoiax.users.application.ports.out.CanonicalizerPort;
 import com.paranoiax.users.application.ports.out.crypto.HashPort;
 import com.paranoiax.users.application.ports.out.operationResult.OperationResultPort;
 import com.paranoiax.users.application.ports.out.TransactionPort;
@@ -11,7 +12,7 @@ import org.springframework.context.annotation.Configuration;
 public class CommonConfig {
 
     @Bean
-    public OperationExecutor operationExecutor(OperationResultPort operationResultPort, TransactionPort transactionPort, HashPort hashPort) {
-        return new OperationExecutor(operationResultPort, transactionPort, hashPort);
+    public OperationExecutor operationExecutor(OperationResultPort operationResultPort, CanonicalizerPort canonicalizerPort, TransactionPort transactionPort, HashPort hashPort) {
+        return new OperationExecutor(operationResultPort, canonicalizerPort, transactionPort, hashPort);
     }
 }

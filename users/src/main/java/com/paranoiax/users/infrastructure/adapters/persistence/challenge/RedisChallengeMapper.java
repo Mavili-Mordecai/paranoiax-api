@@ -34,7 +34,7 @@ public class RedisChallengeMapper implements OperationResultsMapper<Challenge, R
     @Override
     public Challenge toDomain(RedisChallengeDto entity) {
         return new Challenge(
-                new UserId(entity.getDeviceId()),
+                new UserId(entity.getUserId()),
                 new DeviceId(entity.getDeviceId()),
                 entity.getType(),
                 new ChallengeValue(entity.getChallenge()),

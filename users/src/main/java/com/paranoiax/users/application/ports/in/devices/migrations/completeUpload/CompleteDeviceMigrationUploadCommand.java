@@ -9,8 +9,4 @@ public record CompleteDeviceMigrationUploadCommand(
         UUID userId,
         String operationId
 ) implements OperationCommand {
-    @Override
-    public String getPayloadSignature() {
-        return String.join(":", migrationId.toString(), userId.toString(), operationId);
-    }
 }

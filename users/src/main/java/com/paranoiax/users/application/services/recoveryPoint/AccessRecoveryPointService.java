@@ -32,9 +32,7 @@ public class AccessRecoveryPointService implements AccessRecoveryPointUseCase {
 
         validator.validateChallenge(command.deviceId(), challenge);
 
-        RecoveryPoint recoveryPoint = recoveryPointPort.findAll(challenge.getUserId())
-                .stream()
-                .findFirst()
+        RecoveryPoint recoveryPoint = recoveryPointPort.find(challenge.getUserId())
                 .orElseThrow(() -> new NotFoundException("RecoveryPoint"));
 
         validator.validateRecoveryPoint(command.signature(), recoveryPoint, challenge);

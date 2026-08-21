@@ -17,7 +17,14 @@ public class RedisChallengeAdapter implements ChallengePort {
 
     @Override
     public Optional<Challenge> find(String challenge) {
-        return Optional.ofNullable(redisTemplate.opsForValue().get(getChallengeKey(challenge))).map((it) -> mapper.toDomain((RedisChallengeDto) it));
+        return Optional.ofNullable(redisTemplate.opsForValue().get(getChallengeKey(challenge)))
+                .map((it) -> mapper.toDomain((RedisChallengeDto) it));
+    }
+
+    @Override
+    public Optional<Challenge> consume(String challenge) {
+        return Optional.ofNullable(redisTemplate.opsForValue().getAndDelete(getChallengeKey(challenge)))
+                .map((it) -> mapper.toDomain((RedisChallengeDto) it));
     }
 
     @Override

@@ -79,10 +79,8 @@ public class RegisterRecoveredDeviceService implements RegisterRecoveredDeviceUs
     }
 
     private Challenge consumeAndValidateChallenge(RegisterRecoveredDeviceCommand command, User user) {
-        Challenge challenge = challengePort.find(command.challenge())
+        Challenge challenge = challengePort.consume(command.challenge())
                 .orElseThrow(() -> new NotFoundException("Challenge"));
-
-        challengePort.delete(challenge);
 
         if (!challenge.getUserId().equals(user.getId())) {
             throw new AccessDeniedException();
@@ -94,9 +92,7 @@ public class RegisterRecoveredDeviceService implements RegisterRecoveredDeviceUs
     }
 
     private void verifyRecoveryPoint(String signature, Challenge challenge) {
-        RecoveryPoint recoveryPoint = recoveryPointPort.findAll(challenge.getUserId())
-                .stream()
-                .findFirst()
+        RecoveryPoint recoveryPoint = recoveryPointPort.find(challenge.getUserId())
                 .orElseThrow(() -> new NotFoundException("RecoveryPoint"));
 
         validator.validateRecoveryPoint(signature, recoveryPoint, challenge);
