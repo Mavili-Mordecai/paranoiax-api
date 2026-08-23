@@ -1,9 +1,9 @@
-package com.paranoiax.users.domain.models;
+package com.paranoiax.core.domain;
 
 import java.time.Instant;
 
 public interface ActivityTrackable {
-    Instant getLastSeenAt();
+    Instant getLastActivityAt();
 
     void recordActivity(Instant activityTime);
 }

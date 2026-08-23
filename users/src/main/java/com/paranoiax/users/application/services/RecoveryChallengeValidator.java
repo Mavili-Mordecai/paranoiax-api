@@ -6,7 +6,7 @@ import com.paranoiax.core.domain.exceptions.InvalidChallengeTypeException;
 import com.paranoiax.core.domain.exceptions.InvalidSignatureException;
 import com.paranoiax.users.application.ports.out.CanonicalizerPort;
 import com.paranoiax.users.application.ports.out.crypto.SignatureVerifierPort;
-import com.paranoiax.users.domain.models.IdentityKey;
+import com.paranoiax.core.domain.IdentityKey;
 import com.paranoiax.users.domain.models.challenge.Challenge;
 import com.paranoiax.users.domain.models.challenge.ChallengeType;
 import com.paranoiax.users.domain.models.device.Device;

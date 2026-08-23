@@ -2,7 +2,7 @@ package com.paranoiax.users.infrastructure.adapters.persistence.recoveryPoint;
 
 
 import com.paranoiax.core.domain.users.UserId;
-import com.paranoiax.users.domain.models.IdentityKey;
+import com.paranoiax.core.domain.IdentityKey;
 import com.paranoiax.users.domain.models.recoveryPoint.RecoveryPoint;
 import com.paranoiax.users.domain.models.recoveryPoint.RecoveryPointData;
 import com.paranoiax.users.domain.models.recoveryPoint.RecoveryPointId;

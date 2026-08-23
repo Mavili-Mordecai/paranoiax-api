@@ -6,8 +6,8 @@ import com.paranoiax.core.domain.exceptions.DomainErrorCode;
 import com.paranoiax.core.domain.exceptions.ExpiredException;
 import com.paranoiax.core.domain.users.UserId;
 import com.paranoiax.users.domain.models.ChallengeValue;
-import com.paranoiax.users.domain.models.EncryptionKey;
-import com.paranoiax.users.domain.models.IdentityKey;
+import com.paranoiax.core.domain.EncryptionKey;
+import com.paranoiax.core.domain.IdentityKey;
 import com.paranoiax.users.domain.models.device.DeviceSignature;
 
 import java.time.Duration;

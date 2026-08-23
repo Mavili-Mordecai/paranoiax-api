@@ -7,8 +7,8 @@ import com.paranoiax.users.application.ports.in.devices.recover.RegisterRecovere
 import com.paranoiax.users.application.ports.out.*;
 import com.paranoiax.users.application.services.OperationExecutor;
 import com.paranoiax.users.application.services.RecoveryChallengeValidator;
-import com.paranoiax.users.domain.models.EncryptionKey;
-import com.paranoiax.users.domain.models.IdentityKey;
+import com.paranoiax.core.domain.EncryptionKey;
+import com.paranoiax.core.domain.IdentityKey;
 import com.paranoiax.users.domain.models.challenge.Challenge;
 import com.paranoiax.users.domain.models.device.Device;
 import com.paranoiax.users.domain.models.device.DeviceName;

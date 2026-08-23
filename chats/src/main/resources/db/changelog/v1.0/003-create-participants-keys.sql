@@ -8,6 +8,6 @@ CREATE TABLE IF NOT EXISTS chats.chats_participants_keys
     device_id      UUID NOT NULL,
     key_version    INT  NOT NULL,
     encryption_key TEXT NOT NULL,
-    CONSTRAINT chats_participants_keys_key_version_check CHECK (key_version >= 0)
+    CONSTRAINT chats_participants_keys_key_version_check CHECK (key_version > 0)
 );
 --rollback DROP TABLE IF EXISTS chats.chats_participants_keys;

@@ -22,7 +22,8 @@ public enum DomainErrorCode {
     OPERATION_PARAMETERS_CHANGED("Operation already processed with different parameters"),
     ACCESS_DENIED("Access denied"),
     ALREADY_TAKEN("%s already taken"),
-    RATE_LIMIT_EXCEEDED("Rate limit exceeded");
+    RATE_LIMIT_EXCEEDED("Rate limit exceeded"),
+    USES_COUNT_EXCEEDED("Uses count exceeded");
 
     private final String defaultMessage;
 

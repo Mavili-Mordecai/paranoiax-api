@@ -1,6 +1,5 @@
-package com.paranoiax.users.domain.models;
+package com.paranoiax.core.domain;
 
-import com.paranoiax.core.domain.Require;
 import com.paranoiax.core.domain.exceptions.DomainErrorCode;
 
 public record EncryptionKey(String value) {
