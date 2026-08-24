@@ -133,6 +133,8 @@ public class Participant {
     }
 
     public void addPermission(ParticipantPermission permission) {
+        Require.notNull(permission, DomainErrorCode.EMPTY_VALUE_NOT_ALLOWED, "permission");
+
         if (this.permissions == null) {
             this.permissions = new HashSet<>();
         }
@@ -143,12 +145,16 @@ public class Participant {
     }
 
     public void removePermission(ParticipantPermission permission) {
+        Require.notNull(permission, DomainErrorCode.EMPTY_VALUE_NOT_ALLOWED, "permission");
+
         if (this.permissions != null && this.permissions.remove(permission)) {
             this.updatedAt = Instant.now();
         }
     }
 
     public boolean hasPermission(ParticipantPermission permission) {
+        Require.notNull(permission, DomainErrorCode.EMPTY_VALUE_NOT_ALLOWED, "permission");
+
         return this.permissions != null && this.permissions.contains(permission);
     }
 
@@ -161,7 +167,7 @@ public class Participant {
     }
 
     public Set<ParticipantPermission> getPermissions() {
-        return permissions;
+        return permissions == null ? Set.of() : Set.copyOf(permissions);
     }
 
     public EventsSeq getLastReadSeq() {
