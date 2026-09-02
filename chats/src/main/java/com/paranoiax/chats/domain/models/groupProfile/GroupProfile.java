@@ -14,7 +14,7 @@ public class GroupProfile {
     private Instant updatedAt;
 
     private GroupProfile(GroupProfileId id, GroupProfileName name, GroupProfileAvatar avatar, Instant updatedAt) {
-        this.id = Require.notNull(id, DomainErrorCode.MISSING_REQUIRED_FIELD, "groupProfileId");
+        this.id = Require.notNull(id, DomainErrorCode.MISSING_REQUIRED_FIELD, "id");
         this.name = Require.notNull(name, DomainErrorCode.MISSING_REQUIRED_FIELD, "name");
         this.updatedAt = Require.notNull(updatedAt, DomainErrorCode.MISSING_REQUIRED_FIELD, "updatedAt");
         this.avatar = avatar;
