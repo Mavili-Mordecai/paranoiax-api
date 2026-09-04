@@ -4,7 +4,7 @@ import com.paranoiax.core.domain.users.UserId;
 import com.paranoiax.users.application.ports.in.recoveryPoint.delete.DeleteRecoveryPointCommand;
 import com.paranoiax.users.application.ports.in.recoveryPoint.delete.DeleteRecoveryPointUseCase;
 import com.paranoiax.users.application.ports.out.RecoveryPointPort;
-import com.paranoiax.users.application.ports.out.TransactionPort;
+import com.paranoiax.core.application.ports.out.TransactionPort;
 import com.paranoiax.users.domain.models.recoveryPoint.RecoveryPointId;
 
 import java.util.List;

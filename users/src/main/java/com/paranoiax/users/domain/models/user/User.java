@@ -4,8 +4,8 @@ import com.paranoiax.core.domain.Require;
 import com.paranoiax.core.domain.exceptions.DomainErrorCode;
 import com.paranoiax.core.domain.users.UserId;
 import com.paranoiax.core.domain.users.UserType;
-import com.paranoiax.users.domain.models.ActivityTrackable;
-import com.paranoiax.users.domain.models.IdentityKey;
+import com.paranoiax.core.domain.ActivityTrackable;
+import com.paranoiax.core.domain.IdentityKey;
 
 import java.time.Instant;
 
@@ -16,7 +16,7 @@ public class User implements ActivityTrackable {
     private final UserType type;
     private Profile profile;
     private final UserId invitedBy;
-    private Instant lastSeenAt;
+    private Instant lastActivityAt;
     private Instant updatedAt;
     private final Instant createdAt;
 
@@ -24,13 +24,13 @@ public class User implements ActivityTrackable {
             UserId id, IdentityKey identityKey,
             Username username, UserType type,
             Profile profile, UserId invitedBy,
-            Instant lastSeenAt, Instant updatedAt, Instant createdAt
+            Instant lastActivityAt, Instant updatedAt, Instant createdAt
     ) {
         this.id = Require.notNull(id, DomainErrorCode.MISSING_REQUIRED_FIELD, "Id");
         this.identityKey = Require.notNull(identityKey, DomainErrorCode.MISSING_REQUIRED_FIELD, "Identity key");
         this.username = Require.notNull(username, DomainErrorCode.MISSING_REQUIRED_FIELD, "Username");
         this.type = Require.notNull(type, DomainErrorCode.MISSING_REQUIRED_FIELD, "User type");
-        this.lastSeenAt = Require.notNull(lastSeenAt, DomainErrorCode.MISSING_REQUIRED_FIELD, "Last seen at");
+        this.lastActivityAt = Require.notNull(lastActivityAt, DomainErrorCode.MISSING_REQUIRED_FIELD, "Last seen at");
         this.updatedAt = Require.notNull(updatedAt, DomainErrorCode.MISSING_REQUIRED_FIELD, "Updated at");
         this.createdAt = Require.notNull(createdAt, DomainErrorCode.MISSING_REQUIRED_FIELD, "Created at");
 
@@ -57,9 +57,9 @@ public class User implements ActivityTrackable {
             UserId id, IdentityKey identityKey,
             Username username, UserType type,
             Profile profile, UserId invitedBy,
-            Instant lastSeenAt, Instant updatedAt, Instant createdAt
+            Instant lastActivity, Instant updatedAt, Instant createdAt
     ) {
-        return new User(id, identityKey, username, type, profile, invitedBy, lastSeenAt, updatedAt, createdAt);
+        return new User(id, identityKey, username, type, profile, invitedBy, lastActivity, updatedAt, createdAt);
     }
 
     public void changeUsername(Username username) {
@@ -86,16 +86,16 @@ public class User implements ActivityTrackable {
     public void recordActivity(Instant activityTime) {
         Require.notNull(activityTime, DomainErrorCode.MISSING_REQUIRED_FIELD, "activityTime");
 
-        if (this.lastSeenAt != null && activityTime.isBefore(this.lastSeenAt)) {
+        if (this.lastActivityAt != null && activityTime.isBefore(this.lastActivityAt)) {
             return;
         }
 
-        this.lastSeenAt = Require.after(activityTime, "activityTime", this.createdAt, "createdAt");
+        this.lastActivityAt = Require.after(activityTime, "activityTime", this.createdAt, "createdAt");
     }
 
     @Override
-    public Instant getLastSeenAt() {
-        return lastSeenAt;
+    public Instant getLastActivityAt() {
+        return lastActivityAt;
     }
 
     public Instant getCreatedAt() {

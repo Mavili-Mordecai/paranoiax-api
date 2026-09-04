@@ -7,9 +7,9 @@ import com.paranoiax.core.domain.exceptions.AlreadyRevokedException;
 import com.paranoiax.core.domain.exceptions.DomainErrorCode;
 import com.paranoiax.core.domain.exceptions.RevokedException;
 import com.paranoiax.core.domain.users.UserId;
-import com.paranoiax.users.domain.models.ActivityTrackable;
-import com.paranoiax.users.domain.models.EncryptionKey;
-import com.paranoiax.users.domain.models.IdentityKey;
+import com.paranoiax.core.domain.ActivityTrackable;
+import com.paranoiax.core.domain.EncryptionKey;
+import com.paranoiax.core.domain.IdentityKey;
 
 import java.time.Instant;
 
@@ -22,14 +22,14 @@ public class Device implements ActivityTrackable {
     private final EncryptionKey encryptionKey;
     private final DeviceSignature deviceSignature;
     private Instant revokedAt;
-    private Instant lastSeenAt;
+    private Instant lastActivityAt;
     private final Instant createdAt;
 
     private Device(
             DeviceId id, UserId userId,
             DeviceName name, DeviceType type,
             IdentityKey identityKey, EncryptionKey encryptionKey, DeviceSignature deviceSignature,
-            Instant revokedAt, Instant lastSeenAt, Instant createdAt
+            Instant revokedAt, Instant lastActivityAt, Instant createdAt
     ) {
         this.id = Require.notNull(id, DomainErrorCode.MISSING_REQUIRED_FIELD, "Id");
         this.userId = Require.notNull(userId, DomainErrorCode.MISSING_REQUIRED_FIELD, "User id");
@@ -38,7 +38,7 @@ public class Device implements ActivityTrackable {
         this.identityKey = Require.notNull(identityKey, DomainErrorCode.MISSING_REQUIRED_FIELD, "Identity key");
         this.encryptionKey = Require.notNull(encryptionKey, DomainErrorCode.MISSING_REQUIRED_FIELD, "Encryption key");
         this.deviceSignature = Require.notNull(deviceSignature, DomainErrorCode.MISSING_REQUIRED_FIELD, "Device signature");
-        this.lastSeenAt = Require.notNull(lastSeenAt, DomainErrorCode.MISSING_REQUIRED_FIELD, "Last seen at");
+        this.lastActivityAt = Require.notNull(lastActivityAt, DomainErrorCode.MISSING_REQUIRED_FIELD, "Last seen at");
         this.createdAt = Require.notNull(createdAt, DomainErrorCode.MISSING_REQUIRED_FIELD, "Created at");
 
         this.revokedAt = revokedAt;
@@ -57,20 +57,20 @@ public class Device implements ActivityTrackable {
             DeviceId id, UserId userId,
             DeviceName name, DeviceType type,
             IdentityKey identityKey, EncryptionKey encryptionKey, DeviceSignature deviceSignature,
-            Instant revokedAt, Instant lastSeenAt, Instant createdAt
+            Instant revokedAt, Instant lastActivityAt, Instant createdAt
     ) {
-        return new Device(id, userId, name, type, identityKey, encryptionKey, deviceSignature, revokedAt, lastSeenAt, createdAt);
+        return new Device(id, userId, name, type, identityKey, encryptionKey, deviceSignature, revokedAt, lastActivityAt, createdAt);
     }
 
     @Override
     public void recordActivity(Instant activityTime) {
         Require.notNull(activityTime, DomainErrorCode.MISSING_REQUIRED_FIELD, "Activity time");
 
-        if (this.lastSeenAt != null && activityTime.isBefore(this.lastSeenAt)) {
+        if (this.lastActivityAt != null && activityTime.isBefore(this.lastActivityAt)) {
             return;
         }
 
-        this.lastSeenAt = Require.after(activityTime, "activityTime", this.createdAt, "createdAt");
+        this.lastActivityAt = Require.after(activityTime, "activityTime", this.createdAt, "createdAt");
     }
 
     public void revoke() {
@@ -91,8 +91,8 @@ public class Device implements ActivityTrackable {
     }
 
     @Override
-    public Instant getLastSeenAt() {
-        return lastSeenAt;
+    public Instant getLastActivityAt() {
+        return lastActivityAt;
     }
 
     public Instant getCreatedAt() {

@@ -2,14 +2,14 @@ package com.paranoiax.users.infrastructure.adapters.persistence.deviceMigration;
 
 import com.paranoiax.core.domain.devices.DeviceId;
 import com.paranoiax.core.domain.users.UserId;
+import com.paranoiax.core_infra.operationResultMapper.OperationResultsMapper;
 import com.paranoiax.users.domain.models.ChallengeValue;
-import com.paranoiax.users.domain.models.EncryptionKey;
-import com.paranoiax.users.domain.models.IdentityKey;
+import com.paranoiax.core.domain.EncryptionKey;
+import com.paranoiax.core.domain.IdentityKey;
 import com.paranoiax.users.domain.models.device.DeviceSignature;
 import com.paranoiax.users.domain.models.device.migration.DeviceMigration;
 import com.paranoiax.users.domain.models.device.migration.DeviceMigrationId;
 import com.paranoiax.users.domain.models.device.migration.DeviceMigrationStatus;
-import com.paranoiax.users.infrastructure.common.operationResultMapper.OperationResultsMapper;
 import org.springframework.stereotype.Component;
 
 @Component

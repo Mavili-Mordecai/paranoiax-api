@@ -5,8 +5,8 @@ import com.paranoiax.core.domain.users.UserId;
 import com.paranoiax.users.application.ports.in.recoveryPoint.create.CreateRecoveryPointCommand;
 import com.paranoiax.users.application.ports.in.recoveryPoint.create.CreateRecoveryPointUseCase;
 import com.paranoiax.users.application.ports.out.RecoveryPointPort;
-import com.paranoiax.users.application.services.OperationExecutor;
-import com.paranoiax.users.domain.models.IdentityKey;
+import com.paranoiax.core.application.services.OperationExecutor;
+import com.paranoiax.core.domain.IdentityKey;
 import com.paranoiax.users.domain.models.recoveryPoint.RecoveryPoint;
 import com.paranoiax.users.domain.models.recoveryPoint.RecoveryPointData;
 

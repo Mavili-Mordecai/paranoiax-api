@@ -4,7 +4,7 @@ import com.paranoiax.users.application.ports.in.profile.getKeys.GetUserKeysUseCa
 import com.paranoiax.users.application.ports.in.profile.search.SearchUserUseCase;
 import com.paranoiax.users.application.ports.in.profile.update.UpdateProfileUseCase;
 import com.paranoiax.users.application.ports.out.DevicePort;
-import com.paranoiax.users.application.ports.out.TransactionPort;
+import com.paranoiax.core.application.ports.out.TransactionPort;
 import com.paranoiax.users.application.ports.out.UserPort;
 import com.paranoiax.users.application.services.profile.GetUserKeysService;
 import com.paranoiax.users.application.services.profile.SearchUserService;

@@ -7,7 +7,7 @@ import com.paranoiax.users.application.ports.in.auth.refreshTokens.RefreshTokens
 import com.paranoiax.users.application.ports.out.AuthTokenBlacklistPort;
 import com.paranoiax.users.application.ports.out.AuthTokenPort;
 import com.paranoiax.users.application.ports.out.DevicePort;
-import com.paranoiax.users.application.services.OperationExecutor;
+import com.paranoiax.core.application.services.OperationExecutor;
 import com.paranoiax.core.domain.exceptions.NotFoundException;
 import com.paranoiax.core.domain.exceptions.AlreadyRevokedException;
 import com.paranoiax.users.domain.models.device.Device;

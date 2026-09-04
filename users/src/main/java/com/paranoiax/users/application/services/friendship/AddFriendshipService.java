@@ -12,7 +12,7 @@ import com.paranoiax.users.application.ports.out.DevicePort;
 import com.paranoiax.users.application.ports.out.FriendshipKeyPort;
 import com.paranoiax.users.application.ports.out.FriendshipPort;
 import com.paranoiax.users.application.ports.out.UserPort;
-import com.paranoiax.users.application.services.OperationExecutor;
+import com.paranoiax.core.application.services.OperationExecutor;
 import com.paranoiax.users.domain.models.device.Device;
 import com.paranoiax.users.domain.models.friendship.Friendship;
 import com.paranoiax.users.domain.models.friendship.FriendshipAttributes;

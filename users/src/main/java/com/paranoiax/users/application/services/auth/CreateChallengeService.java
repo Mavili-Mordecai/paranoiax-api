@@ -5,8 +5,8 @@ import com.paranoiax.users.application.ports.in.auth.createChallenge.CreateChall
 import com.paranoiax.users.application.ports.in.auth.createChallenge.CreateChallengeUseCase;
 import com.paranoiax.users.application.ports.out.ChallengePort;
 import com.paranoiax.users.application.ports.out.DevicePort;
-import com.paranoiax.users.application.ports.out.crypto.TokenGenerator;
-import com.paranoiax.users.application.services.OperationExecutor;
+import com.paranoiax.core.application.ports.out.crypto.TokenGenerator;
+import com.paranoiax.core.application.services.OperationExecutor;
 import com.paranoiax.core.domain.exceptions.NotFoundException;
 import com.paranoiax.users.domain.models.challenge.Challenge;
 import com.paranoiax.users.domain.models.ChallengeValue;

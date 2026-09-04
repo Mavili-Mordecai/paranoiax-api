@@ -2,12 +2,12 @@ package com.paranoiax.users.infrastructure.adapters.persistence.device;
 
 import com.paranoiax.core.domain.devices.DeviceId;
 import com.paranoiax.core.domain.users.UserId;
-import com.paranoiax.users.domain.models.EncryptionKey;
-import com.paranoiax.users.domain.models.IdentityKey;
+import com.paranoiax.core.domain.EncryptionKey;
+import com.paranoiax.core.domain.IdentityKey;
+import com.paranoiax.core_infra.operationResultMapper.OperationResultsMapper;
 import com.paranoiax.users.domain.models.device.Device;
 import com.paranoiax.users.domain.models.device.DeviceName;
 import com.paranoiax.users.domain.models.device.DeviceSignature;
-import com.paranoiax.users.infrastructure.common.operationResultMapper.OperationResultsMapper;
 import com.paranoiax.users.infrastructure.entities.DeviceEntity;
 import org.springframework.stereotype.Component;
 
@@ -50,7 +50,7 @@ public class JpaDeviceMapper implements OperationResultsMapper<Device, DeviceEnt
                 .encryptionKey(device.getEncryptionKey().value())
                 .deviceSignature(device.getDeviceSignature().value())
                 .revokedAt(device.getRevokedAt())
-                .lastSeenAt(device.getLastSeenAt())
+                .lastSeenAt(device.getLastActivityAt())
                 .createdAt(device.getCreatedAt())
                 .build();
     }

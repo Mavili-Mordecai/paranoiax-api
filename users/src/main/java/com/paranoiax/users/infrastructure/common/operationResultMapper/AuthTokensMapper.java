@@ -1,5 +1,6 @@
 package com.paranoiax.users.infrastructure.common.operationResultMapper;
 
+import com.paranoiax.core_infra.operationResultMapper.OperationResultsMapper;
 import com.paranoiax.users.application.ports.in.auth.TokenPair;
 import org.springframework.stereotype.Component;
 

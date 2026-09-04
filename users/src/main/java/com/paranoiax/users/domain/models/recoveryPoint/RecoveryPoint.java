@@ -1,7 +1,7 @@
 package com.paranoiax.users.domain.models.recoveryPoint;
 
 import com.paranoiax.core.domain.users.UserId;
-import com.paranoiax.users.domain.models.IdentityKey;
+import com.paranoiax.core.domain.IdentityKey;
 
 import java.time.Instant;
 

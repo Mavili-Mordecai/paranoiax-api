@@ -1,0 +1,11 @@
+databaseChangeLog:
+  - include:
+      file: /db/changelog/v1.0/001-create-chats.sql
+  - include:
+      file: /db/changelog/v1.0/002-create-participants.sql
+  - include:
+      file: db/changelog/v1.0/003-create-participants-keys.sql
+  - include:
+      file: db/changelog/v1.0/004-create-groups-profiles.sql
+  - include:
+      file: db/changelog/v1.0/005-create-chats-invites.sql

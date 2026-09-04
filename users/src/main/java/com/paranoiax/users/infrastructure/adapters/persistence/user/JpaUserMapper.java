@@ -1,9 +1,9 @@
 package com.paranoiax.users.infrastructure.adapters.persistence.user;
 
 import com.paranoiax.core.domain.users.UserId;
-import com.paranoiax.users.domain.models.IdentityKey;
+import com.paranoiax.core.domain.IdentityKey;
+import com.paranoiax.core_infra.operationResultMapper.OperationResultsMapper;
 import com.paranoiax.users.domain.models.user.*;
-import com.paranoiax.users.infrastructure.common.operationResultMapper.OperationResultsMapper;
 import com.paranoiax.users.infrastructure.entities.UserEntity;
 import org.springframework.stereotype.Component;
 
@@ -32,7 +32,7 @@ public class JpaUserMapper implements OperationResultsMapper<User, UserEntity> {
                 .profile(profile != null ? profile.data() : null)
                 .profileVersion(profile != null ? profile.version() : null)
                 .invitedById(user.getInvitedBy() != null ? user.getInvitedBy().value() : null)
-                .lastSeenAt(user.getLastSeenAt())
+                .lastSeenAt(user.getLastActivityAt())
                 .updatedAt(user.getUpdatedAt())
                 .createdAt(user.getCreatedAt())
                 .build();

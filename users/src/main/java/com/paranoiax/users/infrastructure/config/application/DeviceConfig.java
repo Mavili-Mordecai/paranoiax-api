@@ -1,5 +1,6 @@
 package com.paranoiax.users.infrastructure.config.application;
 
+import com.paranoiax.core.application.ports.out.TransactionPort;
 import com.paranoiax.users.application.ports.in.devices.migrations.createMigration.CreateDeviceMigrationUseCase;
 import com.paranoiax.users.application.ports.in.devices.migrations.generateDownloadUrl.GenerateDeviceMigrationDownloadUrlUseCase;
 import com.paranoiax.users.application.ports.in.devices.migrations.getMigrationStatus.GetDeviceMigrationStatusUseCase;
@@ -7,10 +8,10 @@ import com.paranoiax.users.application.ports.in.devices.recover.RegisterRecovere
 import com.paranoiax.users.application.ports.in.devices.register.RegisterDeviceUseCase;
 import com.paranoiax.users.application.ports.in.devices.revoke.RevokeDeviceUseCase;
 import com.paranoiax.users.application.ports.out.*;
-import com.paranoiax.users.application.ports.out.crypto.SignatureVerifierPort;
-import com.paranoiax.users.application.ports.out.crypto.TokenGenerator;
+import com.paranoiax.core.application.ports.out.crypto.SignatureVerifierPort;
+import com.paranoiax.core.application.ports.out.crypto.TokenGenerator;
 import com.paranoiax.users.application.ports.out.rateLimiter.RateLimiter;
-import com.paranoiax.users.application.services.OperationExecutor;
+import com.paranoiax.core.application.services.OperationExecutor;
 import com.paranoiax.users.application.services.RecoveryChallengeValidator;
 import com.paranoiax.users.application.services.devices.RegisterDeviceService;
 import com.paranoiax.users.application.services.devices.RegisterRecoveredDeviceService;

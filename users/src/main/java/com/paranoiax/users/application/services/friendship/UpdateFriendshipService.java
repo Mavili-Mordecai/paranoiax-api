@@ -4,7 +4,7 @@ import com.paranoiax.core.domain.exceptions.NotFoundException;
 import com.paranoiax.users.application.ports.in.friendship.update.UpdateFriendshipCommand;
 import com.paranoiax.users.application.ports.in.friendship.update.UpdateFriendshipUseCase;
 import com.paranoiax.users.application.ports.out.FriendshipPort;
-import com.paranoiax.users.application.services.OperationExecutor;
+import com.paranoiax.core.application.services.OperationExecutor;
 import com.paranoiax.users.domain.models.friendship.Friendship;
 import com.paranoiax.users.domain.models.friendship.FriendshipId;
 

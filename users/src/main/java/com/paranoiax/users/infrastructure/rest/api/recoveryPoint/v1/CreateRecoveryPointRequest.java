@@ -1,7 +1,7 @@
 package com.paranoiax.users.infrastructure.rest.api.recoveryPoint.v1;
 
-import com.paranoiax.users.domain.models.EncryptionKey;
-import com.paranoiax.users.domain.models.IdentityKey;
+import com.paranoiax.core.domain.EncryptionKey;
+import com.paranoiax.core.domain.IdentityKey;
 import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.Size;
 import tools.jackson.databind.PropertyNamingStrategies;
