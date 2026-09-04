@@ -1,13 +1,15 @@
 package com.paranoiax.users.infrastructure.config.application;
 
+import com.paranoiax.core.application.ports.out.CanonicalizerPort;
+import com.paranoiax.core.application.ports.out.TransactionPort;
 import com.paranoiax.users.application.ports.in.recoveryPoint.challenge.CreateRecoveryPointChallengeUseCase;
 import com.paranoiax.users.application.ports.in.recoveryPoint.create.CreateRecoveryPointUseCase;
 import com.paranoiax.users.application.ports.in.recoveryPoint.delete.DeleteRecoveryPointUseCase;
 import com.paranoiax.users.application.ports.in.recoveryPoint.get.AccessRecoveryPointUseCase;
 import com.paranoiax.users.application.ports.out.*;
-import com.paranoiax.users.application.ports.out.crypto.SignatureVerifierPort;
-import com.paranoiax.users.application.ports.out.crypto.TokenGenerator;
-import com.paranoiax.users.application.services.OperationExecutor;
+import com.paranoiax.core.application.ports.out.crypto.SignatureVerifierPort;
+import com.paranoiax.core.application.ports.out.crypto.TokenGenerator;
+import com.paranoiax.core.application.services.OperationExecutor;
 import com.paranoiax.users.application.services.RecoveryChallengeValidator;
 import com.paranoiax.users.application.services.recoveryPoint.CreateRecoveryPointChallengeService;
 import com.paranoiax.users.application.services.recoveryPoint.CreateRecoveryPointService;

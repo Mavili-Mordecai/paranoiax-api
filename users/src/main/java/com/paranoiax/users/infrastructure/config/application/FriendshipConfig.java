@@ -1,5 +1,6 @@
 package com.paranoiax.users.infrastructure.config.application;
 
+import com.paranoiax.core.application.ports.out.TransactionPort;
 import com.paranoiax.users.application.ports.in.friendship.accept.AcceptFriendshipUseCase;
 import com.paranoiax.users.application.ports.in.friendship.add.AddFriendshipUseCase;
 import com.paranoiax.users.application.ports.in.friendship.block.BlockFriendshipUseCase;
@@ -10,7 +11,7 @@ import com.paranoiax.users.application.ports.in.friendship.getKeys.GetFriendship
 import com.paranoiax.users.application.ports.in.friendship.unblock.UnblockFriendshipUseCase;
 import com.paranoiax.users.application.ports.in.friendship.update.UpdateFriendshipUseCase;
 import com.paranoiax.users.application.ports.out.*;
-import com.paranoiax.users.application.services.OperationExecutor;
+import com.paranoiax.core.application.services.OperationExecutor;
 import com.paranoiax.users.application.services.friendship.*;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.Bean;

@@ -5,7 +5,7 @@ import com.paranoiax.core.domain.users.UserId;
 import com.paranoiax.users.application.ports.in.friendship.block.BlockFriendshipCommand;
 import com.paranoiax.users.application.ports.in.friendship.block.BlockFriendshipUseCase;
 import com.paranoiax.users.application.ports.out.FriendshipPort;
-import com.paranoiax.users.application.services.OperationExecutor;
+import com.paranoiax.core.application.services.OperationExecutor;
 import com.paranoiax.users.domain.models.friendship.Friendship;
 import lombok.extern.slf4j.Slf4j;
 

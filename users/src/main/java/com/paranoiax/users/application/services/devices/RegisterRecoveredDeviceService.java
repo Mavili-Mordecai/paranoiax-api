@@ -5,7 +5,7 @@ import com.paranoiax.core.domain.exceptions.*;
 import com.paranoiax.users.application.ports.in.devices.recover.RegisterRecoveredDeviceCommand;
 import com.paranoiax.users.application.ports.in.devices.recover.RegisterRecoveredDeviceUseCase;
 import com.paranoiax.users.application.ports.out.*;
-import com.paranoiax.users.application.services.OperationExecutor;
+import com.paranoiax.core.application.services.OperationExecutor;
 import com.paranoiax.users.application.services.RecoveryChallengeValidator;
 import com.paranoiax.core.domain.EncryptionKey;
 import com.paranoiax.core.domain.IdentityKey;

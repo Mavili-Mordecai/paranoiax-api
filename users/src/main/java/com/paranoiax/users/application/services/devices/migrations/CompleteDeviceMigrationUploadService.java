@@ -4,8 +4,8 @@ import com.paranoiax.users.application.ports.in.devices.migrations.completeUploa
 import com.paranoiax.users.application.ports.in.devices.migrations.completeUpload.CompleteDeviceMigrationUploadUseCase;
 import com.paranoiax.users.application.ports.out.DeviceMigrationPort;
 import com.paranoiax.users.application.ports.out.EventPublisher;
-import com.paranoiax.users.application.ports.out.crypto.TokenGenerator;
-import com.paranoiax.users.application.services.OperationExecutor;
+import com.paranoiax.core.application.ports.out.crypto.TokenGenerator;
+import com.paranoiax.core.application.services.OperationExecutor;
 import com.paranoiax.core.domain.exceptions.AccessDeniedException;
 import com.paranoiax.core.domain.exceptions.NotFoundException;
 import com.paranoiax.users.domain.models.ChallengeValue;

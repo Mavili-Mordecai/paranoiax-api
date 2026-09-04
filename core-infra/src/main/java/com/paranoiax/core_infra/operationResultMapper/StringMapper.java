@@ -1,8 +1,5 @@
-package com.paranoiax.users.infrastructure.common.operationResultMapper;
+package com.paranoiax.core_infra.operationResultMapper;
 
-import org.springframework.stereotype.Component;
-
-@Component
 public class StringMapper implements OperationResultsMapper<String, String> {
     @Override
     public Class<String> getDomainClass() {

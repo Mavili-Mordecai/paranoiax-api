@@ -4,7 +4,7 @@ import com.paranoiax.core.domain.exceptions.NotFoundException;
 import com.paranoiax.users.application.ports.in.friendship.delete.DeleteFriendshipCommand;
 import com.paranoiax.users.application.ports.in.friendship.delete.DeleteFriendshipUseCase;
 import com.paranoiax.users.application.ports.out.FriendshipPort;
-import com.paranoiax.users.application.ports.out.TransactionPort;
+import com.paranoiax.core.application.ports.out.TransactionPort;
 import com.paranoiax.users.domain.models.friendship.Friendship;
 import com.paranoiax.users.domain.models.friendship.FriendshipId;
 import com.paranoiax.users.domain.models.friendship.FriendshipStatus;

@@ -7,7 +7,7 @@ import com.paranoiax.core.domain.users.UserType;
 import com.paranoiax.users.application.ports.in.auth.register.RegisterUserCommand;
 import com.paranoiax.users.application.ports.in.auth.register.RegisterUserUseCase;
 import com.paranoiax.users.application.ports.out.*;
-import com.paranoiax.users.application.services.OperationExecutor;
+import com.paranoiax.core.application.services.OperationExecutor;
 import com.paranoiax.core.domain.exceptions.ExpiredException;
 import com.paranoiax.core.domain.exceptions.MissingRequiredFieldException;
 import com.paranoiax.core.domain.exceptions.NotFoundException;

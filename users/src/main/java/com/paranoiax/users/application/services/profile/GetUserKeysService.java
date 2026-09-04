@@ -3,7 +3,7 @@ package com.paranoiax.users.application.services.profile;
 import com.paranoiax.core.domain.users.UserId;
 import com.paranoiax.users.application.ports.in.profile.getKeys.*;
 import com.paranoiax.users.application.ports.out.DevicePort;
-import com.paranoiax.users.application.ports.out.TransactionPort;
+import com.paranoiax.core.application.ports.out.TransactionPort;
 import com.paranoiax.users.application.ports.out.UserPort;
 import com.paranoiax.core.domain.exceptions.InvalidLengthException;
 import com.paranoiax.core.domain.exceptions.NotFoundException;

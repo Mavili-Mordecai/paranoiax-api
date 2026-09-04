@@ -1,4 +1,4 @@
-package com.paranoiax.users.application.ports.out;
+package com.paranoiax.core.application.ports.out;
 
 import java.util.function.Supplier;
 

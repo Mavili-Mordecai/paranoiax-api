@@ -1,6 +1,6 @@
 package com.paranoiax.users.application.ports.in.friendship.add;
 
-import com.paranoiax.users.application.ports.out.operationResult.OperationCommand;
+import com.paranoiax.core.application.OperationCommand;
 
 import java.util.List;
 import java.util.UUID;

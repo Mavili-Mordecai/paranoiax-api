@@ -1,4 +1,4 @@
-package com.paranoiax.users.application.ports.out.crypto;
+package com.paranoiax.core.application.ports.out.crypto;
 
 public interface HashPort {
     String sha256Hex(byte[] payload);

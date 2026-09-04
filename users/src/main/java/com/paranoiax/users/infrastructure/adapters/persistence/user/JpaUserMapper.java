@@ -2,8 +2,8 @@ package com.paranoiax.users.infrastructure.adapters.persistence.user;
 
 import com.paranoiax.core.domain.users.UserId;
 import com.paranoiax.core.domain.IdentityKey;
+import com.paranoiax.core_infra.operationResultMapper.OperationResultsMapper;
 import com.paranoiax.users.domain.models.user.*;
-import com.paranoiax.users.infrastructure.common.operationResultMapper.OperationResultsMapper;
 import com.paranoiax.users.infrastructure.entities.UserEntity;
 import org.springframework.stereotype.Component;
 

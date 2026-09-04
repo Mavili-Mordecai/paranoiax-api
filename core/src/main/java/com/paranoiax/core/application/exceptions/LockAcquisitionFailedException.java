@@ -1,4 +1,4 @@
-package com.paranoiax.users.application.exceptions;
+package com.paranoiax.core.application.exceptions;
 
 import com.paranoiax.core.domain.exceptions.DomainErrorCode;
 import com.paranoiax.core.domain.exceptions.DomainException;

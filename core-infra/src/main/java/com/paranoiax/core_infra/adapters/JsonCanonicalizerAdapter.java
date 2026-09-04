@@ -1,17 +1,17 @@
-package com.paranoiax.users.infrastructure.adapters;
+package com.paranoiax.core_infra.adapters;
 
-import com.paranoiax.users.application.ports.out.CanonicalizerPort;
-import lombok.RequiredArgsConstructor;
+import com.paranoiax.core.application.ports.out.CanonicalizerPort;
 import org.erdtman.jcs.JsonCanonicalizer;
-import org.springframework.stereotype.Component;
 import tools.jackson.databind.ObjectMapper;
 
 import java.io.IOException;
 
-@Component
-@RequiredArgsConstructor
 public class JsonCanonicalizerAdapter implements CanonicalizerPort {
     private final ObjectMapper objectMapper;
+
+    public JsonCanonicalizerAdapter(ObjectMapper objectMapper) {
+        this.objectMapper = objectMapper;
+    }
 
     @Override
     public byte[] canonicalize(Object payload) {

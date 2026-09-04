@@ -1,12 +1,12 @@
-package com.paranoiax.users.application.services;
+package com.paranoiax.core.application.services;
 
-import com.paranoiax.users.application.exceptions.LockAcquisitionFailedException;
-import com.paranoiax.users.application.ports.out.CanonicalizerPort;
-import com.paranoiax.users.application.ports.out.operationResult.OperationCommand;
-import com.paranoiax.users.application.ports.out.operationResult.OperationRecord;
-import com.paranoiax.users.application.ports.out.operationResult.OperationResultPort;
-import com.paranoiax.users.application.ports.out.TransactionPort;
-import com.paranoiax.users.application.ports.out.crypto.HashPort;
+import com.paranoiax.core.application.exceptions.LockAcquisitionFailedException;
+import com.paranoiax.core.application.ports.out.CanonicalizerPort;
+import com.paranoiax.core.application.ports.out.TransactionPort;
+import com.paranoiax.core.application.ports.out.crypto.HashPort;
+import com.paranoiax.core.application.OperationCommand;
+import com.paranoiax.core.application.ports.out.operationResult.OperationRecord;
+import com.paranoiax.core.application.ports.out.operationResult.OperationResultPort;
 import com.paranoiax.core.domain.exceptions.OperationParametersChangedException;
 
 import java.time.Duration;

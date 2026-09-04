@@ -6,8 +6,8 @@ import com.paranoiax.users.application.ports.in.recoveryPoint.challenge.CreateRe
 import com.paranoiax.users.application.ports.in.recoveryPoint.challenge.CreateRecoveryPointChallengeUseCase;
 import com.paranoiax.users.application.ports.out.ChallengePort;
 import com.paranoiax.users.application.ports.out.UserPort;
-import com.paranoiax.users.application.ports.out.crypto.TokenGenerator;
-import com.paranoiax.users.application.services.OperationExecutor;
+import com.paranoiax.core.application.ports.out.crypto.TokenGenerator;
+import com.paranoiax.core.application.services.OperationExecutor;
 import com.paranoiax.users.domain.models.ChallengeValue;
 import com.paranoiax.users.domain.models.challenge.Challenge;
 import com.paranoiax.users.domain.models.challenge.ChallengeType;

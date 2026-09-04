@@ -1,4 +1,4 @@
-package com.paranoiax.users.application.ports.out.operationResult;
+package com.paranoiax.core.application.ports.out.operationResult;
 
 public class OperationRecord<T> {
     private String payloadSignature;

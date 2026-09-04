@@ -4,10 +4,10 @@ import com.paranoiax.core.domain.devices.DeviceId;
 import com.paranoiax.core.domain.users.UserId;
 import com.paranoiax.core.domain.EncryptionKey;
 import com.paranoiax.core.domain.IdentityKey;
+import com.paranoiax.core_infra.operationResultMapper.OperationResultsMapper;
 import com.paranoiax.users.domain.models.device.Device;
 import com.paranoiax.users.domain.models.device.DeviceName;
 import com.paranoiax.users.domain.models.device.DeviceSignature;
-import com.paranoiax.users.infrastructure.common.operationResultMapper.OperationResultsMapper;
 import com.paranoiax.users.infrastructure.entities.DeviceEntity;
 import org.springframework.stereotype.Component;
 

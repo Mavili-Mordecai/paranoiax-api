@@ -1,4 +1,4 @@
-package com.paranoiax.users.infrastructure.exceptions;
+package com.paranoiax.core_infra.exceptions;
 
 public class InfrastructureException extends RuntimeException {
     public InfrastructureException(String message) {

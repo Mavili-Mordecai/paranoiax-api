@@ -1,10 +1,8 @@
-package com.paranoiax.users.infrastructure.adapters.crypto;
+package com.paranoiax.core_infra.adapters.crypto;
 
-import com.paranoiax.users.application.ports.out.crypto.HashPort;
+import com.paranoiax.core.application.ports.out.crypto.HashPort;
 import org.apache.commons.codec.digest.DigestUtils;
-import org.springframework.stereotype.Component;
 
-@Component
 public class ApacheHashAdapter implements HashPort {
     @Override
     public String sha256Hex(byte[] payload) {

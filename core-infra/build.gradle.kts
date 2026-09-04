@@ -10,6 +10,15 @@ repositories {
 }
 
 dependencies {
-    implementation("com.fasterxml.jackson.core:jackson-annotations:2.18.2")
-    implementation("com.fasterxml.jackson.core:jackson-databind:2.18.2")
+    implementation(platform("org.springframework.boot:spring-boot-dependencies:4.0.7"))
+    annotationProcessor(platform("org.springframework.boot:spring-boot-dependencies:4.0.7"))
+
+    implementation(project(":core"))
+    implementation("tools.jackson.core:jackson-databind:3.0.0")
+    implementation("commons-codec:commons-codec:1.22.1")
+    implementation("io.github.erdtman:java-json-canonicalization:1.1")
+
+    implementation("org.springframework:spring-tx")
+    compileOnly("org.projectlombok:lombok")
+    annotationProcessor("org.projectlombok:lombok")
 }

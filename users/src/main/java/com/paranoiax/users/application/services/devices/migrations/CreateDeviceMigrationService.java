@@ -8,7 +8,7 @@ import com.paranoiax.users.application.ports.out.DeviceMigrationPort;
 import com.paranoiax.users.application.ports.out.EventPublisher;
 import com.paranoiax.users.application.ports.out.MediaStoragePort;
 import com.paranoiax.users.application.ports.out.UserPort;
-import com.paranoiax.users.application.services.OperationExecutor;
+import com.paranoiax.core.application.services.OperationExecutor;
 import com.paranoiax.core.domain.exceptions.NotFoundException;
 import com.paranoiax.core.domain.EncryptionKey;
 import com.paranoiax.core.domain.IdentityKey;

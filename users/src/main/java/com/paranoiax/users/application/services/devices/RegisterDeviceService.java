@@ -5,8 +5,8 @@ import com.paranoiax.users.application.ports.in.devices.register.RegisterDeviceC
 import com.paranoiax.users.application.ports.in.devices.register.RegisterDeviceUseCase;
 import com.paranoiax.users.application.ports.out.DeviceMigrationPort;
 import com.paranoiax.users.application.ports.out.DevicePort;
-import com.paranoiax.users.application.ports.out.crypto.SignatureVerifierPort;
-import com.paranoiax.users.application.services.OperationExecutor;
+import com.paranoiax.core.application.ports.out.crypto.SignatureVerifierPort;
+import com.paranoiax.core.application.services.OperationExecutor;
 import com.paranoiax.core.domain.exceptions.InvalidSignatureException;
 import com.paranoiax.core.domain.exceptions.InvalidValueException;
 import com.paranoiax.core.domain.exceptions.NotFoundException;

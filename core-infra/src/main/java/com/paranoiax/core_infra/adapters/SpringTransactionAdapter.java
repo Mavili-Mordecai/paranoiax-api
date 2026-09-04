@@ -1,13 +1,11 @@
-package com.paranoiax.users.infrastructure.adapters.persistence;
+package com.paranoiax.core_infra.adapters;
 
-import com.paranoiax.users.application.ports.out.TransactionPort;
+import com.paranoiax.core.application.ports.out.TransactionPort;
 import lombok.RequiredArgsConstructor;
-import org.springframework.stereotype.Component;
 import org.springframework.transaction.support.TransactionOperations;
 
 import java.util.function.Supplier;
 
-@Component
 @RequiredArgsConstructor
 public class SpringTransactionAdapter implements TransactionPort {
     private final TransactionOperations transactionOperations;

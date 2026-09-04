@@ -4,7 +4,7 @@ import com.paranoiax.core.domain.devices.DeviceId;
 import com.paranoiax.users.application.ports.in.devices.revoke.RevokeDeviceCommand;
 import com.paranoiax.users.application.ports.in.devices.revoke.RevokeDeviceUseCase;
 import com.paranoiax.users.application.ports.out.DevicePort;
-import com.paranoiax.users.application.ports.out.TransactionPort;
+import com.paranoiax.core.application.ports.out.TransactionPort;
 import com.paranoiax.core.domain.exceptions.AccessDeniedException;
 import com.paranoiax.core.domain.exceptions.NotFoundException;
 import com.paranoiax.users.domain.models.device.Device;

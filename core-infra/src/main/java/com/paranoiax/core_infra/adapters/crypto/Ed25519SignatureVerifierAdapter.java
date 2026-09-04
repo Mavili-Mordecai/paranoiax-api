@@ -1,7 +1,6 @@
-package com.paranoiax.users.infrastructure.adapters.crypto;
+package com.paranoiax.core_infra.adapters.crypto;
 
-import com.paranoiax.users.application.ports.out.crypto.SignatureVerifierPort;
-import org.springframework.stereotype.Component;
+import com.paranoiax.core.application.ports.out.crypto.SignatureVerifierPort;
 
 import java.security.KeyFactory;
 import java.security.PublicKey;
@@ -9,8 +8,8 @@ import java.security.Signature;
 import java.security.spec.X509EncodedKeySpec;
 import java.util.Base64;
 
-@Component
 public class Ed25519SignatureVerifierAdapter implements SignatureVerifierPort {
+
     @Override
     public boolean verify(String publicKey, String data, String signature) {
         try {

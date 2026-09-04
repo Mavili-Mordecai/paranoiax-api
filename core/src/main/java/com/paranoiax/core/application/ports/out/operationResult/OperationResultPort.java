@@ -1,4 +1,4 @@
-package com.paranoiax.users.application.ports.out.operationResult;
+package com.paranoiax.core.application.ports.out.operationResult;
 
 import java.time.Duration;
 import java.util.Optional;

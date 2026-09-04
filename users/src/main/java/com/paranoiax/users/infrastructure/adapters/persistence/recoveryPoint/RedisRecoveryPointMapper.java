@@ -3,10 +3,10 @@ package com.paranoiax.users.infrastructure.adapters.persistence.recoveryPoint;
 
 import com.paranoiax.core.domain.users.UserId;
 import com.paranoiax.core.domain.IdentityKey;
+import com.paranoiax.core_infra.operationResultMapper.OperationResultsMapper;
 import com.paranoiax.users.domain.models.recoveryPoint.RecoveryPoint;
 import com.paranoiax.users.domain.models.recoveryPoint.RecoveryPointData;
 import com.paranoiax.users.domain.models.recoveryPoint.RecoveryPointId;
-import com.paranoiax.users.infrastructure.common.operationResultMapper.OperationResultsMapper;
 import org.springframework.stereotype.Component;
 
 @Component

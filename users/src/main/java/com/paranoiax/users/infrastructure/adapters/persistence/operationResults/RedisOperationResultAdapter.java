@@ -1,12 +1,12 @@
 package com.paranoiax.users.infrastructure.adapters.persistence.operationResults;
 
-import com.fasterxml.jackson.core.JsonProcessingException;
-import com.fasterxml.jackson.databind.JavaType;
-import com.fasterxml.jackson.databind.ObjectMapper;
-import com.paranoiax.users.application.ports.out.operationResult.OperationRecord;
-import com.paranoiax.users.application.ports.out.operationResult.OperationResultPort;
-import com.paranoiax.users.infrastructure.common.operationResultMapper.OperationResultsMapper;
-import com.paranoiax.users.infrastructure.exceptions.InfrastructureException;
+import tools.jackson.core.JacksonException;
+import tools.jackson.databind.JavaType;
+import tools.jackson.databind.ObjectMapper;
+import com.paranoiax.core.application.ports.out.operationResult.OperationRecord;
+import com.paranoiax.core.application.ports.out.operationResult.OperationResultPort;
+import com.paranoiax.core_infra.exceptions.InfrastructureException;
+import com.paranoiax.core_infra.operationResultMapper.OperationResultsMapper;
 import org.springframework.data.redis.core.RedisTemplate;
 import org.springframework.stereotype.Component;
 
@@ -67,7 +67,7 @@ public class RedisOperationResultAdapter implements OperationResultPort {
             T domainResult = mapper.toDomain(recordDto.getResult());
 
             return Optional.of(new OperationRecord<>(recordDto.getPayloadSignature(), domainResult));
-        } catch (JsonProcessingException e) {
+        } catch (JacksonException e) {
             throw new InfrastructureException("Failed to read operation result from Redis", e);
         }
     }
@@ -87,7 +87,7 @@ public class RedisOperationResultAdapter implements OperationResultPort {
 
             String json = objectMapper.writeValueAsString(dto);
             redisTemplate.opsForValue().set(getOperationKey(operationId), json, ttl);
-        } catch (JsonProcessingException ex) {
+        } catch (JacksonException ex) {
             throw new InfrastructureException("Failed to save operation result to Redis", ex);
         }
     }
