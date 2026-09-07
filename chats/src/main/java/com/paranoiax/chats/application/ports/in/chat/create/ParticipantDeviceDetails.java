@@ -1,7 +1,9 @@
 package com.paranoiax.chats.application.ports.in.chat.create;
 
+import java.util.UUID;
+
 public record ParticipantDeviceDetails(
-        String id,
+        UUID id,
         String encryptionKey
 ) {
 }

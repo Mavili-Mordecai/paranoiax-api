@@ -64,5 +64,10 @@ eureka:
     service-url:
       defaultZone: http://${EUREKA_HOST:localhost}:${EUREKA_PORT:8761}/eureka/
 
+application:
+  chat:
+    lock-ttl: 5s
+    result-ttl: 15m
+
 jwt:
   public-key: ${JWT_PUBLIC_KEY}

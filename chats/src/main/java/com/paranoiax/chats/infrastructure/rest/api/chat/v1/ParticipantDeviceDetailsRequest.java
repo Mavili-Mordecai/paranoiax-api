@@ -5,11 +5,12 @@ import jakarta.validation.constraints.NotNull;
 import tools.jackson.databind.PropertyNamingStrategies;
 import tools.jackson.databind.annotation.JsonNaming;
 
+import java.util.UUID;
+
 @JsonNaming(PropertyNamingStrategies.SnakeCaseStrategy.class)
-public record ParticipantDeviceDetails(
+public record ParticipantDeviceDetailsRequest(
         @NotNull(message = "FIELD_REQUIRED")
-        @NotBlank(message = "FIELD_REQUIRED")
-        String id,
+        UUID id,
         @NotNull(message = "FIELD_REQUIRED")
         @NotBlank(message = "FIELD_REQUIRED")
         String encryptionKey
