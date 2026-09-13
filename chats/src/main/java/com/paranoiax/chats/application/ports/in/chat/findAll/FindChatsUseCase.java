@@ -1,4 +1,4 @@
-package com.paranoiax.chats.application.ports.in.chat.getAll;
+package com.paranoiax.chats.application.ports.in.chat.findAll;
 
 import java.util.List;
 

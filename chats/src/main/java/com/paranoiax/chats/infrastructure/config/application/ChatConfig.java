@@ -1,11 +1,13 @@
 package com.paranoiax.chats.infrastructure.config.application;
 
+import com.paranoiax.chats.application.ports.in.chat.addParticipant.AddParticipantsToChatUseCase;
 import com.paranoiax.chats.application.ports.in.chat.create.CreateChatUseCase;
-import com.paranoiax.chats.application.ports.in.chat.getAll.FindChatsUseCase;
+import com.paranoiax.chats.application.ports.in.chat.findAll.FindChatsUseCase;
 import com.paranoiax.chats.application.ports.out.ChatPort;
 import com.paranoiax.chats.application.ports.out.GroupProfilePort;
 import com.paranoiax.chats.application.ports.out.ParticipantKeyPort;
 import com.paranoiax.chats.application.ports.out.ParticipantPort;
+import com.paranoiax.chats.application.services.chat.AddParticipantsToChatService;
 import com.paranoiax.chats.application.services.chat.CreateChatService;
 import com.paranoiax.chats.application.services.chat.FindChatsService;
 import com.paranoiax.core.application.services.OperationExecutor;
@@ -45,5 +47,17 @@ public class ChatConfig {
             GroupProfilePort groupProfilePort
     ) {
         return new FindChatsService(chatPort, groupProfilePort);
+    }
+
+    @Bean
+    public AddParticipantsToChatUseCase addParticipantsToChatUseCase(
+            ChatPort chatPort,
+            ParticipantPort participantPort,
+            ParticipantKeyPort participantKeyPort,
+            OperationExecutor executor,
+            @Value("${application.chat.lock-ttl}") Duration lockTtl,
+            @Value("${application.chat.result-ttl}") Duration resultTtl
+    ) {
+       return new AddParticipantsToChatService(chatPort, participantPort, participantKeyPort, executor, lockTtl, resultTtl);
     }
 }

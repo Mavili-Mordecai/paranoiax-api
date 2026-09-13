@@ -1,6 +1,6 @@
 package com.paranoiax.chats.infrastructure.rest.api.chat.v1;
 
-import com.paranoiax.chats.application.ports.in.chat.getAll.ChatDetails;
+import com.paranoiax.chats.application.ports.in.chat.findAll.ChatDetails;
 
 import java.time.Instant;
 

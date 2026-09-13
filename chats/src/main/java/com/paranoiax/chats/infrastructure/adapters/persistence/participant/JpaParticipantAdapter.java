@@ -5,11 +5,13 @@ import com.paranoiax.chats.domain.models.chat.ChatId;
 import com.paranoiax.chats.domain.models.participant.Participant;
 import com.paranoiax.chats.domain.models.participant.ParticipantId;
 import com.paranoiax.chats.infrastructure.entities.ParticipantEntity;
+import com.paranoiax.core.domain.users.UserId;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Component;
 
 import java.util.Collection;
 import java.util.List;
+import java.util.Optional;
 import java.util.stream.Collectors;
 
 @Component
@@ -47,6 +49,11 @@ public class JpaParticipantAdapter implements ParticipantPort {
                 .stream()
                 .map(mapper::toDomain)
                 .collect(Collectors.toList());
+    }
+
+    @Override
+    public Optional<Participant> findBy(ChatId chatId, UserId userId) {
+        return repository.findByChatIdAndUserId(chatId.value(), userId.value()).map(mapper::toDomain);
     }
 
     @Override

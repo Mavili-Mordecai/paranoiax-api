@@ -1,8 +1,8 @@
 package com.paranoiax.chats.application.services.chat;
 
-import com.paranoiax.chats.application.ports.in.chat.getAll.ChatDetails;
-import com.paranoiax.chats.application.ports.in.chat.getAll.FindChatsByUserIdQuery;
-import com.paranoiax.chats.application.ports.in.chat.getAll.FindChatsUseCase;
+import com.paranoiax.chats.application.ports.in.chat.findAll.ChatDetails;
+import com.paranoiax.chats.application.ports.in.chat.findAll.FindChatsByUserIdQuery;
+import com.paranoiax.chats.application.ports.in.chat.findAll.FindChatsUseCase;
 import com.paranoiax.chats.application.ports.out.ChatPort;
 import com.paranoiax.chats.application.ports.out.GroupProfilePort;
 import com.paranoiax.chats.domain.models.chat.Chat;

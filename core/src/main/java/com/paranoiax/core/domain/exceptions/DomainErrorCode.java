@@ -10,6 +10,7 @@ public enum DomainErrorCode {
     INVALID_STATE_TRANSITION("It is not possible to switch from the %s status to the %s status"),
     INVALID_FRIEND_OPERATION("Invalid operation with this friend"),
     INVALID_CHALLENGE_TYPE("Invalid challenge type: \"%s\""),
+    INVALID_CHAT_TYPE("Invalid chat type: \"%s\". Expected: %s"),
     TIMESTAMP_MUST_BE_AFTER("Field \"%s\" must be after \"%s\""),
     TIMESTAMP_MUST_BE_BEFORE("Field \"%s\" must be before \"%s\""),
     LOCK_ACQUISITION_FAILED("Failed to acquire lock for operation. Operation ID: %s"),

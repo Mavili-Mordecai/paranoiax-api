@@ -12,12 +12,9 @@ import com.paranoiax.chats.domain.models.chat.ChatType;
 import com.paranoiax.chats.domain.models.groupProfile.GroupProfile;
 import com.paranoiax.chats.domain.models.groupProfile.GroupProfileName;
 import com.paranoiax.chats.domain.models.participant.Participant;
-import com.paranoiax.chats.domain.models.participant.ParticipantPermission;
 import com.paranoiax.chats.domain.models.participant.ParticipantRole;
 import com.paranoiax.chats.domain.models.participantKey.ParticipantKey;
 import com.paranoiax.core.application.services.OperationExecutor;
-import com.paranoiax.core.domain.EncryptionKey;
-import com.paranoiax.core.domain.devices.DeviceId;
 import com.paranoiax.core.domain.users.UserId;
 import org.jspecify.annotations.NonNull;
 
@@ -56,13 +53,17 @@ public class CreateChatService implements CreateChatUseCase {
         this.resultTtl = resultTtl;
     }
 
+    // TODO: Add a check for the existence of users and their devices in the user service
+    // TODO: Add sending an event to Kafka
     @Override
     public ChatId execute(CreateChatCommand command) {
         return executor.execute(command, Chat.class, lockTtl, resultTtl, () -> {
             Chat chat = Chat.create(ChatType.valueOf(command.type()));
 
             Map<UUID, Participant> participants = getParticipants(command, chat);
-            List<ParticipantKey> keys = getKeys(command, participants);
+            List<ParticipantKey> keys = command.participants().stream()
+                    .flatMap(details -> details.toKeys(participants.get(details.userId())).stream())
+                    .collect(Collectors.toList());
 
             chatPort.insert(chat);
             participantPort.insertAll(participants.values());
@@ -80,39 +81,19 @@ public class CreateChatService implements CreateChatUseCase {
         }).getId();
     }
 
-    private static @NonNull List<ParticipantKey> getKeys(CreateChatCommand command, Map<UUID, Participant> participants) {
-        return command.participants()
-                .stream()
-                .flatMap(details -> {
-                    Participant participant = participants.get(details.userId());
-                    return details.devices()
-                            .stream()
-                            .map(device -> ParticipantKey.create(
-                                    participant.getId(),
-                                    new DeviceId(device.id()),
-                                    new EncryptionKey(device.encryptionKey())
-                            ));
-                })
-                .collect(Collectors.toList());
-    }
-
     private static @NonNull Map<UUID, Participant> getParticipants(CreateChatCommand command, Chat chat) {
         return command.participants()
                 .stream()
-                .map(details -> Participant.create(
+                .map(participant -> Participant.create(
                         chat.getId(),
-                        new UserId(details.userId()),
-                        command.userId().equals(details.userId()) ? ParticipantRole.OWNER : ParticipantRole.MEMBER,
-                        command.userId().equals(details.userId()) ? Set.of() : getDefaultPermissions(chat.getType())
+                        new UserId(participant.userId()),
+                        chat.isMultiparty() && command.userId().equals(participant.userId())
+                                ? ParticipantRole.OWNER
+                                : ParticipantRole.MEMBER,
+                        command.userId().equals(participant.userId())
+                                ? Set.of()
+                                : chat.getType().getDefaultPermissions()
                 ))
                 .collect(Collectors.toMap(it -> it.getUserId().value(), Function.identity()));
-    }
-
-    public static Set<ParticipantPermission> getDefaultPermissions(ChatType type) {
-        return switch (type) {
-            case SAVED, PRIVATE, ISOLATED -> Set.of(ParticipantPermission.PIN, ParticipantPermission.SEND_MESSAGE);
-            case GROUP -> Set.of(ParticipantPermission.ADD, ParticipantPermission.PIN, ParticipantPermission.SEND_MESSAGE);
-            case CHANNEL -> Set.of();
-        };
     }
 }

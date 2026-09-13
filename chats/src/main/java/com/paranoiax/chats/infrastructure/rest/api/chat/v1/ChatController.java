@@ -1,8 +1,9 @@
 package com.paranoiax.chats.infrastructure.rest.api.chat.v1;
 
+import com.paranoiax.chats.application.ports.in.chat.addParticipant.AddParticipantsToChatUseCase;
 import com.paranoiax.chats.application.ports.in.chat.create.CreateChatUseCase;
-import com.paranoiax.chats.application.ports.in.chat.getAll.FindChatsByUserIdQuery;
-import com.paranoiax.chats.application.ports.in.chat.getAll.FindChatsUseCase;
+import com.paranoiax.chats.application.ports.in.chat.findAll.FindChatsByUserIdQuery;
+import com.paranoiax.chats.application.ports.in.chat.findAll.FindChatsUseCase;
 import com.paranoiax.chats.domain.models.chat.ChatId;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
@@ -21,6 +22,7 @@ import java.util.stream.Collectors;
 public class ChatController {
     private final CreateChatUseCase createChatUseCase;
     private final FindChatsUseCase findChatsUseCase;
+    private final AddParticipantsToChatUseCase addParticipantsToChatUseCase;
 
     @PostMapping
     public ResponseEntity<ChatIdResponse> create(
@@ -34,12 +36,23 @@ public class ChatController {
 
     @GetMapping
     public ResponseEntity<List<ChatResponse>> getAll(
-            @AuthenticationPrincipal UUID userId
+            @AuthenticationPrincipal UUID principalId
     ) {
         return ResponseEntity.ok(
-                findChatsUseCase.execute(new FindChatsByUserIdQuery(userId)).stream()
+                findChatsUseCase.execute(new FindChatsByUserIdQuery(principalId)).stream()
                         .map(ChatResponse::from)
                         .collect(Collectors.toList())
         );
+    }
+
+    @PostMapping("/{chat_id}/participants")
+    @ResponseStatus(HttpStatus.NO_CONTENT)
+    public void addParticipant(
+            @RequestHeader("Idempotency-Key") String idempotencyKey,
+            @RequestBody @Valid AddParticipantsToChatRequest request,
+            @AuthenticationPrincipal UUID principalId,
+            @PathVariable("chat_id") UUID chatId
+    ) {
+        addParticipantsToChatUseCase.execute(request.toCommand(principalId, chatId, idempotencyKey));
     }
 }

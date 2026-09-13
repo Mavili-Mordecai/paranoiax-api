@@ -155,7 +155,7 @@ public class Participant {
     public boolean hasPermission(ParticipantPermission permission) {
         Require.notNull(permission, DomainErrorCode.EMPTY_VALUE_NOT_ALLOWED, "permission");
 
-        return this.permissions != null && this.permissions.contains(permission);
+        return this.role == ParticipantRole.OWNER || this.permissions.contains(permission);
     }
 
     public Instant getJoinedAt() {
@@ -167,7 +167,7 @@ public class Participant {
     }
 
     public Set<ParticipantPermission> getPermissions() {
-        return permissions == null ? Set.of() : Set.copyOf(permissions);
+        return Set.copyOf(permissions);
     }
 
     public EventsSeq getLastReadSeq() {
