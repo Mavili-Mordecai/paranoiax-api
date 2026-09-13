@@ -22,6 +22,7 @@ public class ChatConfig {
     public CreateChatUseCase createChatUseCase(
             OperationExecutor executor,
             ChatPort chatPort,
+            GroupProfilePort groupProfilePort,
             ParticipantPort participantPort,
             ParticipantKeyPort participantKeyPort,
             @Value("${application.chat.lock-ttl}") Duration lockTtl,
@@ -30,6 +31,7 @@ public class ChatConfig {
         return new CreateChatService(
                 executor,
                 chatPort,
+                groupProfilePort,
                 participantPort,
                 participantKeyPort,
                 lockTtl,
