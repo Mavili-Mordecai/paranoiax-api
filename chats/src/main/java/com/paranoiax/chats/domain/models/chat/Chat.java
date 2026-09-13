@@ -14,7 +14,7 @@ public class Chat implements ActivityTrackable {
     private Instant lastActivityAt;
     private final Instant createdAt;
 
-    private Chat(ChatId id, ChatType type, EventsSeq eventsSeq, Instant lastActivityAt, Instant createdAt) {
+    protected Chat(ChatId id, ChatType type, EventsSeq eventsSeq, Instant lastActivityAt, Instant createdAt) {
         this.id = Require.notNull(id, DomainErrorCode.MISSING_REQUIRED_FIELD, "id");
         this.type = Require.notNull(type, DomainErrorCode.MISSING_REQUIRED_FIELD, "type");
         this.eventsSeq = Require.notNull(eventsSeq, DomainErrorCode.MISSING_REQUIRED_FIELD, "eventsSeq");
@@ -29,6 +29,10 @@ public class Chat implements ActivityTrackable {
     public static Chat create(ChatType type) {
         Instant now = Instant.now();
         return new Chat(ChatId.create(), type, EventsSeq.create(), now, now);
+    }
+
+    public boolean isMultiparty() {
+        return type == ChatType.GROUP || type == ChatType.CHANNEL;
     }
 
     @Override

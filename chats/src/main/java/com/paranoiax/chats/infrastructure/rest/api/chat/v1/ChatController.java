@@ -1,6 +1,8 @@
 package com.paranoiax.chats.infrastructure.rest.api.chat.v1;
 
 import com.paranoiax.chats.application.ports.in.chat.create.CreateChatUseCase;
+import com.paranoiax.chats.application.ports.in.chat.getAll.FindChatsByUserIdQuery;
+import com.paranoiax.chats.application.ports.in.chat.getAll.FindChatsUseCase;
 import com.paranoiax.chats.domain.models.chat.ChatId;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
@@ -11,12 +13,14 @@ import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
 import java.util.UUID;
+import java.util.stream.Collectors;
 
 @RequiredArgsConstructor
 @RestController
 @RequestMapping("/v1/chats")
 public class ChatController {
     private final CreateChatUseCase createChatUseCase;
+    private final FindChatsUseCase findChatsUseCase;
 
     @PostMapping
     public ResponseEntity<ChatIdResponse> create(
@@ -32,6 +36,10 @@ public class ChatController {
     public ResponseEntity<List<ChatResponse>> getAll(
             @AuthenticationPrincipal UUID userId
     ) {
-        throw new UnsupportedOperationException();
+        return ResponseEntity.ok(
+                findChatsUseCase.execute(new FindChatsByUserIdQuery(userId)).stream()
+                        .map(ChatResponse::from)
+                        .collect(Collectors.toList())
+        );
     }
 }

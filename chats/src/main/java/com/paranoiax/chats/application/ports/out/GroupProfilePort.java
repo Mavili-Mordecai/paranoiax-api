@@ -9,7 +9,7 @@ import java.util.Optional;
 
 public interface GroupProfilePort {
     Optional<GroupProfile> findById(GroupProfileId groupProfileId);
-    List<GroupProfile> findAllByIds(Collection<GroupProfileId> ids);
+    List<GroupProfile> findAllById(Collection<GroupProfileId> ids);
     GroupProfile insert(GroupProfile groupProfile);
     GroupProfile update(GroupProfile groupProfile);
     void delete(GroupProfileId id);
