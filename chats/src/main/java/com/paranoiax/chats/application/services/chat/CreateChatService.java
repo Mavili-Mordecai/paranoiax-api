@@ -84,16 +84,18 @@ public class CreateChatService implements CreateChatUseCase {
     private static @NonNull Map<UUID, Participant> getParticipants(CreateChatCommand command, Chat chat) {
         return command.participants()
                 .stream()
-                .map(participant -> Participant.create(
-                        chat.getId(),
-                        new UserId(participant.userId()),
-                        chat.isMultiparty() && command.userId().equals(participant.userId())
-                                ? ParticipantRole.OWNER
-                                : ParticipantRole.MEMBER,
-                        command.userId().equals(participant.userId())
-                                ? Set.of()
-                                : chat.getType().getDefaultPermissions()
-                ))
+                .map(participant -> {
+                    boolean isSameUser = command.userId().equals(participant.userId());
+                    ParticipantRole role = chat.isMultiparty() && isSameUser
+                            ? ParticipantRole.OWNER
+                            : ParticipantRole.MEMBER;
+                    return Participant.create(
+                            chat.getId(),
+                            new UserId(participant.userId()),
+                            role,
+                            isSameUser ? Set.of() : chat.getType().getDefaultPermissions(role)
+                    );
+                })
                 .collect(Collectors.toMap(it -> it.getUserId().value(), Function.identity()));
     }
 }

@@ -4,5 +4,6 @@ public enum ParticipantPermission {
     ADD,
     KICK,
     PIN,
-    SEND_MESSAGE
+    SEND_MESSAGE,
+    CREATE_INVITE
 }

@@ -77,7 +77,7 @@ public class AddParticipantsToChatService implements AddParticipantsToChatUseCas
                             chat.getId(),
                             new UserId(participantDetails.userId()),
                             ParticipantRole.MEMBER,
-                            chat.getType().getDefaultPermissions()
+                            chat.getType().getDefaultPermissions(ParticipantRole.MEMBER)
                     ))
                     .collect(Collectors.toList());
 

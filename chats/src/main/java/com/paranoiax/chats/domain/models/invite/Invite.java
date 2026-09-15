@@ -1,4 +1,4 @@
-package com.paranoiax.chats.domain.models.chatInvite;
+package com.paranoiax.chats.domain.models.invite;
 
 import com.paranoiax.chats.domain.models.chat.ChatId;
 import com.paranoiax.core.domain.Require;
@@ -8,15 +8,15 @@ import com.paranoiax.core.domain.users.UserId;
 
 import java.time.Instant;
 
-public class ChatInvite {
-    private final ChatInviteId id;
+public class Invite {
+    private final InviteId id;
     private final ChatId chatId;
     private final UserId createdById;
-    private ChatInviteUsesCount usesCount;
-    private final ChatInviteMaxUses maxUses;
+    private InviteUsesCount usesCount;
+    private final InviteMaxUses maxUses;
     private final Instant expiresAt;
 
-    public ChatInvite(ChatInviteId id, ChatId chatId, UserId createdById, ChatInviteUsesCount usesCount, ChatInviteMaxUses maxUses, Instant expiresAt) {
+    public Invite(InviteId id, ChatId chatId, UserId createdById, InviteUsesCount usesCount, InviteMaxUses maxUses, Instant expiresAt) {
         this.id = Require.notNull(id, DomainErrorCode.MISSING_REQUIRED_FIELD, "id");
         this.chatId = Require.notNull(chatId, DomainErrorCode.MISSING_REQUIRED_FIELD, "chatId");
         this.createdById = Require.notNull(createdById, DomainErrorCode.MISSING_REQUIRED_FIELD, "createdById");
@@ -26,12 +26,12 @@ public class ChatInvite {
         this.expiresAt = expiresAt;
     }
 
-    public static ChatInvite of(ChatInviteId id, ChatId chatId, UserId createdById, ChatInviteUsesCount usesCount, ChatInviteMaxUses maxUses, Instant expiresAt) {
-        return new ChatInvite(id, chatId, createdById, usesCount, maxUses, expiresAt);
+    public static Invite of(InviteId id, ChatId chatId, UserId createdById, InviteUsesCount usesCount, InviteMaxUses maxUses, Instant expiresAt) {
+        return new Invite(id, chatId, createdById, usesCount, maxUses, expiresAt);
     }
 
-    public static ChatInvite create(ChatId chatId, UserId createdById, ChatInviteMaxUses maxUses, Instant expiresAt) {
-        return new ChatInvite(ChatInviteId.create(), chatId, createdById, ChatInviteUsesCount.create(), maxUses, expiresAt);
+    public static Invite create(ChatId chatId, UserId createdById, InviteMaxUses maxUses, Instant expiresAt) {
+        return new Invite(InviteId.create(), chatId, createdById, InviteUsesCount.create(), maxUses, expiresAt);
     }
 
     public void use() {
@@ -46,11 +46,11 @@ public class ChatInvite {
         return expiresAt;
     }
 
-    public ChatInviteMaxUses getMaxUses() {
+    public InviteMaxUses getMaxUses() {
         return maxUses;
     }
 
-    public ChatInviteUsesCount getUsesCount() {
+    public InviteUsesCount getUsesCount() {
         return usesCount;
     }
 
@@ -62,7 +62,7 @@ public class ChatInvite {
         return chatId;
     }
 
-    public ChatInviteId getId() {
+    public InviteId getId() {
         return id;
     }
 }
