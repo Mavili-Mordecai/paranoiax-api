@@ -4,11 +4,13 @@ import com.paranoiax.chats.application.ports.in.chat.addParticipant.AddParticipa
 import com.paranoiax.chats.application.ports.in.chat.create.CreateChatUseCase;
 import com.paranoiax.chats.application.ports.in.chat.findAll.FindChatsUseCase;
 import com.paranoiax.chats.application.ports.in.invite.create.CreateInviteUseCase;
+import com.paranoiax.chats.application.ports.in.invite.use.UseInviteUseCase;
 import com.paranoiax.chats.application.ports.out.*;
 import com.paranoiax.chats.application.services.chat.AddParticipantsToChatService;
 import com.paranoiax.chats.application.services.chat.CreateChatService;
 import com.paranoiax.chats.application.services.chat.FindChatsService;
 import com.paranoiax.chats.application.services.invite.CreateInviteService;
+import com.paranoiax.chats.application.services.invite.UseInviteService;
 import com.paranoiax.core.application.services.OperationExecutor;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.Bean;
@@ -69,5 +71,26 @@ public class ChatConfig {
             @Value("${application.chat.result-ttl}") Duration resultTtl
     ) {
         return new CreateInviteService(invitePort, participantPort, executor, lockTtl, resultTtl);
+    }
+
+    @Bean
+    public UseInviteUseCase useInviteUseCase(
+            InvitePort invitePort,
+            ChatPort chatPort,
+            ParticipantPort participantPort,
+            ParticipantKeyPort participantKeyPort,
+            OperationExecutor executor,
+            @Value("${application.chat.lock-ttl}") Duration lockTtl,
+            @Value("${application.chat.result-ttl}") Duration resultTtl
+    ) {
+        return new UseInviteService(
+                invitePort,
+                chatPort,
+                participantPort,
+                participantKeyPort,
+                executor,
+                lockTtl,
+                resultTtl
+        );
     }
 }

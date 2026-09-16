@@ -20,7 +20,7 @@ public record InviteUsesCount(int value) {
         return new InviteUsesCount(value + 1);
     }
 
-    public boolean greaterThan(InviteMaxUses maxUses) {
+    public boolean greaterThanOrEquals(InviteMaxUses maxUses) {
         return value >= maxUses.value();
     }
 }

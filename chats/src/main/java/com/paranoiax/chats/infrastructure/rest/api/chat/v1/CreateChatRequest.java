@@ -1,6 +1,7 @@
 package com.paranoiax.chats.infrastructure.rest.api.chat.v1;
 
 import com.paranoiax.chats.application.ports.in.chat.create.CreateChatCommand;
+import jakarta.validation.Valid;
 import jakarta.validation.constraints.*;
 import tools.jackson.databind.PropertyNamingStrategies;
 import tools.jackson.databind.annotation.JsonNaming;
@@ -10,15 +11,11 @@ import java.util.UUID;
 
 @JsonNaming(PropertyNamingStrategies.SnakeCaseStrategy.class)
 public record CreateChatRequest(
-        @NotNull(message = "FIELD_REQUIRED")
-        @NotBlank(message = "FIELD_REQUIRED")
-        String name,
-        @NotNull(message = "FIELD_REQUIRED")
-        @NotBlank(message = "FIELD_REQUIRED")
-        String type,
+        @NotBlank(message = "FIELD_REQUIRED") String name,
+        @NotBlank(message = "FIELD_REQUIRED") String type,
         @NotNull(message = "FIELD_REQUIRED")
         @Size(min = 1, max = 100, message = "INVALID_LENGTH")
-        List<ParticipantDetailsRequest> participants
+        @Valid List<ParticipantDetailsRequest> participants
 ) {
     public CreateChatCommand toCommand(UUID userId, String operationId) {
         return new CreateChatCommand(

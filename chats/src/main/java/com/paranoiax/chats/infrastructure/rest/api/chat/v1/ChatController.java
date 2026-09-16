@@ -6,6 +6,8 @@ import com.paranoiax.chats.application.ports.in.chat.findAll.FindChatsByUserIdQu
 import com.paranoiax.chats.application.ports.in.chat.findAll.FindChatsUseCase;
 import com.paranoiax.chats.application.ports.in.invite.create.CreateInviteCommand;
 import com.paranoiax.chats.application.ports.in.invite.create.CreateInviteUseCase;
+import com.paranoiax.chats.application.ports.in.invite.use.UseInviteCommand;
+import com.paranoiax.chats.application.ports.in.invite.use.UseInviteUseCase;
 import com.paranoiax.chats.domain.models.chat.ChatId;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
@@ -26,6 +28,7 @@ public class ChatController {
     private final FindChatsUseCase findChatsUseCase;
     private final AddParticipantsToChatUseCase addParticipantsToChatUseCase;
     private final CreateInviteUseCase createInviteUseCase;
+    private final UseInviteUseCase useInviteUseCase;
 
     @PostMapping
     public ResponseEntity<ChatIdResponse> create(
@@ -75,4 +78,23 @@ public class ChatController {
         )));
         return ResponseEntity.status(HttpStatus.CREATED).body(response);
     }
+
+    @PostMapping("/invites/{invite_id}/join")
+    @ResponseStatus(HttpStatus.NO_CONTENT)
+    public void useInvite(
+            @RequestHeader("Idempotency-Key") String idempotencyKey,
+            @RequestBody @Valid UseInviteRequest request,
+            @AuthenticationPrincipal UUID principalId,
+            @PathVariable("invite_id") UUID inviteId
+    ) {
+        useInviteUseCase.execute(new UseInviteCommand(
+                principalId,
+                inviteId,
+                request.deviceKeys().stream()
+                        .map(ParticipantDeviceDetailsRequest::toDetails)
+                        .collect(Collectors.toList()),
+                idempotencyKey
+        ));
+    }
+
 }

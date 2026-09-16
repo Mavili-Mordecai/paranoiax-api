@@ -71,6 +71,16 @@ public class GlobalExceptionHandler {
         return getErrorResponse(HttpStatus.CONFLICT, request, e.getCode(), e.getMessage(), e.getArgs());
     }
 
+    @ExceptionHandler(UsesCountExceededException.class)
+    public ResponseEntity<ErrorResponse<DomainErrorResponse>> handleUsesCountExceededException(UsesCountExceededException e, HttpServletRequest request) {
+        return getErrorResponse(HttpStatus.FORBIDDEN, request, e.getCode(), e.getMessage(), e.getArgs());
+    }
+
+    @ExceptionHandler(ExpiredException.class)
+    public ResponseEntity<ErrorResponse<DomainErrorResponse>> handleExpiredException(ExpiredException e, HttpServletRequest request) {
+        return getErrorResponse(HttpStatus.FORBIDDEN, request, e.getCode(), e.getMessage(), e.getArgs());
+    }
+
     @ExceptionHandler(RateLimitExceededException.class)
     public ResponseEntity<ErrorResponse<DomainErrorResponse>> handleRateLimitExceededException(RateLimitExceededException e, HttpServletRequest request) {
         return ResponseEntity.status(HttpStatus.TOO_MANY_REQUESTS)

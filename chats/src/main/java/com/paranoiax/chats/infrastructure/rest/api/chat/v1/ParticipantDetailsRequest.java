@@ -1,7 +1,7 @@
 package com.paranoiax.chats.infrastructure.rest.api.chat.v1;
 
 import com.paranoiax.chats.application.ports.in.chat.create.ParticipantDetails;
-import com.paranoiax.chats.application.ports.in.chat.create.ParticipantDeviceDetails;
+import jakarta.validation.Valid;
 import jakarta.validation.constraints.*;
 import tools.jackson.databind.PropertyNamingStrategies;
 import tools.jackson.databind.annotation.JsonNaming;
@@ -16,7 +16,7 @@ public record ParticipantDetailsRequest(
         UUID id,
         @NotNull(message = "FIELD_REQUIRED")
         @Size(min = 1, max = 8, message = "INVALID_LENGTH")
-        List<ParticipantDeviceDetailsRequest> devices
+        @Valid List<ParticipantDeviceDetailsRequest> devices
 ) {
     public static List<ParticipantDetails> toParticipantDetails(List<ParticipantDetailsRequest> participants) {
         return participants.stream()
@@ -24,7 +24,7 @@ public record ParticipantDetailsRequest(
                         it.id(),
                         it.devices()
                                 .stream()
-                                .map(device -> new ParticipantDeviceDetails(device.id(), device.encryptionKey()))
+                                .map(ParticipantDeviceDetailsRequest::toDetails)
                                 .collect(Collectors.toList())
                 ))
                 .collect(Collectors.toList());

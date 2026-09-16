@@ -3,7 +3,8 @@ package com.paranoiax.chats.domain.models.invite;
 import com.paranoiax.chats.domain.models.chat.ChatId;
 import com.paranoiax.core.domain.Require;
 import com.paranoiax.core.domain.exceptions.DomainErrorCode;
-import com.paranoiax.core.domain.exceptions.UsesCountExceeded;
+import com.paranoiax.core.domain.exceptions.ExpiredException;
+import com.paranoiax.core.domain.exceptions.UsesCountExceededException;
 import com.paranoiax.core.domain.users.UserId;
 
 import java.time.Instant;
@@ -34,9 +35,12 @@ public class Invite {
         return new Invite(InviteId.create(), chatId, createdById, InviteUsesCount.create(), maxUses, expiresAt);
     }
 
-    public void use() {
-        if (this.maxUses != null && this.usesCount.greaterThan(this.maxUses)) {
-            throw new UsesCountExceeded();
+    public void use(Instant now) {
+        if (this.maxUses != null && this.usesCount.greaterThanOrEquals(this.maxUses)) {
+            throw new UsesCountExceededException();
+        }
+        if (this.expiresAt != null && this.expiresAt.isBefore(now)) {
+            throw new ExpiredException("Invite");
         }
 
         this.usesCount = this.usesCount.increment();

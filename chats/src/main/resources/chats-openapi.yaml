@@ -339,10 +339,10 @@ components:
           items:
             type: object
             required:
-              - device_id
+              - id
               - encryption_key
             properties:
-              device_id:
+              id:
                 type: string
                 format: uuid
               encryption_key:
@@ -378,10 +378,10 @@ components:
           items:
             type: object
             required:
-              - device_id
+              - id
               - encrypted_key
             properties:
-              device_id:
+              id:
                 type: string
                 format: uuid
               encrypted_key:
