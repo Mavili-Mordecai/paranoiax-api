@@ -1,4 +1,4 @@
-package com.paranoiax.chats.infrastructure.rest.api.chat.v1;
+package com.paranoiax.chats.infrastructure.rest.api.invites.v1;
 
 import com.fasterxml.jackson.annotation.JsonInclude;
 import com.paranoiax.chats.application.ports.in.invite.create.InviteDetails;

@@ -1,7 +1,7 @@
 package com.paranoiax.chats.application.services.chat;
 
-import com.paranoiax.chats.application.ports.in.chat.addParticipant.AddParticipantsToChatCommand;
-import com.paranoiax.chats.application.ports.in.chat.addParticipant.AddParticipantsToChatUseCase;
+import com.paranoiax.chats.application.ports.in.participant.addParticipant.AddParticipantsToChatCommand;
+import com.paranoiax.chats.application.ports.in.participant.addParticipant.AddParticipantsToChatUseCase;
 import com.paranoiax.chats.application.ports.out.ChatPort;
 import com.paranoiax.chats.application.ports.out.ParticipantKeyPort;
 import com.paranoiax.chats.application.ports.out.ParticipantPort;

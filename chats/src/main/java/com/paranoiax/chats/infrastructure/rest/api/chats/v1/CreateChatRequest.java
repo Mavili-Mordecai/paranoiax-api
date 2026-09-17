@@ -1,4 +1,4 @@
-package com.paranoiax.chats.infrastructure.rest.api.chat.v1;
+package com.paranoiax.chats.infrastructure.rest.api.chats.v1;
 
 import com.paranoiax.chats.application.ports.in.chat.create.CreateChatCommand;
 import jakarta.validation.Valid;

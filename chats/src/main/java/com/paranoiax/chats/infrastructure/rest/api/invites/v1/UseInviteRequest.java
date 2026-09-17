@@ -1,5 +1,6 @@
-package com.paranoiax.chats.infrastructure.rest.api.chat.v1;
+package com.paranoiax.chats.infrastructure.rest.api.invites.v1;
 
+import com.paranoiax.chats.infrastructure.rest.api.chats.v1.ParticipantDeviceDetailsRequest;
 import jakarta.validation.Valid;
 import jakarta.validation.constraints.NotNull;
 import jakarta.validation.constraints.Size;

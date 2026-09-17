@@ -1,4 +1,4 @@
-package com.paranoiax.chats.application.ports.in.chat.addParticipant;
+package com.paranoiax.chats.application.ports.in.participant.addParticipant;
 
 import com.paranoiax.chats.application.ports.in.chat.create.ParticipantDetails;
 import com.paranoiax.core.application.OperationCommand;

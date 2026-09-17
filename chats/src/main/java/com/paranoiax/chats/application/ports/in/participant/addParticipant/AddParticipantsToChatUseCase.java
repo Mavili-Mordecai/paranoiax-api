@@ -1,4 +1,4 @@
-package com.paranoiax.chats.application.ports.in.chat.addParticipant;
+package com.paranoiax.chats.application.ports.in.participant.addParticipant;
 
 public interface AddParticipantsToChatUseCase {
     void execute(AddParticipantsToChatCommand command);

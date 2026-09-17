@@ -1,6 +1,7 @@
-package com.paranoiax.chats.infrastructure.rest.api.chat.v1;
+package com.paranoiax.chats.infrastructure.rest.api.participants.v1;
 
-import com.paranoiax.chats.application.ports.in.chat.addParticipant.AddParticipantsToChatCommand;
+import com.paranoiax.chats.application.ports.in.participant.addParticipant.AddParticipantsToChatCommand;
+import com.paranoiax.chats.infrastructure.rest.api.chats.v1.ParticipantDetailsRequest;
 import jakarta.validation.Valid;
 import jakarta.validation.constraints.NotNull;
 import tools.jackson.databind.PropertyNamingStrategies;

@@ -1,9 +1,12 @@
-package com.paranoiax.chats.infrastructure.rest.api.chat.v1;
+package com.paranoiax.chats.infrastructure.rest.api.chats.v1;
 
 import com.paranoiax.chats.application.ports.in.chat.findAll.ChatDetails;
+import tools.jackson.databind.PropertyNamingStrategies;
+import tools.jackson.databind.annotation.JsonNaming;
 
 import java.time.Instant;
 
+@JsonNaming(PropertyNamingStrategies.SnakeCaseStrategy.class)
 public record ChatResponse(
         String chatId,
         String type,
