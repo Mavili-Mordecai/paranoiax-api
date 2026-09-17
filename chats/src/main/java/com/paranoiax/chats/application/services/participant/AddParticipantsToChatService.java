@@ -1,4 +1,4 @@
-package com.paranoiax.chats.application.services.chat;
+package com.paranoiax.chats.application.services.participant;
 
 import com.paranoiax.chats.application.ports.in.participant.addParticipant.AddParticipantsToChatCommand;
 import com.paranoiax.chats.application.ports.in.participant.addParticipant.AddParticipantsToChatUseCase;

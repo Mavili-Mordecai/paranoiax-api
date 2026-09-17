@@ -210,7 +210,7 @@ components:
       type: object
       required:
         - id
-        - encrypted_key
+        - encryption_key
       properties:
         id:
           type: string
@@ -360,7 +360,7 @@ components:
           format: uuid
         key_version:
           type: integer
-        encrypted_key:
+        encryption_key:
           type: string
           format: base64
 
@@ -379,11 +379,11 @@ components:
             type: object
             required:
               - id
-              - encrypted_key
+              - encryption_key
             properties:
               id:
                 type: string
                 format: uuid
-              encrypted_key:
+              encryption_key:
                 type: string
                 format: base64

@@ -4,7 +4,7 @@ import com.paranoiax.chats.application.ports.in.participant.addParticipant.AddPa
 import com.paranoiax.chats.application.ports.out.ChatPort;
 import com.paranoiax.chats.application.ports.out.ParticipantKeyPort;
 import com.paranoiax.chats.application.ports.out.ParticipantPort;
-import com.paranoiax.chats.application.services.chat.AddParticipantsToChatService;
+import com.paranoiax.chats.application.services.participant.AddParticipantsToChatService;
 import com.paranoiax.core.application.services.OperationExecutor;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.Bean;

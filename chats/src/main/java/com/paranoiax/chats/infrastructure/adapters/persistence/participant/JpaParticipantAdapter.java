@@ -52,6 +52,14 @@ public class JpaParticipantAdapter implements ParticipantPort {
     }
 
     @Override
+    public List<Participant> findAllById(Collection<ParticipantId> participantIds) {
+        return repository.findAllById(participantIds.stream().map(ParticipantId::value).collect(Collectors.toSet()))
+                .stream()
+                .map(mapper::toDomain)
+                .collect(Collectors.toList());
+    }
+
+    @Override
     public Optional<Participant> findBy(ChatId chatId, UserId userId) {
         return repository.findByChatIdAndUserId(chatId.value(), userId.value()).map(mapper::toDomain);
     }

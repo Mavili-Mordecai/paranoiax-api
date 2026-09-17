@@ -35,7 +35,7 @@ public class JwtTokenFilter extends OncePerRequestFilter {
 
         try {
             AccessToken accessToken = jwtAuthTokensAdapter.parseAccessToken(token);
-            CustomJwtAuthentication authentication = new CustomJwtAuthentication(
+            JwtAuthentication authentication = new JwtAuthentication(
                     accessToken.getUserId().value(),
                     accessToken.getType(),
                     accessToken.getDeviceId().value(),

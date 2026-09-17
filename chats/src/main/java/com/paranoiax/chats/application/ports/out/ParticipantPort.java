@@ -14,6 +14,7 @@ public interface ParticipantPort {
     List<Participant> insertAll(Collection<Participant> participants);
     Participant update(Participant participant);
     List<Participant> findAll(ChatId chatId);
+    List<Participant> findAllById(Collection<ParticipantId> participantIds);
     Optional<Participant> findBy(ChatId chatId, UserId userId);
     void delete(ParticipantId id);
 }
